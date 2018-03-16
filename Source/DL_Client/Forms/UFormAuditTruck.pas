@@ -130,7 +130,7 @@ begin
     Exit;
   end;
   nPic := nil;
-  nStr := 'select * from %s ,%s where A_Serial=S_NO and A_Truck=''%s''';
+  nStr := 'select * from %s ,%s where A_Serial=S_NO and A_ID=''%s''';
   nStr := Format(nStr, [sTable_AuditTruck, sTable_LoadStandard, FTruckID]);
 
   ShowWaitForm(Self, '加载车辆信息', True);

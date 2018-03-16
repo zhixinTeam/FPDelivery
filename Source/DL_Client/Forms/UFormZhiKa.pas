@@ -85,9 +85,12 @@ type
     dxLayout1Item20: TdxLayoutItem;
     ckPrintHy: TcxCheckBox;
     dxLayout1Item21: TdxLayoutItem;
-    cxCheckBox1: TcxCheckBox;
+    ckSeal: TcxCheckBox;
     dxLayout1Item22: TdxLayoutItem;
     dxLayout1Group7: TdxLayoutGroup;
+    btnBackCash: TButton;
+    dxLayout1Item23: TdxLayoutItem;
+    dxLayout1Group8: TdxLayoutGroup;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure EditSManPropertiesEditValueChanged(Sender: TObject);
@@ -101,6 +104,7 @@ type
     procedure EditCustomKeyPress(Sender: TObject; var Key: Char);
     procedure EditPricePropertiesEditValueChanged(Sender: TObject);
     procedure EditLadingPropertiesChange(Sender: TObject);
+    procedure btnBackCashClick(Sender: TObject);
   protected
     { Protected declarations }
     FRecordID: string;
@@ -119,6 +123,7 @@ type
     //水泥列表
     procedure LoadSaleContract(const nCID: string);
     //载入合同
+    procedure CleanBackRule;
   public
     { Public declarations }
     class function CreateForm(const nPopedom: string = '';
@@ -132,7 +137,7 @@ implementation
 
 uses
   IniFiles, ULibFun, UMgrControl, UAdjustForm, UFormCtrl, UFormBase, UFrameBase,
-  USysGrid, USysDB, USysConst, USysBusiness, UDataModule;
+  USysGrid, USysDB, USysConst, USysBusiness, UDataModule, UFormBackCashRule;
 
 var
   gForm: TfFormZhiKa = nil;
@@ -237,6 +242,8 @@ begin
     nIni.Free;
   end;
 
+  CleanBackRule;
+  
   gForm := nil;
   Action := caFree;
   ReleaseCtrlData(Self);
@@ -299,7 +306,8 @@ begin
       //预付金
       EditFPType.ItemIndex := FieldByName('Z_FPType').AsInteger - 1;  //发票类型，1：一票制  2：两票制
       EditFreight.Value := FieldByName('Z_Freight').AsFloat;          //每吨运费
-
+      ckPrintHy.Checked := FieldByName('Z_PrintHy').AsBoolean;
+      ckSeal.Checked := FieldByName('Z_Seal').AsBoolean;
 
       nStr := 'Select * From %s Where D_ZID=''%s''';
       nStr := Format(nStr, [sTable_ZhiKaDtl, nID]);
@@ -581,8 +589,15 @@ begin
   begin
     FItemIndex := -1;
 
+    if ListDetail.Items[ListDetail.ItemIndex].Checked then
+      btnBackCash.Enabled := True
+    else
+      btnBackCash.Enabled := False;
+    //勾选的方可设置返现规则
+
     EditStock.Text := FStockList[ListDetail.ItemIndex].FName;
     EditPrice.Text := Format('%.2f', [FStockList[ListDetail.ItemIndex].FPrice]);
+    btnBackCash.Hint := FStockList[ListDetail.ItemIndex].FStock;
     
     EditValue.Text := Format('%.2f', [FStockList[ListDetail.ItemIndex].FValue]);
     //EditValue.SetFocus;
@@ -793,6 +808,11 @@ begin
     nList.Add(Format('Z_Lading=''%s''', [GetCtrlData(EditLading)]));
     nList.Add(Format('Z_ValidDays=''%s''', [Date2Str(EditDays.Date)]));
     nList.Add(Format('Z_YFMoney=%s', [EditMoney.Text]));
+
+    //是否打印化验单，录入封签号
+    nList.Add(Format('Z_PrintHy=%s', [BoolToStr(ckPrintHy.Checked)]));
+    nList.Add(Format('Z_Seal=%s', [BoolToStr(ckSeal.Checked)]));
+
     if EditLading.ItemIndex = 0 then
     begin
       nList.Add(Format('Z_FPType=%s', ['1']));
@@ -853,6 +873,12 @@ begin
       FDM.ExecuteSQL(nSQL);
     end;
 
+    //添加返现规则
+    nSQL := 'insert into %s select ''%s'' as B_ZhiKa,B_StockNo,B_LeaveL,B_LeaveH,'+
+            'B_Value,B_Date,B_User from %s';
+    nSQL := Format(nSQL,[sTable_BackCashRule, nZID,sTable_BackCashRuleTmp]);
+    FDM.ExecuteSQL(nSQL);
+
     if nParam.FParamB <> '' then
     begin
       nList.Text := MacroValue(nParam.FParamB, [MI('$NewZK', nZID)]);
@@ -904,6 +930,36 @@ begin
     dxLayout1Group6.Visible := true
   else
     dxLayout1Group6.Visible := False;
+end;
+
+procedure TfFormZhiKa.btnBackCashClick(Sender: TObject);
+var
+  nParam: TFormCommandParam;
+begin
+  if FRecordID = '' then
+  begin  //新建纸卡
+    nParam.FParamA := '';
+    nParam.FParamB := btnBackCash.Hint;
+    CreateBaseFormItem(cFI_FormBackCashRule, '', @nParam);
+  end
+  else
+  begin  //修改旧纸卡
+    nParam.FParamA := FRecordID;
+    nParam.FParamB := btnBackCash.Hint;
+    CreateBaseFormItem(cFI_FormBackCashRule, '', @nParam);
+  end;
+end;
+
+procedure TfFormZhiKa.CleanBackRule;
+var
+  nStr: string;
+begin
+  if FRecordID = '' then
+  begin
+    nStr := 'delete from %s';
+    nStr := Format(nStr,[sTable_BackCashRuleTmp]);
+    fdm.ExecuteSQL(nStr);
+  end;
 end;
 
 initialization

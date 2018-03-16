@@ -134,7 +134,7 @@ end;
 procedure TfFormTruckCard.BtnOKClick(Sender: TObject);
 var
   nStr: string;
-  NList: TStrings;
+  nList: TStrings;
 begin
   if Trim(editCard.Text) = '' then
   begin
@@ -170,12 +170,12 @@ begin
 
     //同步绑定磁卡状态到商城
     nStr := 'select * from %s where T_Truck=''%s''';
-    nStr := Format(nStr,[sTable_Truck,editCard.Text]);
+    nStr := Format(nStr,[sTable_Truck,editTruck.Text]);
     with fdm.QueryTemp(nStr) do
     begin
       if Trim(FieldByName('T_WebId').AsString) <> '' then
       begin
-        nList := TStrings.Create;
+        nList := TStringList.Create;
         with nList do
         begin
           Clear;
@@ -186,7 +186,7 @@ begin
           Values['Type']     := '1';
         end;
 
-        //if UpLoadAuditTruck(PackerEncodeStr(nList.Text)) <> sFlag_Yes then Exit;
+        if UpLoadAuditTruck(PackerEncodeStr(nList.Text)) <> sFlag_Yes then Exit;
         //call remote同步到微信端
       end;
     end;

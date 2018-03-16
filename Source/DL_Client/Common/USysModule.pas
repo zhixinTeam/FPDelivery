@@ -46,7 +46,7 @@ uses
   UFormHYStock, UFormHYData, UFormHYRecord, UFormGetStockNo,
   UFrameHYStock, UFrameHYData, UFrameHYRecord,
   UFrameCustomer_FP, UFormTestResult, UFormStockItem,
-  UFormSealNum, UFormAdjustMoney;
+  UFormSealNum, UFormAdjustMoney, UFormBackCash;
   //UFormpoundAdjust ; 
 
 procedure InitSystemObject;

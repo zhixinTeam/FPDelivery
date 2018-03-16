@@ -73,6 +73,7 @@ type
     //获取岗位交货单
     function SavePostBillItems(var nData: string): Boolean;
     //保存岗位交货单
+
   public
     constructor Create; override;
     destructor destroy; override;
@@ -641,7 +642,8 @@ begin
               SF('L_Man', FIn.FBase.FFrom.FUser),
               SF('L_FPType', FListA.Values['FPType'],sfVal),
               SF('L_Freight', FListA.Values['Freight'],sfVal),
-              SF('L_Date', sField_SQLServer_Now, sfVal)
+              SF('L_Date', sField_SQLServer_Now, sfVal),
+              SF('L_MustSeal', FListA.Values['MustSeal'])
               ], sTable_Bill,SF('L_ID', nOut.FData),FListA.Values['Card']='');
       gDBConnManager.WorkerExec(FDBConn, nStr);
       //根据卡号新增或者更新信息
@@ -1810,7 +1812,7 @@ begin
   nStr := 'Select L_ID,L_ZhiKa,L_CusID,L_CusName,L_Type,L_StockNo,' +
           'L_StockName,L_Truck,L_Value,L_Price,L_ZKMoney,L_Status,' +
           'L_NextStatus,L_Card,L_IsVIP,L_PValue,L_MValue,L_PrintHY,' +
-          'L_HYDan From $Bill b ';
+          'L_HYDan,L_Seal,L_MustSeal From $Bill b ';
   //xxxxx
 
   if nIsBill then
@@ -1899,6 +1901,9 @@ begin
       FPData.FValue := FieldByName('L_PValue').AsFloat;
       FMData.FValue := FieldByName('L_MValue').AsFloat;
       FSelected := True;
+
+      FSeal := FieldByName('L_Seal').AsString;
+      FMustSeal := FieldByName('L_MustSeal').AsBoolean;
 
       Inc(nIdx);
       Next;

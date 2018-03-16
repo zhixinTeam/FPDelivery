@@ -33,6 +33,8 @@ inherited fFrameInvoiceZZ: TfFrameInvoiceZZ
       Top = 93
       Hint = 'T.R_Customer'
       ParentFont = False
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 5
       Width = 135
     end
@@ -41,6 +43,8 @@ inherited fFrameInvoiceZZ: TfFrameInvoiceZZ
       Top = 93
       Hint = 'T.R_Stock'
       ParentFont = False
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 2
       Width = 135
     end
@@ -49,6 +53,8 @@ inherited fFrameInvoiceZZ: TfFrameInvoiceZZ
       Top = 93
       Hint = 'T.R_Price'
       ParentFont = False
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 3
       Width = 85
     end
@@ -57,6 +63,8 @@ inherited fFrameInvoiceZZ: TfFrameInvoiceZZ
       Top = 93
       Hint = 'T.R_ReqValue'
       ParentFont = False
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 4
       Width = 98
     end
@@ -71,6 +79,9 @@ inherited fFrameInvoiceZZ: TfFrameInvoiceZZ
         end>
       Properties.ReadOnly = True
       Properties.OnButtonClick = EditWeekPropertiesButtonClick
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
+      Style.ButtonStyle = btsHotFlat
       TabOrder = 1
       Width = 278
     end
@@ -84,6 +95,9 @@ inherited fFrameInvoiceZZ: TfFrameInvoiceZZ
           Kind = bkEllipsis
         end>
       Properties.OnButtonClick = EditCusPropertiesButtonClick
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
+      Style.ButtonStyle = btsHotFlat
       TabOrder = 0
       OnKeyPress = OnCtrlKeyPress
       Width = 135
@@ -91,37 +105,36 @@ inherited fFrameInvoiceZZ: TfFrameInvoiceZZ
     inherited dxGroup1: TdxLayoutGroup
       inherited GroupSearch1: TdxLayoutGroup
         object dxLayout1Item7: TdxLayoutItem
-          Caption = #23458#25143#21517#31216':'
+          CaptionOptions.Text = #23458#25143#21517#31216':'
           Control = EditCus
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item1: TdxLayoutItem
-          Caption = #21608#26399#31579#36873':'
+          CaptionOptions.Text = #21608#26399#31579#36873':'
           Control = EditWeek
           ControlOptions.ShowBorder = False
         end
       end
       inherited GroupDetail1: TdxLayoutGroup
         object dxLayout1Item6: TdxLayoutItem
-          Caption = #27700#27877#21517#31216':'
+          CaptionOptions.Text = #27700#27877#21517#31216':'
           Control = cxTextEdit4
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item5: TdxLayoutItem
-          AutoAligns = [aaVertical]
-          Caption = #21333#20215'('#20803'/'#21544'):'
+          AlignHorz = ahLeft
+          CaptionOptions.Text = #21333#20215'('#20803'/'#21544'):'
           Control = cxTextEdit3
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item2: TdxLayoutItem
-          Caption = #30003#35831#37327'('#21544'):'
+          CaptionOptions.Text = #30003#35831#37327'('#21544'):'
           Control = cxTextEdit5
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item4: TdxLayoutItem
-          AutoAligns = [aaVertical]
           AlignHorz = ahClient
-          Caption = #23458#25143#21517#31216':'
+          CaptionOptions.Text = #23458#25143#21517#31216':'
           Control = cxTextEdit2
           ControlOptions.ShowBorder = False
         end

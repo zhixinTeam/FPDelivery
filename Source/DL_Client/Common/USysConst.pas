@@ -181,6 +181,9 @@ const
   cFI_FormAdjustMoney   = $1104;                     //账号金额调拨(富平)
   cFI_FormGetWechartAccount = $1058;                 //获取商城注册信息
   cFI_FormTruckCard     = $1105;                     //车辆绑定长期卡(富平)
+  cFI_FormBackCashRule  = $1107;                     //为纸卡设置返现规则(富平)
+  cFI_FormBackCash      = $1108;                     //计算返现
+
 
 
   {*Command*}
@@ -350,6 +353,7 @@ begin
   AddMenuModuleItem('MAIN_H04', cFI_FormSealNum, mtForm);
   AddMenuModuleItem('MAIN_C10', cFI_FormAdjustMoney, mtForm);
   AddMenuModuleItem('MAIN_B07', cFI_FrameAuditTruck);
+  AddMenuModuleItem('MAIN_C11', cFI_FormBackCash, mtForm);
   {$ELSE}
   AddMenuModuleItem('MAIN_B02', cFI_FrameCustomer);
   {$ENDIF}

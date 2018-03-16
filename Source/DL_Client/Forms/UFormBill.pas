@@ -70,6 +70,7 @@ type
     { Protected declarations }
     FBuDanFlag: string;
     //补单标记
+    FMustSeal: Boolean;
     procedure LoadFormData;
     procedure LoadStockList;
     //载入数据
@@ -311,6 +312,9 @@ begin
 
     FFpType := nDB.FieldByName('Z_FPType').AsInteger;
     FFreight := nDB.FieldByName('Z_Freight').AsFloat;
+
+    PrintHY.Checked := nDB.FieldByName('Z_PrintHy').AsBoolean;
+    FMustSeal := nDB.FieldByName('Z_Seal').AsBoolean;
   end else
   begin
     ShowMsg(nStr, sHint); Exit;
@@ -694,6 +698,10 @@ begin
       Values['Card'] := gInfo.FCard;
       Values['FpType'] := IntToStr(gInfo.FFpType);
       Values['Freight'] := FloatToStr(gInfo.FFreight);
+      if FMustSeal then
+        Values['MustSeal'] := '1'
+      else
+        Values['MustSeal'] := '0';
     end;
 
     BtnOK.Enabled := False;

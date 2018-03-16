@@ -273,7 +273,7 @@ begin
                 'Union All '+
                 'Select Sum(A_value) from $JstM '+
                 'Where A_OutCusId=''$Cus''';
-        nStr := MacroValue(nStr, [MI('$Bill', sTable_Bill), MI('$Cus', nStatus)]);
+        nStr := MacroValue(nStr, [MI('$Bill', sTable_Bill), MI('$Cus', nStatus), MI('$JstM', sTable_AdjustMoney)]);
         {$ELSE}
         nStr := 'Select Sum(L_Price*L_Value) From $Bill ' +
                 'Where L_CusID=''$Cus'' And L_OutFact Is Not Null ' +

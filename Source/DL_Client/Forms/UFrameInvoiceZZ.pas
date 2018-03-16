@@ -14,7 +14,7 @@ uses
   cxTextEdit, cxMaskEdit, cxButtonEdit, ADODB, cxLabel, UBitmapPanel,
   cxSplitter, cxGridLevel, cxClasses, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid,
-  ComCtrls, ToolWin, cxDropDownEdit, Menus;
+  ComCtrls, ToolWin, cxDropDownEdit, Menus, dxLayoutcxEditAdapters;
 
 type
   TfFrameInvoiceZZ = class(TfFrameNormal)

@@ -19,16 +19,6 @@ inherited fFormAuditTruck: TfFormAuditTruck
     ParentColor = False
     Visible = False
   end
-  object lblwebid: TLabel
-    Left = 80
-    Top = 14
-    Width = 48
-    Height = 12
-    Caption = 'lblwebid'
-    Color = clWindow
-    ParentColor = False
-    Visible = False
-  end
   object dxLayoutControl1: TdxLayoutControl
     Left = 0
     Top = 0

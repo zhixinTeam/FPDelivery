@@ -112,6 +112,9 @@ type
     //下载图片
     function get_shoporderByTruck(var nData:string):boolean;
     //根据车牌号获取订单信息
+
+    function GetZhiKaFrozen(nCusId: string):Double;
+    //获取纸卡冻结金额
   public
     constructor Create; override;
     destructor destroy; override;
@@ -653,6 +656,7 @@ function TBusWorkerBusinessWebchat.GetOrderList(var nData: string): Boolean;
 var nStr, nType: string;
     nNode: TXmlNode;
     nValue,nMoney: Double;
+    nFixMoney:Double;  //限提金额
 begin
   Result := False;
   BuildDefaultXML;
@@ -676,6 +680,8 @@ begin
         '  Z_Customer,' +                       //客户编号
         '  Z_Name,' +                           //客户名称
         '  Z_Lading,' +                         //提货方式
+        '  Z_OnlyMoney,' +                      //是否限提
+        '  Z_FixedMoney,' +                     //限提金额
         '  Z_CID ' +                            //合同编号
         'from %s a join %s b on a.Z_ID = b.D_ZID ' +
         'where Z_Verified=''%s'' and (Z_InValid<>''%s'' or Z_InValid is null) '+
@@ -727,6 +733,9 @@ begin
         nValue := FieldByName('D_Value').AsFloat;
         {$IFDEF UseCustomertMoney}
         try
+          if FieldByName('Z_OnlyMoney').AsString = 'Y' then
+            nMoney := FieldByName('Z_FixedMoney').AsFloat;
+
           nValue := nMoney / FieldByName('D_Price').AsFloat;
           nValue := Float2PInt(nValue, cPrecision, False) / cPrecision;
         except
@@ -1461,6 +1470,7 @@ function TBusWorkerBusinessWebchat.GetCustomerValidMoney(nCustomer: string): Dou
 var nStr: string;
     nUseCredit: Boolean;
     nVal,nCredit: Double;
+    nZKFrozen: Double;  //纸卡冻结金额
 begin
   Result := 0 ;
   nUseCredit := False;
@@ -1473,6 +1483,9 @@ begin
     nUseCredit := (Fields[0].AsDateTime > Str2Date('2000-01-01')) and
                   (Fields[0].AsDateTime > Now());
   //信用未过期
+
+  nZKFrozen := GetZhiKaFrozen(nCustomer);
+  //纸卡冻结金额
 
   nStr := 'Select * From %s Where A_CID=''%s''';
   nStr := Format(nStr, [sTable_CusAccount, nCustomer]);
@@ -1487,7 +1500,7 @@ begin
     nVal := FieldByName('A_InitMoney').AsFloat + FieldByName('A_InMoney').AsFloat -
             FieldByName('A_OutMoney').AsFloat -
             FieldByName('A_Compensation').AsFloat -
-            FieldByName('A_FreezeMoney').AsFloat;
+            FieldByName('A_FreezeMoney').AsFloat - nZKFrozen;
     //xxxxx
     WriteLog('用户账户金额:'+FloatToStr(nVal));
     nCredit := FieldByName('A_CreditLimit').AsFloat;
@@ -2104,6 +2117,19 @@ begin
   Result := True;
   FOut.FData := nData;
   FOut.FBase.FResult := True;
+end;
+
+function TBusWorkerBusinessWebchat.GetZhiKaFrozen(nCusId: string): Double;
+var
+  nStr: string;
+begin
+  nStr := 'select SUM(Z_FixedMoney)as frozen from %s where Z_InValid<>''%s'' or '+
+          ' Z_InValid is null and Z_OnlyMoney=''%s'' and Z_Customer=''%s''' ;
+  nStr := Format(nStr,[sTable_ZhiKa,sFlag_Yes,sFlag_Yes,nCusId]);
+  with gDBConnManager.WorkerQuery(FDBConn, nStr) do
+  begin
+    Result := fieldbyname('frozen').AsFloat;
+  end;
 end;
 
 initialization

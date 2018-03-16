@@ -355,6 +355,8 @@ var
   nBindcustomerid:string;
   nWechartAccount:string;
   nStr:string;
+  nID,nName,nBindID,nAccount:string;
+  nFListA: TStrings;
 begin
   if cxView1.DataController.GetSelectedCount < 1 then
   begin
@@ -368,17 +370,47 @@ begin
     Exit;
   end;
 
+  nFListA := TStringList.Create;
+
   nParam.FCommand := cCmd_AddData;
   CreateBaseFormItem(cFI_FormGetWechartAccount, PopedomItem, @nParam);
 
-  if (nParam.FCommand = cCmd_ModalResult) and (nParam.FParamA = mrOK) then
+  if (nParam.FCommand <> cCmd_ModalResult) or (nParam.FParamA <> mrOK) then Exit;
+
+  nBindID  := nParam.FParamB;
+  nAccount := nParam.FParamC;
+  nID      := SQLQuery.FieldByName('C_ID').AsString;
+  nName    := SQLQuery.FieldByName('C_Name').AsString;
+
+  with nFListA do
   begin
-    nBindcustomerid := PackerDecodeStr(nParam.FParamB);
-    nWechartAccount := PackerDecodeStr(nParam.FParamC);
+    Clear;
+    Values['Action']   := 'add';
+    Values['BindID']   := nBindID;
+    Values['Account']  := nAccount;
+    Values['CusID']    := nID;
+    Values['CusName']  := nName;
+    Values['Memo']     := sFlag_Sale;
+  end;
+
+  if edit_shopclients(PackerEncodeStr(nFListA.Text)) <> sFlag_Yes then Exit;
+  //call remote
+
+   nStr := 'update %s set C_WechartAccount=''%s'' where C_ID=''%s''';
+  nStr := Format(nStr,[sTable_Customer, nAccount, nID]);
+  FDM.ExecuteSQL(nStr);
+
+  ShowMsg('关联商城账户成功',sHint);
+  InitFormData(FWhere);
+  nFListA.Free;
+  {if (nParam.FCommand = cCmd_ModalResult) and (nParam.FParamA = mrOK) then
+  begin
+    nBindcustomerid := nParam.FParamB;//PackerDecodeStr(nParam.FParamB);
+    nWechartAccount := nParam.FParamC;//PackerDecodeStr(nParam.FParamC);
     nCus_ID := SQLQuery.FieldByName('C_ID').AsString;
     nCusName := SQLQuery.FieldByName('C_Name').AsString;
     if not AddMallUser(nBindcustomerid,nCus_ID,nCusName) then Exit;
-    
+
     nStr := 'update %s set C_WechartAccount=''%s'' where C_ID=''%s''';
     nStr := Format(nStr,[sTable_Customer,nWechartAccount,nCus_ID]);
     FDM.ADOConn.BeginTrans;
@@ -391,7 +423,7 @@ begin
       FDM.ADOConn.RollbackTrans;
       ShowMsg('关联商城账户失败', '未知错误');
     end;
-  end;
+  end; }
 end;
 
 procedure TfFrameCustomer_FP.N6Click(Sender: TObject);
@@ -399,6 +431,8 @@ var
   nWechartAccount:string;
   nStr:string;
   nCus_ID,nCusName:string;
+  nID,nName,nAccount:string;
+  nFListA: TStrings;
 begin
   if cxView1.DataController.GetSelectedCount < 1 then
   begin
@@ -412,7 +446,33 @@ begin
     Exit;
   end;
 
-  nCus_ID := SQLQuery.FieldByName('C_ID').AsString;
+  nAccount := SQLQuery.FieldByName('C_WechartAccount').AsString;
+  nID := SQLQuery.FieldByName('C_ID').AsString;
+  nName := SQLQuery.FieldByName('C_Name').AsString;
+
+  nFListA := TStringList.Create;
+  with nFListA do
+  begin
+    Clear;
+    Values['Action']   := 'del';
+    Values['Account']  := nAccount;
+    Values['CusID']    := nID;
+    Values['CusName']  := nName;
+    Values['Memo']     := sFlag_Sale;
+  end;
+
+  if edit_shopclients(PackerEncodeStr(nFListA.Text)) <> sFlag_Yes then Exit;
+  //call remote
+  nFListA.Free;
+
+  nStr := 'update %s set C_WechartAccount=Null where C_ID=''%s''';
+  nStr := Format(nStr,[sTable_Customer, nID]);
+  FDM.ExecuteSQL(nStr);
+
+  InitFormData(FWhere);
+  ShowMsg('取消商城关联成功！', sHint);
+
+  {nCus_ID := SQLQuery.FieldByName('C_ID').AsString;
   nCusName := SQLQuery.FieldByName('C_Name').AsString;
 
   if not DelMallUser(nWechartAccount, nCus_ID) then Exit;
@@ -427,7 +487,7 @@ begin
   except
     FDM.ADOConn.RollbackTrans;
     ShowMsg('取消商城账户关联 失败', '未知错误');
-  end;
+  end; }
 end;
 
 function TfFrameCustomer_FP.AddMallUser(const nBindcustomerid, nCus_num,

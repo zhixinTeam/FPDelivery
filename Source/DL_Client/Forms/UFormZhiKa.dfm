@@ -1,7 +1,7 @@
 inherited fFormZhiKa: TfFormZhiKa
   Left = 488
   Top = 166
-  Width = 461
+  Width = 476
   Height = 501
   BorderStyle = bsSizeable
   OnClose = FormClose
@@ -9,18 +9,18 @@ inherited fFormZhiKa: TfFormZhiKa
   PixelsPerInch = 96
   TextHeight = 12
   inherited dxLayout1: TdxLayoutControl
-    Width = 445
+    Width = 460
     Height = 463
     OptionsItem.AutoControlAreaAlignment = False
     inherited BtnOK: TButton
-      Left = 299
-      Top = 430
-      TabOrder = 20
-    end
-    inherited BtnExit: TButton
-      Left = 369
+      Left = 314
       Top = 430
       TabOrder = 21
+    end
+    inherited BtnExit: TButton
+      Left = 384
+      Top = 430
+      TabOrder = 22
     end
     object ListDetail: TcxListView [2]
       Left = 23
@@ -62,24 +62,24 @@ inherited fFormZhiKa: TfFormZhiKa
       Width = 123
     end
     object EditPrice: TcxTextEdit [4]
-      Left = 215
+      Left = 224
       Top = 398
       ParentFont = False
       Properties.OnEditValueChanged = EditPricePropertiesEditValueChanged
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
       TabOrder = 17
-      Width = 79
+      Width = 56
     end
     object EditValue: TcxTextEdit [5]
-      Left = 345
+      Left = 331
       Top = 398
       ParentFont = False
       Properties.OnEditValueChanged = EditPricePropertiesEditValueChanged
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
       TabOrder = 18
-      Width = 77
+      Width = 50
     end
     object EditCID: TcxButtonEdit [6]
       Left = 269
@@ -186,7 +186,7 @@ inherited fFormZhiKa: TfFormZhiKa
       Width = 121
     end
     object cxLabel2: TcxLabel [13]
-      Left = 402
+      Left = 417
       Top = 161
       AutoSize = False
       Caption = #20803
@@ -204,7 +204,7 @@ inherited fFormZhiKa: TfFormZhiKa
       ParentFont = False
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
-      TabOrder = 19
+      TabOrder = 20
       Transparent = True
       Width = 142
     end
@@ -281,7 +281,7 @@ inherited fFormZhiKa: TfFormZhiKa
       Transparent = True
       Width = 180
     end
-    object cxCheckBox1: TcxCheckBox [21]
+    object ckSeal: TcxCheckBox [21]
       Left = 208
       Top = 211
       Caption = #24405#20837#23553#31614#21495
@@ -292,6 +292,16 @@ inherited fFormZhiKa: TfFormZhiKa
       TabOrder = 14
       Transparent = True
       Width = 195
+    end
+    object btnBackCash: TButton [22]
+      Left = 386
+      Top = 398
+      Width = 51
+      Height = 20
+      Caption = #35774#32622#36820#29616
+      Enabled = False
+      TabOrder = 19
+      OnClick = btnBackCashClick
     end
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
@@ -405,7 +415,7 @@ inherited fFormZhiKa: TfFormZhiKa
           object dxLayout1Item22: TdxLayoutItem
             CaptionOptions.Text = 'cxCheckBox1'
             CaptionOptions.Visible = False
-            Control = cxCheckBox1
+            Control = ckSeal
             ControlOptions.ShowBorder = False
           end
         end
@@ -444,6 +454,20 @@ inherited fFormZhiKa: TfFormZhiKa
             CaptionOptions.Text = #21150#29702#37327':'
             Control = EditValue
             ControlOptions.ShowBorder = False
+          end
+          object dxLayout1Group8: TdxLayoutGroup
+            AlignHorz = ahRight
+            ButtonOptions.Buttons = <>
+            Hidden = True
+            LayoutDirection = ldHorizontal
+            ShowBorder = False
+            object dxLayout1Item23: TdxLayoutItem
+              CaptionOptions.Text = 'Button1'
+              CaptionOptions.Visible = False
+              Enabled = False
+              Control = btnBackCash
+              ControlOptions.ShowBorder = False
+            end
           end
         end
       end

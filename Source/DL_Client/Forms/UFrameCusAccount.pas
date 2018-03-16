@@ -73,6 +73,8 @@ begin
             ' Left Join $Cus cus On cus.C_ID=ca.A_CID ' +
             ' Left Join $SM sm On sm.S_ID=cus.C_SaleMan ';
   //xxxxx
+  //left join (select Z_Customer,sum(Z_FixedMoney) as Z_FixedMoney from S_ZhiKa where Z_OnlyMoney='Y' and Z_InValid<>'Y' group by Z_Customer ) as fx on C_ID=fx.Z_Customer
+  //zyw 2018-03-06 上面sql语句是统计纸卡限提占用的金额可能会用到
 
   if nWhere = '' then
        Result := Result + 'Where IsNull(C_XuNi, '''')<>''$Yes'''

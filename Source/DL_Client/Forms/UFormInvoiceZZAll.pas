@@ -11,7 +11,7 @@ uses
   Dialogs, UFormNormal, dxLayoutControl, StdCtrls, cxControls, cxMemo,
   cxButtonEdit, cxLabel, cxTextEdit, cxContainer, cxEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, cxGraphics, cxLookAndFeels,
-  cxLookAndFeelPainters, cxRadioGroup;
+  cxLookAndFeelPainters, cxRadioGroup, dxLayoutcxEditAdapters;
 
 type
   TfFormInvoiceZZAll = class(TfFormNormal)
@@ -200,7 +200,7 @@ begin
 
   BtnOK.Enabled := False;
   try
-    EditMemo.Clear;          
+    EditMemo.Clear;
     ZZ_All(nInt > 0);
   except
     on E:Exception do

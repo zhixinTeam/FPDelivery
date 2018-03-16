@@ -41,7 +41,7 @@ function SaveBillCard(const nBill, nCard: string): Boolean;
 //保存交货单磁卡
 function SaveOrderCard(const nOrder, nCard: string): Boolean;
 //保存采购单磁卡
-function GetWebOrderByCard(const nCard: string): Boolean;
+//function GetWebOrderByCard(const nCard: string): Boolean;
 //通过卡号获取商城订单
 
 //推送消息到微信平台
@@ -74,6 +74,7 @@ var nStr: string;
     nPacker: TBusinessPackerBase;
     nWorker: TBusinessWorkerBase;
 begin
+  gSysLoger.AddLog('CallBusinessCommand最前');
   nPacker := nil;
   nWorker := nil;
   try
@@ -94,6 +95,7 @@ begin
     gBusinessPackerManager.RelasePacker(nPacker);
     gBusinessWorkerManager.RelaseWorker(nWorker);
   end;
+  gSysLoger.AddLog('CallBusinessCommand最后');
 end;
 
 //Date: 2014-09-05
@@ -205,14 +207,6 @@ begin
   else gSysLoger.AddLog(TBusinessWorkerManager, '业务对象', nOut.FData);
 end;
 
-//Parm: 磁卡号
-//Desc: 通过卡号取网络订单信息
-function GetWebOrderByCard(const nCard: string): Boolean;
-var nOut: TWorkerBusinessCommand;
-begin
-  Result := CallBusinessSaleBill(cBC_GetWebOrderByCard, nCard, '', @nOut);
-end;
-
 //Parm: 开单数据
 //Desc: 保存交货单,返回交货单号列表
 function SaveBill(const nBillData: string): string;
@@ -275,6 +269,18 @@ begin
   if Result then
        nCardType := nOut.FData
   else gSysLoger.AddLog(TBusinessWorkerManager, '业务对象', nOut.FData);
+  //xxxxx
+end;
+
+//Parm: 磁卡号
+//Desc: 通过卡号取网络订单信息
+function GetWebOrderByCard(const nCard: string): Boolean;
+var nOut: TWorkerBusinessCommand;
+begin
+  gSysLoger.AddLog(TBusinessWorkerManager, '业务对象', '开始进入GetWebOrderByCard');
+  Result := CallBusinessCommand(cBC_GetWebOrderByCard, nCard, '', @nOut);
+  if not Result then
+    gSysLoger.AddLog(TBusinessWorkerManager, '业务对象', nOut.FData);
   //xxxxx
 end;
 
@@ -363,9 +369,12 @@ begin
         nRet := GetLadingOrders(nCard, sFlag_TruckIn, nTrucks)
   else  nRet := GetLadingBills(nCard, sFlag_TruckIn, nTrucks);
 
+  WriteHardHelperLog('zyww::去网上取订单,卡号：'+ncard);
   //去网上取订单
   if not nRet then
+  begin
     nRet := GetWebOrderByCard(nCard);
+  end;
 
   if not nRet then
   begin
@@ -573,6 +582,20 @@ begin
     
     WriteHardHelperLog(nStr, sPost_Out);
     Exit;
+  end;
+
+  //判断是否需要录入封签号
+  for nIdx:=Low(nTrucks) to High(nTrucks) do
+  with nTrucks[nIdx] do
+  begin
+    if FMustSeal and (FSeal = '') then
+    begin
+      nStr := '车辆[ %s ] 必须录入封签号.';
+      nStr := Format(nStr, [FTruck, TruckStatusToStr(FNextStatus)]);
+    
+      WriteHardHelperLog(nStr, sPost_Out);
+      Exit;
+    end;
   end;
 
   if nCardType = sFlag_Provide then
@@ -1036,7 +1059,7 @@ begin
     Result := False;
     SyncLock.Enter;
     nIdx := GetLine(nTunnel);
-    //WriteNearReaderLog('zyww::准备开启计数');
+
     if nIdx < 0 then
     begin
       nHint := Format('通道[ %s ]无效.', [nTunnel]);
@@ -1059,11 +1082,8 @@ begin
       PTruckItem(nPLine.FTrucks[nIdx]).FStarted := False;
     nPTruck.FStarted := True;
 
-    //WriteNearReaderLog('zyww::开启计数1');
-
     if PrintBillCode(nTunnel, nBill, nHint) and nAddJS then
     begin
-      //WriteNearReaderLog('zyww::进入开启计数');
       nTask := gTaskMonitor.AddTask('UHardBusiness.AddJS', cTaskTimeoutLong);
       //to mon
 

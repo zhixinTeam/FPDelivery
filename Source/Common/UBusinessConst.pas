@@ -192,6 +192,8 @@ type
     FHYDan      : string;          //化验单号
     FMemo       : string;          //动作备注
     FTestNo     : string;          //化验编号
+    FSeal       : string;          //封签号
+    FMustSeal   : Boolean;         //必须录入封签号
   end;
 
   TLadingBillItems = array of TLadingBillItem;

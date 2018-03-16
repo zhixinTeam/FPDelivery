@@ -28,6 +28,8 @@ inherited fFormInvoiceZZAll: TfFormInvoiceZZAll
       ParentFont = False
       Properties.MaxLength = 0
       Properties.ScrollBars = ssVertical
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       Style.Edges = [bLeft, bTop, bRight, bBottom]
       TabOrder = 2
       Height = 45
@@ -44,6 +46,9 @@ inherited fFormInvoiceZZAll: TfFormInvoiceZZAll
         end>
       Properties.ReadOnly = True
       Properties.OnButtonClick = EditWeekPropertiesButtonClick
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
+      Style.ButtonStyle = btsHotFlat
       TabOrder = 0
       OnKeyPress = OnCtrlKeyPress
       Width = 121
@@ -61,22 +66,21 @@ inherited fFormInvoiceZZAll: TfFormInvoiceZZAll
     end
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
-        Caption = #36873#39033
+        CaptionOptions.Text = #36873#39033
         object dxLayout1Item3: TdxLayoutItem
-          Caption = #32467#31639#21608#26399':'
+          CaptionOptions.Text = #32467#31639#21608#26399':'
           Control = EditWeek
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item4: TdxLayoutItem
-          Caption = 'cxLabel1'
-          ShowCaption = False
+          CaptionOptions.Text = 'cxLabel1'
+          CaptionOptions.Visible = False
           Control = cxLabel1
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item12: TdxLayoutItem
-          AutoAligns = [aaHorizontal]
           AlignVert = avClient
-          Caption = #25552#31034#20449#24687':'
+          CaptionOptions.Text = #25552#31034#20449#24687':'
           CaptionOptions.Layout = clTop
           Control = EditMemo
           ControlOptions.ShowBorder = False

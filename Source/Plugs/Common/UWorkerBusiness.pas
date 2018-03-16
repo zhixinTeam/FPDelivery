@@ -158,7 +158,7 @@ type
 
     //获取车辆最大限载值
     function GetLimitValue(var nData:string):Boolean;
-    function GetshoporderbyTruck(const nData: string): string;
+    function GetshoporderbyTruck_2(const nData: string): string;
     //根据车牌号获取订单
 
     //获取网上下单信息
@@ -166,6 +166,8 @@ type
 
     function SaveWebOrderMatch(const nBillID,nWebOrderID,nBillType:string):Boolean;
     //保存网络订单信息，供微信中间件推消息
+
+    function GetZhiKaFrozen(nCusId: string):Double;
   public
     constructor Create; override;
     destructor destroy; override;
@@ -180,7 +182,7 @@ type
 
 implementation
 uses
-  UMgrQueue, UWorkerClientWebChat,UHardBusiness;
+  UMgrQueue, UHardBusiness, UWorkerClientWebChat, UCallWXServer;
 
 class function TBusWorkerQueryField.FunctionName: string;
 begin
@@ -679,7 +681,7 @@ end;
 function TWorkerBusinessCommander.GetCustomerValidMoney(var nData: string): Boolean;
 var nStr: string;
     nUseCredit: Boolean;
-    nVal,nCredit: Double;
+    nVal,nCredit, nZKFrozen: Double;
 begin
   nUseCredit := False;
   if FIn.FExtParam = sFlag_Yes then
@@ -693,6 +695,8 @@ begin
                     (Fields[0].AsDateTime > Now());
     //信用未过期
   end;
+
+  nZKFrozen := GetZhiKaFrozen(FIn.FData); //纸卡冻结金额
 
   nStr := 'Select * From %s Where A_CID=''%s''';
   nStr := Format(nStr, [sTable_CusAccount, FIn.FData]);
@@ -711,7 +715,7 @@ begin
     nVal := FieldByName('A_InitMoney').AsFloat + FieldByName('A_InMoney').AsFloat -
             FieldByName('A_OutMoney').AsFloat -
             FieldByName('A_Compensation').AsFloat -
-            FieldByName('A_FreezeMoney').AsFloat;
+            FieldByName('A_FreezeMoney').AsFloat - nZKFrozen;
     //xxxxx
 
     nCredit := FieldByName('A_CreditLimit').AsFloat;
@@ -733,7 +737,8 @@ end;
 //Desc: 获取指定纸卡的可用金额
 function TWorkerBusinessCommander.GetZhiKaValidMoney(var nData: string): Boolean;
 var nStr: string;
-    nVal,nMoney,nCredit: Double;
+    nVal,nMoney,nCredit, nFrozen: Double;
+    nCusId: string;
 begin
   nStr := 'Select ca.*,Z_OnlyMoney,Z_FixedMoney From $ZK,$CA ca ' +
           'Where Z_ID=''$ZID'' and A_CID=Z_Customer';
@@ -763,10 +768,13 @@ begin
 
     nCredit := FieldByName('A_CreditLimit').AsFloat;
     nCredit := Float2PInt(nCredit, cPrecision, False) / cPrecision;
+    nCusId := FieldByName('A_CID').AsString;
+
+    nFrozen := GetZhiKaFrozen(nCusId);
 
     nStr := 'Select MAX(C_End) From %s ' +
             'Where C_CusID=''%s'' and C_Money>=0 and C_Verify=''%s''';
-    nStr := Format(nStr, [sTable_CusCredit, FieldByName('A_CID').AsString,
+    nStr := Format(nStr, [sTable_CusCredit, nCusId,
             sFlag_Yes]);
     //xxxxx
 
@@ -781,12 +789,16 @@ begin
     nVal := Float2PInt(nVal, cPrecision, False) / cPrecision;
     //total money
 
+    {原版备份
     if FOut.FExtParam = sFlag_Yes then
     begin
       if nMoney > nVal then
         nMoney := nVal;
       //enough money
-    end else nMoney := nVal;
+    end else nMoney := nVal;}
+
+    if FOut.FExtParam <> sFlag_Yes then
+      nMoney := nVal - nFrozen;
 
     FOut.FData := FloatToStr(nMoney);
     Result := True;
@@ -3091,6 +3103,7 @@ var
   nWebOrderValue, MaxQuantity:Double;
 begin
   Result := True;
+
   nStr := 'Select * From %s Where T_Card=''%s''';
   nStr := Format(nStr, [sTable_Truck, FIn.FData]);
   with gDBConnManager.WorkerQuery(FDBConn, nStr) do
@@ -3100,17 +3113,18 @@ begin
       nMsg := '磁卡[ %s ]未绑定车辆或卡号不存在.';
       nMsg := Format(nMsg,[FIn.FData]);
       WriteLog(nMsg);
+      nData := nMsg;
       Result := False;
       Exit;
     end;
-
     //拿车牌号去网上商城查询订单
     nTruck := FieldByName('T_Truck').AsString;
-    nStr := GetshoporderbyTruck(PackerEncodeStr(nTruck));
+    nStr := GetshoporderbyTruck_2(PackerEncodeStr(nTruck));
 
     if nStr = '' then
     begin
       Writelog('未查询到网上商城订单详细信息，请检查订单号是否正确');
+      nData := '未查询到网上商城订单详细信息，请检查订单号是否正确';
       Result := False;
       Exit;
     end;
@@ -3129,11 +3143,11 @@ begin
         nMsg := '订单[ %s ]已成功办卡，请勿重复操作.';
         nMsg := Format(nMsg,[nList.Values['ordernumber']]);
         WriteLog(nMsg);
+        nData := nMsg;
         Result := False;
         Exit;
       end;
     end;
-
     if nList.Values['order_type'] = 'S' then
     begin
       //销售单
@@ -3141,7 +3155,8 @@ begin
         nTmp := TStringList.Create;
         nListBill := TStringList.Create;
 
-        nSQL := 'select Z_Customer,D_Price,D_StockName,D_Type from %s a join %s b on a.Z_ID = b.D_ZID ' +
+        nSQL := 'select Z_Customer,D_Price,D_StockName,D_Type,Z_PrintHy,Z_Seal '+
+                'from %s a join %s b on a.Z_ID = b.D_ZID ' +
                 'where Z_ID=''%s'' and D_StockNo=''%s'' ';
         nSQL := Format(nSQL,[sTable_ZhiKa,sTable_ZhiKaDtl,nlist.Values['fac_order_no'],nlist.Values['goodsID']]);
 
@@ -3152,6 +3167,7 @@ begin
             nMsg := '纸卡[%s]不存在或者已经被删除.';
             nMsg := Format(nMsg,[nList.Values['fac_order_no']]);
             WriteLog(nMsg);
+            nData := nMsg;
             Result := False;
             Exit;
           end;
@@ -3160,6 +3176,10 @@ begin
           nTmp.Values['StockName'] := FieldByName('D_StockName').AsString;
           nTmp.Values['Price'] := FieldByName('D_Price').AsString;
           nTmp.Values['Value'] := nlist.Values['data'];
+
+          if FieldByName('Z_PrintHy').AsBoolean then
+               nTmp.Values['PrintHY'] := sFlag_Yes
+          else nTmp.Values['PrintHY'] := sFlag_No;
 
           nListBill.Add(PackerEncodeStr(nTmp.Text));
 
@@ -3174,9 +3194,12 @@ begin
             Values['Seal'] := '';
             Values['HYDan'] := '';
             Values['WebOrderID'] := nList.Values['ordernumber'];
+
+            if FieldByName('Z_Seal').AsBoolean then
+                 Values['MustSeal'] := '1'
+            else Values['MustSeal'] := '0';
           end;
         end;
-
         nBillData := PackerEncodeStr(nListBill.Text);
         FBegin := Now;
         nBillID := SaveBill(nBillData);
@@ -3185,19 +3208,19 @@ begin
           nMsg := '保存商城订单[ %s ]失败.';
           nMsg := Format(nMsg,[nList.Values['ordernumber']]);
           writelog('保存订单失败');
+          nData := nMsg;
           Result := False;
           Exit;
         end;
-
         if not SaveBillCard(nBillID,FIn.FData) then
         begin
           nMsg := '保存订单[ %s ]的磁卡信息[ %s ]失败.';
           nMsg := Format(nMsg,[nBillID, FIn.FData]);
           writelog('保存订单失败');
+          nData := nMsg;
           Result := False;
           Exit;
         end;
-
         WriteLog('TfFormNewCard.SaveBillProxy 生成提货单['+nBillID+']-耗时：'+InttoStr(MilliSecondsBetween(Now, FBegin))+'ms');
         FBegin := Now;
         SaveWebOrderMatch(nBillID, nList.Values['ordernumber'] ,sFlag_Sale);
@@ -3228,6 +3251,7 @@ begin
           nMsg := '采购合同编号有误或采购合同已被删除[%s]。';
           nMsg := Format(nMsg,[nList.Values['fac_order_no']]);
           WriteLog(nMsg);
+          nData := nMsg;
           Result := False;
           Exit;
         end;
@@ -3237,6 +3261,7 @@ begin
           nMsg := '商城货单中原材料[ %s ]有误。';
           nMsg := Format(nMsg,[nList.Values['goodsID']]);
           Writelog(nMsg);
+          nData := nMsg;
           Result := False;
           Exit;
         end;
@@ -3248,6 +3273,7 @@ begin
           nMsg := '商城货单中提货数量有误，最多可提货数量为[%f]。';
           nMsg := Format(nMsg,[MaxQuantity]);
           Writelog(nMsg);
+          nData := nMsg;
           Result := False;
           Exit;
         end;
@@ -3279,6 +3305,7 @@ begin
           nMsg := '保存商城采购单[ %s ]失败';
           nMsg := Format(nMsg,[nList.Values['ordernumber']]);
           Writelog(nMsg);
+          nData := nMsg;
           Result := False;
           Exit;
         end;
@@ -3288,6 +3315,7 @@ begin
           nMsg := '保存采购单[ %s ]的磁卡信息[ %s ]失败';
           nMsg := Format(nMsg,[nBillID,FIn.FData]);
           Writelog(nMsg);
+          nData := nMsg;
           Result := False;
           Exit;
         end;
@@ -3324,19 +3352,17 @@ begin
     nIn.FData := nData;
     nIn.FExtParam := nExt;
     nIn.FRemoteUL := nSrvURL;
-
     if nWarn then
          nIn.FBase.FParam := ''
     else nIn.FBase.FParam := sParam_NoHintOnError;
 
     //if gSysParam.FAutoPound and (not gSysParam.FIsManual) then
-      nIn.FBase.FParam := sParam_NoHintOnError;
+    //  nIn.FBase.FParam := sParam_NoHintOnError;
     //close hint param
     
     nWorker := gBusinessWorkerManager.LockWorker(sCLI_BusinessWebchat);
     //get worker
     Result := nWorker.WorkActive(@nIn, nOut);
-
     if not Result then
       gSysLoger.AddLog(nOut.FBase.FErrDesc);
     //xxxxx
@@ -3346,12 +3372,16 @@ begin
 end;
 
 //根据车牌号获取订单
-function TWorkerBusinessCommander.GetshoporderbyTruck(const nData: string): string;
+function TWorkerBusinessCommander.GetshoporderbyTruck_2(const nData: string): string;
 var nOut: TWorkerBusinessCommand;
 begin
   if CallBusinessWechat(cBC_WX_get_shoporderbyTruck, nData, '', '', @nOut) then
        Result := nOut.FData
   else Result := '';
+
+  {if CallRemoteWorker(sCLI_BusinessWebchat, FIn.FData, '', @nOut,cBC_WX_get_shoporderbyTruck) then
+       Result := nOut.FData
+  else Result := '';}
 end;
 
 function TWorkerBusinessCommander.SaveWebOrderMatch(const nBillID,
@@ -3370,6 +3400,19 @@ begin
         ], sTable_WebOrderMatch, '', True);
 
   gDBConnManager.WorkerExec(FDBConn, nStr);
+end;
+
+function TWorkerBusinessCommander.GetZhiKaFrozen(nCusId: string): Double;
+var
+  nStr: string;
+begin
+  nStr := 'select SUM(Z_FixedMoney)as frozen from %s where Z_InValid<>''%s'' or '+
+          ' Z_InValid is null and Z_OnlyMoney=''%s'' and Z_Customer=''%s''' ;
+  nStr := Format(nStr,[sTable_ZhiKa,sFlag_Yes,sFlag_Yes,nCusId]);
+  with gDBConnManager.WorkerQuery(FDBConn, nStr) do
+  begin
+    Result := fieldbyname('frozen').AsFloat;
+  end;
 end;
 
 initialization

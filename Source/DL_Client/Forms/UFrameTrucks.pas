@@ -312,7 +312,7 @@ begin
       FDM.ExecuteSQL(nSQL);
 
       //同步状态到商城
-      {nList := TStrings.Create;
+      nList := TStringList.Create;
       with nList do
       begin
         Clear;
@@ -322,7 +322,7 @@ begin
         Values['Man']  := gSysParam.FUserID;
         Values['Type']     := '0';
       end;
-      if UpLoadAuditTruck(PackerEncodeStr(nList.Text)) <> sFlag_Yes then Exit;}
+      if UpLoadAuditTruck(PackerEncodeStr(nList.Text)) <> sFlag_Yes then Exit;
       //call remote 同步到微信端
 
       nStr := '取消车辆 [ '+ nTruck +' ]与磁卡[ '+nStr+' ]的关联';
@@ -334,7 +334,7 @@ begin
       ShowMsg(nStr, sHint);
     except
       FDM.ADOConn.RollbackTrans;
-      ShowMsg(nStr, sHint);
+      ShowMsg('取消关联失败.', sHint);
     end;
   end;
 end;

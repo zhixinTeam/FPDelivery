@@ -340,6 +340,9 @@ const
   sTable_WebOrderMatch= 'S_WebOrderMatch';           //商城订单映射
   sTable_AdjustMoney  = 'S_AdjustMoney';             //金额调拨表
   sTable_BackCashRule = 'S_BackCashRule';            //返现
+  sTable_BackCashRuleTmp = 'S_BackCashRuleTmp';      //返现临时表
+  sTable_BackRecord      = 'S_BackRecord';           //返现记录表
+
 
   {*新建表*}
   sSQL_NewSysDict = 'Create Table $Table(D_ID $Inc, D_Name varChar(15),' +
@@ -679,7 +682,8 @@ const
        'Z_Verified Char(1), Z_InValid Char(1), Z_Freeze Char(1),' +
        'Z_YFMoney $Float, Z_FixedMoney $Float, Z_OnlyMoney Char(1),' +
        'Z_TJStatus Char(1), Z_Memo varChar(200), Z_Man varChar(32),' +
-       'Z_Date DateTime, Z_FPType Integer, Z_Freight $Float)';
+       'Z_Date DateTime, Z_FPType Integer, Z_Freight $Float, Z_PrintHy bit,'+
+       'Z_Seal bit)';
   {-----------------------------------------------------------------------------
    纸卡办理: ZhiKa
    *.R_ID:记录编号
@@ -744,7 +748,7 @@ const
        'L_Man varChar(32), L_Date DateTime,' +
        'L_DelMan varChar(32), L_DelDate DateTime, L_KZValue $Float,'+
        'L_KZMan varchar(50), L_KZDate DateTime, L_FPType Integer,'+
-       'L_Freight $Float)';
+       'L_Freight $Float, L_MustSeal bit)';
   {-----------------------------------------------------------------------------
    交货单表: Bill
    *.R_ID: 编号
@@ -1503,6 +1507,23 @@ const
    *.B_User: 操作员
    *.
   -----------------------------------------------------------------------------}
+  sSQL_NewBackRecord = 'Create Table $Table(R_ID $Inc,R_WeekNo varchar(20),'
+      +'R_WeekName varchar(20),R_CusId varchar(30),R_ZhiKa varchar(30),'
+      +'R_StockNo varchar(30),R_Rule $Float,R_Total $Float, R_Value $Float, R_Date Datetime,'
+      +'R_User varchar(30),R_Valid char(1))';
+  {-----------------------------------------------------------------------------
+   返现记录表: BackRecord
+   *.R_ID: 记录编号
+   *.R_CusId:客户编号
+   *.R_ZhiKa: 纸卡编号
+   *.R_StockNo: 物料编号
+   *.R_LeaveL: 返现下限
+   *.R_LeaveH: 返现上限
+   *.R_Value: 返现金额
+   *.R_Date: 日期
+   *.R_User: 操作员
+   *.R_Valid:是否有效 Y=无效
+  -----------------------------------------------------------------------------}
 
 function CardStatusToStr(const nStatus: string): string;
 //磁卡状态
@@ -1641,6 +1662,8 @@ begin
   AddSysTableItem(sTable_AdjustMoney,sSQL_NewAdjustMoney);
   AddSysTableItem(sTable_AuditTruck, sSQL_NewAuditTruck);
   AddSysTableItem(sTable_BackCashRule, sSQL_NewBackCashRule);
+  AddSysTableItem(sTable_BackCashRuleTmp, sSQL_NewBackCashRule);
+  AddSysTableItem(sTable_BackRecord, sSQL_NewBackRecord);
 end;
 
 //Desc: 清理系统表
