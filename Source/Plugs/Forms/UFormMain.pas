@@ -13,7 +13,7 @@ uses
   cxLookAndFeelPainters, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinsdxNavBar2Painter, cxContainer, cxEdit,
   ExtCtrls, ComCtrls, cxLabel, dxNavBarCollns, cxClasses, dxNavBarBase,
-  dxNavBar, cxLookAndFeels;
+  dxNavBar, cxLookAndFeels, StdCtrls;
 
 type
   TfFormMain = class(TForm)
@@ -147,6 +147,7 @@ begin
 
       FAdminKeep := nIni.ReadInteger('System', 'AdminKeep', 60);
       FAutoMin := nIni.ReadBool('System', 'AutoMin', False);
+      FGPWSURL := nIni.ReadString('System', 'GPWSURL', '');
     end;
 
      LoadFormConfig(Self, nIni);

@@ -369,7 +369,7 @@ begin
         nStr := '车辆[ %s ]有已出队的交货单[ %s ],需先处理.';
         nData := Format(nStr, [nTruck, FieldByName('T_Bill').AsString]);
         Exit;
-      end; 
+      end;
 
       with FMatchItems[nIdx] do
       begin
@@ -464,7 +464,11 @@ var nIdx: Integer;
 begin
   Result := False;
   FListA.Text := PackerDecodeStr(FIn.FData);
-  if not VerifyBeforSave(nData) then Exit;
+  if not VerifyBeforSave(nData) then
+  begin
+    writelog('验证开单信息失败,原因:'+nData);
+    Exit;
+  end;
 
   if not TWorkerBusinessCommander.CallMe(cBC_GetZhiKaMoney,
             FListA.Values['ZhiKa'], '', @nOut) then
@@ -1826,37 +1830,12 @@ begin
   begin
     if RecordCount < 1 then
     begin
-      //原代码备份
       if nIsBill then
            nData := '交货单[ %s ]已无效.'
       else nData := '磁卡号[ %s ]没有交货单.';
 
       nData := Format(nData, [FIn.FData]);
       Exit;
-      
-      {if nIsBill then
-      begin
-        nData := '交货单[ %s ]已无效.';
-        nData := Format(nData, [FIn.FData]);
-        Exit;
-      end
-      else
-      begin
-        nStr := 'Select * From %s Where T_Card=''%s''';
-        nStr := Format(nStr, [sTable_Truck,FIn.FData]);
-        with gDBConnManager.WorkerQuery(FDBConn, nStr) do
-        begin
-          if RecordCount < 1 then
-          begin
-            nData := '磁卡号[ %s ]没有交货单.';
-            nData := Format(nData, [FIn.FData]);
-            Exit;
-          end;
-
-          //拿车牌号去网上商城查询订单
-          nTruck := FieldByName('T_Truck').AsString;
-        end;
-      end;}
     end;
 
     SetLength(nBills, RecordCount);

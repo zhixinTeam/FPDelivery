@@ -670,6 +670,7 @@ begin
   {$ENDIF}
 
   nStr := 'select D_ZID,' +                     //销售卡片编号
+        '  Z_Name ' +                           //纸卡名称
         '  D_Type,' +                           //类型(袋,散)
         '  D_StockNo,' +                        //水泥编号
         '  D_StockName,' +                      //水泥名称
@@ -729,6 +730,7 @@ begin
         NodeNew('BillNumber').ValueAsString := FieldByName('D_ZID').AsString;
         NodeNew('StockNo').ValueAsString    := FieldByName('D_StockNo').AsString;
         NodeNew('StockName').ValueAsString  := FieldByName('D_StockName').AsString;
+        NodeNew('BillName').ValueAsString   := FieldByName('Z_Name').AsString;
 
         nValue := FieldByName('D_Value').AsFloat;
         {$IFDEF UseCustomertMoney}

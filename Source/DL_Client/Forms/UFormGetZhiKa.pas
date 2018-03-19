@@ -11,7 +11,7 @@ uses
   UFormNormal, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, ComCtrls, cxListView,
   cxDropDownEdit, cxTextEdit, cxMaskEdit, cxButtonEdit, cxMCListBox,
-  dxLayoutControl, StdCtrls;
+  dxLayoutControl, StdCtrls, dxLayoutcxEditAdapters;
 
 type
   TfFormGetZhiKa = class(TfFormNormal)
@@ -162,9 +162,9 @@ begin
   //----------------------------------------------------------------------------
   nStr := 'Z_ID=Select Z_ID, Z_Name From %s ' +
           'Where Z_Customer=''%s'' And Z_ValidDays>%s And ' +
-          'IsNull(Z_InValid, '''')<>''%s'' And ' +
-          'IsNull(Z_Freeze, '''')<>''%s'' Order By Z_ID';
-  nStr := Format(nStr, [sTable_ZhiKa, nID, sField_SQLServer_Now, sFlag_Yes, sFlag_Yes]);
+          'IsNull(Z_InValid, '''')<>''%s'' And ' +      
+          'IsNull(Z_Freeze, '''')<>''%s'' and Z_Verified=''%s'' Order By Z_ID';
+  nStr := Format(nStr, [sTable_ZhiKa, nID, sField_SQLServer_Now,sFlag_Yes, sFlag_Yes, sFlag_Yes]);
 
   with EditZK.Properties do
   begin

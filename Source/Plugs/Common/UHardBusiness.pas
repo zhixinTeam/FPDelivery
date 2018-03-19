@@ -55,6 +55,8 @@ function Do_ModifyWebOrderStatus(const nXmlStr: string): string;
 
 procedure PustMsgToWeb(nList,nFactId,nBillType:string);
 
+function GetWebOrderByCard(const nCard: string): Boolean;
+
 implementation
 
 uses
@@ -74,7 +76,6 @@ var nStr: string;
     nPacker: TBusinessPackerBase;
     nWorker: TBusinessWorkerBase;
 begin
-  gSysLoger.AddLog('CallBusinessCommand最前');
   nPacker := nil;
   nWorker := nil;
   try
@@ -95,7 +96,6 @@ begin
     gBusinessPackerManager.RelasePacker(nPacker);
     gBusinessWorkerManager.RelaseWorker(nWorker);
   end;
-  gSysLoger.AddLog('CallBusinessCommand最后');
 end;
 
 //Date: 2014-09-05
@@ -277,7 +277,6 @@ end;
 function GetWebOrderByCard(const nCard: string): Boolean;
 var nOut: TWorkerBusinessCommand;
 begin
-  gSysLoger.AddLog(TBusinessWorkerManager, '业务对象', '开始进入GetWebOrderByCard');
   Result := CallBusinessCommand(cBC_GetWebOrderByCard, nCard, '', @nOut);
   if not Result then
     gSysLoger.AddLog(TBusinessWorkerManager, '业务对象', nOut.FData);
@@ -369,11 +368,19 @@ begin
         nRet := GetLadingOrders(nCard, sFlag_TruckIn, nTrucks)
   else  nRet := GetLadingBills(nCard, sFlag_TruckIn, nTrucks);
 
-  WriteHardHelperLog('zyww::去网上取订单,卡号：'+ncard);
   //去网上取订单
   if not nRet then
   begin
     nRet := GetWebOrderByCard(nCard);
+  end;
+
+  if nRet then
+  begin
+    if not GetCardUsed(nCard, nCardType) then Exit;
+    
+    if nCardType = sFlag_Provide then
+          nRet := GetLadingOrders(nCard, sFlag_TruckIn, nTrucks)
+    else  nRet := GetLadingBills(nCard, sFlag_TruckIn, nTrucks);
   end;
 
   if not nRet then

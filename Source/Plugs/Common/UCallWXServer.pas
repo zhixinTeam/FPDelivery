@@ -74,17 +74,16 @@ var nStr: string;
     nParam: string;
     nArray: TDynamicStrArray;
 begin
-  writelog('zyww::doWork');
-  with PBWDataBase(nIn)^ do
+  with PBWDataBase(nIn)^,gSysParam do
   begin
     nParam := FParam;
     FPacker.InitData(nIn, True, False);
 
     with FFrom do
     begin
-      FUser   := 'zyww';
-      FIP     := '192.168.39.250';
-      FMAC    := '11-22-33-44-55-66';
+      FUser   := 'MitServer';
+      FIP     := FLocalIP;
+      FMAC    := FLocalMAC;
       FTime   := Now;
       FKpLong := GetTickCount;
     end;
@@ -108,7 +107,7 @@ begin
   with PBWDataBase(nOut)^ do
   begin
     nStr := 'User:[ %s ] FUN:[ %s ] TO:[ %s ] KP:[ %d ]';
-    nStr := Format(nStr, ['zyww', FunctionName, FVia.FIP,
+    nStr := Format(nStr, ['MitServer', FunctionName, FVia.FIP,
             GetTickCount - FWorkTimeInit]);
     WriteLog(nStr);
 
@@ -167,7 +166,7 @@ end;
 //Desc: 强制指定服务地址
 function TClient2MITWorker.GetFixedServiceURL: string;
 begin
-  Result := '';
+  Result := gSysParam.FGPWSURL;
 end;
 
 //Date: 2012-3-9
@@ -189,13 +188,14 @@ begin
     with nChannel^ do
     while True do
     try
-      if not Assigned(FChannel) then
-        FChannel := CoSrvWebchat.Create(FMsg, FHttp);
+      //if not Assigned(FChannel) then
+      //  FChannel := CoSrvWebchat.Create(FMsg, FHttp);
       //xxxxx
 
-      if GetFixedServiceURL = '' then
-           FHttp.TargetURL := gChannelChoolser.ActiveURL
-      else FHttp.TargetURL := GetFixedServiceURL;
+      if not Assigned(FChannel) then
+        FChannel := CoSrvBusiness.Create(FMsg, FHttp);
+        
+      FHttp.TargetURL := gSysParam.FGPWSURL;
 
       Result := ISrvWebChat(FChannel).Action(GetFlagStr(cWorker_GetMITName),
                                               nData);
@@ -217,54 +217,6 @@ begin
     gChannelManager.ReleaseChannel(nChannel);
   end;
 end;
-
-//Date: 2012-3-9
-//Parm: 入参数据
-//Desc: 连接MIT执行具体业务
-{function TClient2MITWorker.MITWork(var nData: string): Boolean;
-var nChannel: PChannelItem;
-begin
-  Result := False;
-  nChannel := nil;
-  try
-    nChannel := gChannelManager.LockChannel(cBus_Channel_Business);
-    if not Assigned(nChannel) then
-    begin
-      nData := '连接MIT服务失败(BUS-MIT No Channel).';
-      Exit;
-    end;
-
-    with nChannel^ do
-    while True do
-    try
-      if not Assigned(FChannel) then
-        FChannel := CoSrvBusiness.Create(FMsg, FHttp);
-      //xxxxx
-
-      if GetFixedServiceURL = '' then
-           FHttp.TargetURL := gChannelChoolser.ActiveURL
-      else FHttp.TargetURL := GetFixedServiceURL;
-
-      Result := ISrvBusiness(FChannel).Action(GetFlagStr(cWorker_GetMITName),
-                                              nData);
-      //call mit funciton
-      Break;
-    except
-      on E:Exception do
-      begin
-        if (GetFixedServiceURL <> '') or
-           (gChannelChoolser.GetChannelURL = FHttp.TargetURL) then
-        begin
-          nData := Format('%s(BY %s ).', [E.Message, '业务中间件']);
-          WriteLog('Function:[ ' + FunctionName + ' ]' + E.Message);
-          Exit;
-        end;
-      end;
-    end;
-  finally
-    gChannelManager.ReleaseChannel(nChannel);
-  end;
-end; }
 
 //------------------------------------------------------------------------------
 class function TClientBusinessWechat.FunctionName: string;

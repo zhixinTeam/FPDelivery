@@ -11,7 +11,7 @@ uses
   UFormNormal, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, cxDropDownEdit, cxMemo,
   cxButtonEdit, cxLabel, cxTextEdit, cxMaskEdit, cxCalendar,
-  dxLayoutControl, StdCtrls;
+  dxLayoutControl, StdCtrls, dxLayoutcxEditAdapters;
 
 type
   TfFormShouJu = class(TfFormNormal)
@@ -204,7 +204,7 @@ begin
   EditMan.Text := gSysParam.FUserID;
 
   if EditBank.Properties.Items.Count < 1 then
-    LoadSysDictItem(sFlag_BankItem, EditBank.Properties.Items);
+    LoadSysDictItem(sFlag_PaymentItem2, EditBank.Properties.Items);
   //xxxxx
   
   if nID = '' then

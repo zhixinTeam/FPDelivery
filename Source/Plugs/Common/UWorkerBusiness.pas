@@ -3118,6 +3118,7 @@ begin
       Exit;
     end;
     //拿车牌号去网上商城查询订单
+
     nTruck := FieldByName('T_Truck').AsString;
     nStr := GetshoporderbyTruck_2(PackerEncodeStr(nTruck));
 
@@ -3142,7 +3143,6 @@ begin
       begin
         nMsg := '订单[ %s ]已成功办卡，请勿重复操作.';
         nMsg := Format(nMsg,[nList.Values['ordernumber']]);
-        WriteLog(nMsg);
         nData := nMsg;
         Result := False;
         Exit;
@@ -3166,7 +3166,6 @@ begin
           begin
             nMsg := '纸卡[%s]不存在或者已经被删除.';
             nMsg := Format(nMsg,[nList.Values['fac_order_no']]);
-            WriteLog(nMsg);
             nData := nMsg;
             Result := False;
             Exit;
@@ -3202,12 +3201,14 @@ begin
         end;
         nBillData := PackerEncodeStr(nListBill.Text);
         FBegin := Now;
+
+        writelog('zyww::SaveBill保存订单');
+
         nBillID := SaveBill(nBillData);
         if nBillID = '' then
         begin
           nMsg := '保存商城订单[ %s ]失败.';
           nMsg := Format(nMsg,[nList.Values['ordernumber']]);
-          writelog('保存订单失败');
           nData := nMsg;
           Result := False;
           Exit;
@@ -3216,7 +3217,6 @@ begin
         begin
           nMsg := '保存订单[ %s ]的磁卡信息[ %s ]失败.';
           nMsg := Format(nMsg,[nBillID, FIn.FData]);
-          writelog('保存订单失败');
           nData := nMsg;
           Result := False;
           Exit;
@@ -3250,7 +3250,6 @@ begin
         begin
           nMsg := '采购合同编号有误或采购合同已被删除[%s]。';
           nMsg := Format(nMsg,[nList.Values['fac_order_no']]);
-          WriteLog(nMsg);
           nData := nMsg;
           Result := False;
           Exit;
@@ -3260,7 +3259,6 @@ begin
         begin
           nMsg := '商城货单中原材料[ %s ]有误。';
           nMsg := Format(nMsg,[nList.Values['goodsID']]);
-          Writelog(nMsg);
           nData := nMsg;
           Result := False;
           Exit;
@@ -3272,7 +3270,6 @@ begin
         begin
           nMsg := '商城货单中提货数量有误，最多可提货数量为[%f]。';
           nMsg := Format(nMsg,[MaxQuantity]);
-          Writelog(nMsg);
           nData := nMsg;
           Result := False;
           Exit;
@@ -3304,7 +3301,6 @@ begin
         begin
           nMsg := '保存商城采购单[ %s ]失败';
           nMsg := Format(nMsg,[nList.Values['ordernumber']]);
-          Writelog(nMsg);
           nData := nMsg;
           Result := False;
           Exit;
@@ -3314,7 +3310,6 @@ begin
         begin
           nMsg := '保存采购单[ %s ]的磁卡信息[ %s ]失败';
           nMsg := Format(nMsg,[nBillID,FIn.FData]);
-          Writelog(nMsg);
           nData := nMsg;
           Result := False;
           Exit;
@@ -3378,10 +3373,6 @@ begin
   if CallBusinessWechat(cBC_WX_get_shoporderbyTruck, nData, '', '', @nOut) then
        Result := nOut.FData
   else Result := '';
-
-  {if CallRemoteWorker(sCLI_BusinessWebchat, FIn.FData, '', @nOut,cBC_WX_get_shoporderbyTruck) then
-       Result := nOut.FData
-  else Result := '';}
 end;
 
 function TWorkerBusinessCommander.SaveWebOrderMatch(const nBillID,
