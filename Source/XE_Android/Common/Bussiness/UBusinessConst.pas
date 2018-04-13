@@ -78,6 +78,7 @@ const
   cBC_SyncStockBill           = $0082;   //同步单据到远程
   cBC_CheckStockValid         = $0083;   //验证是否允许发货
   cBC_GetTestNo               = $0109;   //生成化验单号
+  cBC_SaveHysYS               = $0115;   //化验室验收
 
 type
   PSystemParam = ^TSystemParam;
@@ -96,6 +97,7 @@ type
     FAutoLogin:Boolean;
 
     FSvrService:string;
+    FIsHYS:    Boolean;
   end;
 
   PWorkerQueryFieldData = ^TWorkerQueryFieldData;
@@ -150,6 +152,7 @@ type
     FKZValue    : Double;          //供应扣除
     FMemo       : string;          //动作备注
     FTestNo     : string;          //化验编号
+    FYSValid    : string;          //验收通过'Y';拒收'N'
   end;
 
   TLadingBillItems = array of TLadingBillItem;
@@ -395,6 +398,7 @@ begin
       FAutoLogin:= ReadBool('ActivityConfig', 'AutoLogin', False);
 
       FSvrService:= DecodeBase64(ReadString('ActivityConfig' ,'SvrService', ''));
+      FIsHYS     := ReadBool('ActivityConfig', 'IsHYS', False);
     end;
   finally
     FreeAndNil(nIniFile);
@@ -422,6 +426,7 @@ begin
       WriteString('ActivityConfig' ,'ServIP', EncodeBase64(FServIP));
       WriteInteger('ActivityConfig' ,'ServPort', FServPort);
       WriteString('ActivityConfig' ,'SvrService', EncodeBase64(FSvrService));
+      WriteBool('ActivityConfig', 'IsHYS', FIsHYS);
     end;
   finally
     FreeAndNil(nIniFile);

@@ -26,6 +26,7 @@ type
     lblTestNo: TLabel;
     Label3: TLabel;
     BtnPrintCode: TSpeedButton;
+    CheckBox1: TCheckBox;
     procedure tmrGetOrderTimer(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
@@ -36,6 +37,7 @@ type
     procedure BtnPrintCodeClick(Sender: TObject);
   private
     { Private declarations }
+    FPrintBarCode:string;
   public
     { Public declarations }
   end;
@@ -62,17 +64,32 @@ begin
 end;
 
 procedure TFrmShowOrderInfo.BtnOKClick(Sender: TObject);
+var
+  nYSVaid: string;
 begin
   inherited;
   if Length(gOrders)>0 then
   with gOrders[0] do
   begin
+    if CheckBox1.IsChecked then
+          nYSVaid := 'N'
+    else  nYSVaid := 'Y';
+    FYSValid := nYSVaid;
+
     FKZValue := StrToFloatDef(EditKZValue.Text, 0);
 
-    if SavePurchaseOrders('X', gOrders) then
+    if gsysparam.FIsHYS then //如果是化验室
     begin
-      BtnPrintCodeClick(Self);
-      MainForm.Show;
+      if SaveHysYS('X', gOrders)and (FPrintBarCode = 'Y') then
+      begin
+        BtnPrintCodeClick(Self);
+        MainForm.Show;
+      end;
+    end
+    else
+    begin
+      if SavePurchaseOrders('X', gOrders) then
+        MainForm.Show;
     end;
   end;
 end;
@@ -138,6 +155,12 @@ begin
   BtnOK.Enabled := False;
   tmrGetOrder.Enabled := True;
   SetLength(gOrders, 0);
+  if gSysParam.FIsHYS then
+  begin
+    checkbox1.visible := false;
+    EditKZValue.visible := False;
+    Label10.visible := False;
+  end;
 end;
 
 procedure TFrmShowOrderInfo.tmrGetOrderTimer(Sender: TObject);
@@ -182,9 +205,14 @@ begin
     nCusID           := FCusID;
     nStockNo         := FStockNo;
     if nTestNo = '' then
-      lblTestNo.Text := GetTestNo(nCusID,nStockNo)
+    begin
+      nTestNo := GetTestNo(nCusID,nStockNo);
+      lblTestNo.Text := Copy(nTestNo,1,Pos('@',nTestNo)-1);
+      FPrintBarCode := Copy(nTestNo,Pos('@',nTestNo)+1,1);
+      FTestNo := lblTestNo.Text;
+    end
     else
-      lblTestNo.Text := nStockNo;
+      lblTestNo.Text := nTestNo;
   end;
 
   BtnOK.Enabled := True;

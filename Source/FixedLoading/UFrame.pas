@@ -9,7 +9,8 @@ uses
   cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit,
   cxTextEdit, cxLabel, cxMaskEdit, cxDropDownEdit, UMgrPoundTunnels,
   ExtCtrls, IdTCPServer, IdContext, IdGlobal, UBusinessConst, ULibFun,
-  Menus, cxButtons, UMgrSendCardNo, USysLoger, cxCurrencyEdit;
+  Menus, cxButtons, UMgrSendCardNo, USysLoger, cxCurrencyEdit, dxSkinsCore,
+  dxSkinsDefaultPainters;
 
 type
   TFrame1 = class(TFrame)
@@ -186,6 +187,7 @@ begin
     HasSet10 := false;
     HasStop := False;
     Label1.Caption := '运行状态：运行...';
+    writelog(GroupBox1.Caption+' 开始放灰, 时间：'+formatdatetime('yyyy-mm-dd HH:MM:ss',Now));
   end
   else begin
     nMsg := 'ErrorCode:[%d],ErrorMsg:[%s]';
@@ -232,7 +234,7 @@ begin
   if Fcontroller.Stop(FrameId) then
   begin
     Label1.Caption := '运行状态：已停止';
-    //SetUIData(True);
+    SetUIData(True);
     FIsBusy := False;
     btnStart.Enabled := True;
     btnStop.Enabled := False;
@@ -241,7 +243,8 @@ begin
     HasSet20 := false;
     HasSet10 := false;
     HasStop := true;
-    ShowLedText(FPoundTunnel.FID, '  欢迎光临');
+    ShowLedText(FPoundTunnel.FID, '  欢迎光临  ');
+    writelog(GroupBox1.Caption+' 停止放灰, 时间：'+formatdatetime('yyyy-mm-dd HH:MM:ss',Now));
   end
   else begin
     nMsg := 'ErrorCode:[%d],ErrorMsg:[%s]';
@@ -517,13 +520,16 @@ begin
     if (nValue+0.1 > FUIData.FMData.FValue) and (FUIData.FMData.FValue>1) and (HasStop = False) then
     begin
       btnStopClick(Self);
-      ShowMsg('超过限载,自动发送停止指令.',sHint);
+      writelog(GroupBox1.Caption+' 超过限载,自动发送停止指令,时间：'+formatdatetime('yyyy-mm-dd HH:MM:ss',Now));
+      //ShowMsg('超过限载,自动发送停止指令.',sHint);
+      Exit;
     end;
     //达到提货量停止放灰
-    if (nNetValue+0.1 >= FUIData.FValue) and (FUIData.FValue > 0) and (HasStop = False) then
+    if (nNetValue+0.1 > FUIData.FValue) and (FUIData.FValue > 0.1) and (HasStop = False) then
     begin
       btnStopClick(Self);
-      ShowMsg('达到提货量,自动发送停止指令.',sHint);
+      writelog(GroupBox1.Caption+' 达到提货量,自动发送停止指令,时间：'+formatdatetime('yyyy-mm-dd HH:MM:ss',Now));
+      Exit;
     end;
   end;
 end;
@@ -535,10 +541,11 @@ begin
   StopGetStatus;
   if Fcontroller.SetOpening(FrameId,editOpenValue.EditValue) then
   begin
+    writelog(GroupBox1.Caption+'人工设置阀度'+formatdatetime('yyyy-mm-dd HH:MM:ss',Now));
     //Label1.Caption := '运行状态：运行...';
   end
   else begin
-    nMsg := 'ErrorCode:[%d],ErrorMsg:[%s]';
+    nMsg := 'zyww::ErrorCode:[%d],ErrorMsg:[%s]';
     nMsg := Format(nMsg,[Fcontroller.ErrCode,Fcontroller.ErrMsg]);
     ShowMessage(nMsg);
   end;
@@ -653,6 +660,7 @@ begin
   if Fcontroller.Reset(FrameId) then
   begin
     Label1.Caption := '运行状态：复位中...';
+    writelog(GroupBox1.Caption+' 复位操作, 时间：'+formatdatetime('yyyy-mm-dd HH:MM:ss',Now));
   end
   else
   begin
@@ -690,9 +698,15 @@ procedure TFrame1.btnHandCtrlClick(Sender: TObject);
 begin
   FUserCtrl := not FUserCtrl;
   if FUserCtrl then
-    btnHandCtrl.Caption := '切换自动'
+  begin
+    btnHandCtrl.Caption := '切换自动';
+    writelog(GroupBox1.Caption+'切换为手动模式, 时间：'+formatdatetime('yyyy-mm-dd HH:MM:ss',Now));
+  end
   else
+  begin
     btnHandCtrl.Caption := '切换手动';
+    writelog(GroupBox1.Caption+'切换为自动模式, 时间：'+formatdatetime('yyyy-mm-dd HH:MM:ss',Now));
+  end;
 end;
 
 procedure TFrame1.tmrUpTimer(Sender: TObject);
@@ -714,6 +728,8 @@ end;
 procedure TFrame1.Button2Click(Sender: TObject);
 begin
   SetUIData(true);
+  FIsBusy := False;
+  writelog(GroupBox1.Caption+' 清屏操作, 时间：'+formatdatetime('yyyy-mm-dd HH:MM:ss',Now));
 end;
 
 end.

@@ -64,6 +64,9 @@ function GetPurchaseOrders(const nCard,nPost: string;
 function SavePurchaseOrders(const nPost: string; const nData: TLadingBillItems): Boolean;
 //保存指定岗位的采购单
 
+function SaveHysYS(const nPost: string; const nData: TLadingBillItems): Boolean;
+//化验室验收
+
 function LogIn: Boolean;
 function LogOut: Boolean;
 
@@ -342,6 +345,18 @@ var nStr: string;
 begin
   nStr := CombineBillItmes(nData);
   Result := CallBusinessPurchaseOrder(cBC_SavePostOrders, nStr, nPost, @nOut);
+  if (not Result) or (nOut.FData = '') then Exit;
+end;
+
+//Date: 2018-04-11
+//Parm: 岗位;交货单列表;磅站通道
+//Desc: 化验室验收
+function SaveHysYS(const nPost: string; const nData: TLadingBillItems): Boolean;
+var nStr: string;
+    nOut: TWorkerBusinessCommand;
+begin
+  nStr := CombineBillItmes(nData);
+  Result := CallBusinessPurchaseOrder(cBC_SaveHysYS, nStr, nPost, @nOut);
   if (not Result) or (nOut.FData = '') then Exit;
 end;
 

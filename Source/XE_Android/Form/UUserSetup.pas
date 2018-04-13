@@ -19,6 +19,7 @@ type
     EditPsw: TEdit;
     Label2: TLabel;
     EditUser: TEdit;
+    CheckBox1: TCheckBox;
     procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
     procedure EditUserChange(Sender: TObject);
@@ -54,6 +55,7 @@ begin
 
     FServIP   := EditServIP.Text;
     FServPort := StrToIntDef(EditPort.Text, 8082);
+    FIsHYS    := CheckBox1.IsChecked;
   end;
 
   //SaveParamToIni;

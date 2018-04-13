@@ -13,7 +13,8 @@ uses
   cxContainer, cxEdit, cxLabel, Menus, StdCtrls, cxButtons, cxGroupBox,
   cxRadioGroup, cxTextEdit, cxCheckBox, ExtCtrls, dxLayoutcxEditAdapters,
   dxLayoutControl, cxDropDownEdit, cxMaskEdit, cxButtonEdit,
-  USysConst, cxListBox, ComCtrls,Uszttce_api,Contnrs,UFormCtrl;
+  USysConst, cxListBox, ComCtrls,Uszttce_api,Contnrs,UFormCtrl,
+  dxSkinsCore, dxSkinsDefaultPainters;
 
 type
 
@@ -366,7 +367,7 @@ begin
   //提单信息
   EditType.ItemIndex := 0;
   EditStock.Text  := nOrderItem.FGoodsID;
-  EditSName.Text  := nOrderItem.FGoodsname;
+  EditSName.Text  := nOrderItem.FGoodsname; //copy(nOrderItem.FGoodsname,1,Length(nOrderItem.FGoodsname)-4);
   EditValue.Text := nOrderItem.FData;
   EditTruck.Text := nOrderItem.Ftracknumber;
 
@@ -504,7 +505,7 @@ begin
     else
       nTmp.Values['Type'] := 'D';
     nTmp.Values['StockNO'] := EditStock.Text;
-    nTmp.Values['StockName'] := EditSName.Text;
+    nTmp.Values['StockName'] := copy(EditSName.Text,1,Length(EditSName.Text)-4);//EditSName.Text;
     nTmp.Values['Price'] := EditPrice.Text;
     nTmp.Values['Value'] := EditValue.Text;
 
@@ -627,6 +628,7 @@ begin
   if Key=Char(vk_return) then
   begin
     key := #0;
+    btnQuery.SetFocus;
     btnQuery.Click;
   end;
 end;

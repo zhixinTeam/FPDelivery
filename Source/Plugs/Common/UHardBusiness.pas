@@ -272,6 +272,16 @@ begin
   //xxxxx
 end;
 
+//Date: 2018-03-20
+//Parm: 磁卡号
+//Desc: 获取磁卡使用类型
+function GetCardLength(const nCard: string): Boolean;
+var nOut: TWorkerBusinessCommand;
+begin
+  Result := CallBusinessCommand(cBC_GetCardLength, nCard, '', @nOut);
+  //xxxxx
+end;
+
 //Parm: 磁卡号
 //Desc: 通过卡号取网络订单信息
 function GetWebOrderByCard(const nCard: string): Boolean;
@@ -705,11 +715,10 @@ begin
   if nCardType = sFlag_Provide then
     nRet := SaveLadingOrders(sFlag_TruckOut, nTrucks) else
   if nCardType = sFlag_Sale then
-    nRet := SaveLadingBills(sFlag_TruckOut, nTrucks);
+    nRet := SaveLadingBills(sFlag_TruckOut, nTrucks) else
+    nRet := False;
   //if nCardType = sFlag_DuanDao then
   //  nRet := SaveDuanDaoItems(sFlag_TruckOut, nTrucks);
-
-
 
   if not nRet then
   begin
@@ -720,13 +729,16 @@ begin
     Exit;
   end;
 
+  nRet := GetCardLength(nCard);
+  //为true是短期卡，false 是长期卡
   //BlueOpenDoor(nReader);
   //抬杆
-  
+
   Result := nRet;
 
   //发起一次打印
-  with nTrucks[0] do
+  for nIdx:=Low(nTrucks) to High(nTrucks) do
+  with nTrucks[nIdx] do
   begin
     {$IFDEF PrintBillMoney}
     if CallBusinessCommand(cBC_GetZhiKaMoney, FZhiKa,'',@nOut) then
@@ -789,7 +801,7 @@ begin
         gHardwareHelper.SetReaderCard(nItem.FVReader, nItem.FCard, False);
     end;
   finally
-    gM100ReaderManager.DealtWithCard(nItem, true); //为TRUE吞卡
+    gM100ReaderManager.DealtWithCard(nItem, nRetain); //为TRUE吞卡
   end;
 end;
 

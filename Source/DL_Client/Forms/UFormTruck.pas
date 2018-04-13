@@ -11,7 +11,8 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   UFormBase, UFormNormal, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, cxMaskEdit, cxDropDownEdit,
-  cxTextEdit, dxLayoutControl, StdCtrls, cxCheckBox, dxLayoutcxEditAdapters;
+  cxTextEdit, dxLayoutControl, StdCtrls, cxCheckBox, dxLayoutcxEditAdapters,
+  dxSkinsCore, dxSkinsDefaultPainters;
 
 type
   TfFormTruck = class(TfFormNormal)
@@ -41,11 +42,15 @@ type
     dxLayout1Item12: TdxLayoutItem;
     EditValue: TcxTextEdit;
     dxLayout1Item13: TdxLayoutItem;
+    checkNoLimit: TcxCheckBox;
+    dxLayout1Item14: TdxLayoutItem;
+    dxLayout1Group5: TdxLayoutGroup;
     procedure BtnOKClick(Sender: TObject);
     procedure EditCarModelPropertiesChange(Sender: TObject);
   protected
     { Protected declarations }
     FTruckID: string;
+    FTruckNum: string;
     FLoadId,FCarModel,FValue: TStringList;
     procedure LoadFormData(const nID: string);
   public
@@ -135,7 +140,8 @@ begin
       Exit;
     end;
 
-    EditTruck.Text := FieldByName('T_Truck').AsString;     
+    FTruckNum := FieldByName('T_Truck').AsString; 
+    EditTruck.Text := FieldByName('T_Truck').AsString;
     EditOwner.Text := FieldByName('T_Owner').AsString;
     EditPhone.Text := FieldByName('T_Phone').AsString;
     EditSBTare.Text := FieldByName('T_SBTare').AsString;
@@ -147,6 +153,8 @@ begin
 
     CheckVip.Checked   := FieldByName('T_VIPTruck').AsString = sFlag_TypeVIP;
     CheckGPS.Checked   := FieldByName('T_HasGPS').AsString = sFlag_Yes;
+
+    checkNoLimit.Checked   := FieldByName('T_NoLimit').AsString = sFlag_Yes;
   end;
   if FLoadId.IndexOf(nLoadId) >=0 then
   begin
@@ -157,7 +165,7 @@ end;
 
 //Desc: ±£´æ
 procedure TfFormTruck.BtnOKClick(Sender: TObject);
-var nStr,nTruck,nU,nV,nP,nVip,nGps,nEvent: string;
+var nStr,nTruck,nU,nV,nP,nVip,nGps,nEvent,nNOLimit: string;
 begin
   nTruck := UpperCase(Trim(EditTruck.Text));
   if nTruck = '' then
@@ -174,8 +182,16 @@ begin
     Exit;
   end;
 
-  nStr := 'select * from %s where T_Truck=''%s''';
-  nStr := Format(nStr,[sTable_Truck,nTruck]);
+  if FTruckID = '' then
+  begin
+    nStr := 'select * from %s where T_Truck=''%s''';
+    nStr := Format(nStr,[sTable_Truck,nTruck]);
+  end
+  else
+  begin
+    nStr := 'select * from %s where T_Truck=''%s'' and T_Truck<>''%s''';
+    nStr := Format(nStr,[sTable_Truck,nTruck, FTruckNum]);
+  end;
   with FDM.QueryTemp(nStr) do
   begin
     if recordcount > 0 then
@@ -185,6 +201,7 @@ begin
       Exit;
     end;
   end;
+
 
   if CheckValid.Checked then
        nV := sFlag_Yes
@@ -206,6 +223,10 @@ begin
        nGps := sFlag_Yes
   else nGps := sFlag_No;
 
+  if checkNoLimit.Checked then
+       nNOLimit := sFlag_Yes
+  else nNOLimit := sFlag_No;
+
   if FTruckID = '' then
        nStr := ''
   else nStr := SF('R_Id', FTruckID, sfVal);
@@ -218,6 +239,7 @@ begin
           SF('T_PrePUse', nP),
           SF('T_VIPTruck', nVip),
           SF('T_HasGPS', nGps),
+          SF('T_NoLimit', nNOLimit),
           SF('T_LoadStand', FLoadId.Strings[EditCarModel.ItemIndex]),
           SF('T_SBTare', StrToFloat(EditSBTare.Text),sfVal),
           SF('T_LastTime', sField_SQLServer_Now, sfVal)

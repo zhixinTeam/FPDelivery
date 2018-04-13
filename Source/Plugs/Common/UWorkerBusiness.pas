@@ -168,6 +168,8 @@ type
     //保存网络订单信息，供微信中间件推消息
 
     function GetZhiKaFrozen(nCusId: string):Double;
+    function GetCardLength(var nData: string): Boolean;
+    //获取车辆是否是长期卡
   public
     constructor Create; override;
     destructor destroy; override;
@@ -440,6 +442,7 @@ begin
 
    cBC_GetLimitValue               : Result := GetLimitValue(nData);     //获取车辆最大限载值
    cBC_GetWebOrderByCard           : Result := GetWebOrderByCard(nData); //通过卡号获取商城订单
+   cBC_GetCardLength               : Result := GetCardLength(nData);     //获取卡是否是长期卡
    else
     begin
       Result := False;
@@ -2839,7 +2842,7 @@ begin
         '  Z_FixedMoney,' +                     //纸卡可提额度
         '  C_Name ' +                           //客户名
         ' from %s a join %s b on a.Z_ID = b.D_ZID join s_customer c on a.Z_Customer=c.C_ID ' +
-        ' where (Z_Freeze<>''Y'' or Z_Freeze is null) '+
+        ' where (Z_Freeze<>''Y'' or Z_Freeze is null) and Z_Verified=''Y'' '+
         ' and (Z_InValid<>''Y'' or Z_InValid is null) and Z_Customer=''%s'' ';
         //订单剩余量大于0、未结订单、订单行未停止状态
 
@@ -3101,38 +3104,49 @@ var
   FBegin: TDateTime;
   nMsg: string;
   nWebOrderValue, MaxQuantity:Double;
+  nCardNo:string;
 begin
   Result := True;
 
+  nCardNo := FIn.FData;
   nStr := 'Select * From %s Where T_Card=''%s''';
-  nStr := Format(nStr, [sTable_Truck, FIn.FData]);
+  nStr := Format(nStr, [sTable_Truck, nCardNo]);
   with gDBConnManager.WorkerQuery(FDBConn, nStr) do
   begin
     if RecordCount < 1 then
     begin
-      nMsg := '磁卡[ %s ]未绑定车辆或卡号不存在.';
-      nMsg := Format(nMsg,[FIn.FData]);
+      nMsg := '取商城订单失败,磁卡[ %s ]未绑定车辆或卡号不存在.';
+      nMsg := Format(nMsg,[nCardNo]);
       WriteLog(nMsg);
-      nData := nMsg;
       Result := False;
       Exit;
     end;
     //拿车牌号去网上商城查询订单
 
     nTruck := FieldByName('T_Truck').AsString;
-    nStr := GetshoporderbyTruck_2(PackerEncodeStr(nTruck));
+    nData := GetshoporderbyTruck_2(PackerEncodeStr(nTruck));
 
-    if nStr = '' then
+    if nData = '' then
     begin
       Writelog('未查询到网上商城订单详细信息，请检查订单号是否正确');
-      nData := '未查询到网上商城订单详细信息，请检查订单号是否正确';
       Result := False;
       Exit;
     end;
 
-    nStr := PackerDecodeStr(nStr);
+    nData := PackerDecodeStr(nData);
     nList := TStringList.Create;
-    nList.Text := nStr;
+    nList.Text := nData;
+
+    if Trim(nList.Values['order_type']) = 'NULL' then
+    begin
+      writelog('磁卡 ['+nCardNo+'] 未查到微信商城订单信息.');
+      Result := False;
+      Exit;
+    end;
+
+    nStr := '取微信商城订单,磁卡 [%s] 车牌 [%s] 订单信息: [%s]';
+    nStr := Format(nStr, [nCardNo,nTruck,nList.Text]);
+    WriteLog(nStr);
 
     //验证是否重复
     nStr := 'select * from %s where WOM_WebOrderID=''%s'' ';
@@ -3141,14 +3155,14 @@ begin
     begin
       if RecordCount > 0 then
       begin
-        nMsg := '订单[ %s ]已成功办卡，请勿重复操作.';
+        nMsg := '商城订单[ %s ]已成功办卡,退出操作.';
         nMsg := Format(nMsg,[nList.Values['ordernumber']]);
-        nData := nMsg;
         Result := False;
         Exit;
       end;
     end;
-    if nList.Values['order_type'] = 'S' then
+    
+    if Trim(nList.Values['order_type']) = 'S' then
     begin
       //销售单
       try
@@ -3166,7 +3180,7 @@ begin
           begin
             nMsg := '纸卡[%s]不存在或者已经被删除.';
             nMsg := Format(nMsg,[nList.Values['fac_order_no']]);
-            nData := nMsg;
+            //nData := nMsg;
             Result := False;
             Exit;
           end;
@@ -3202,22 +3216,18 @@ begin
         nBillData := PackerEncodeStr(nListBill.Text);
         FBegin := Now;
 
-        writelog('zyww::SaveBill保存订单');
-
         nBillID := SaveBill(nBillData);
         if nBillID = '' then
         begin
           nMsg := '保存商城订单[ %s ]失败.';
           nMsg := Format(nMsg,[nList.Values['ordernumber']]);
-          nData := nMsg;
           Result := False;
           Exit;
         end;
-        if not SaveBillCard(nBillID,FIn.FData) then
+        if not SaveBillCard(nBillID,nCardNo) then
         begin
           nMsg := '保存订单[ %s ]的磁卡信息[ %s ]失败.';
-          nMsg := Format(nMsg,[nBillID, FIn.FData]);
-          nData := nMsg;
+          nMsg := Format(nMsg,[nBillID, nCardNo]);
           Result := False;
           Exit;
         end;
@@ -3250,7 +3260,6 @@ begin
         begin
           nMsg := '采购合同编号有误或采购合同已被删除[%s]。';
           nMsg := Format(nMsg,[nList.Values['fac_order_no']]);
-          nData := nMsg;
           Result := False;
           Exit;
         end;
@@ -3259,7 +3268,6 @@ begin
         begin
           nMsg := '商城货单中原材料[ %s ]有误。';
           nMsg := Format(nMsg,[nList.Values['goodsID']]);
-          nData := nMsg;
           Result := False;
           Exit;
         end;
@@ -3270,7 +3278,6 @@ begin
         begin
           nMsg := '商城货单中提货数量有误，最多可提货数量为[%f]。';
           nMsg := Format(nMsg,[MaxQuantity]);
-          nData := nMsg;
           Result := False;
           Exit;
         end;
@@ -3301,16 +3308,14 @@ begin
         begin
           nMsg := '保存商城采购单[ %s ]失败';
           nMsg := Format(nMsg,[nList.Values['ordernumber']]);
-          nData := nMsg;
           Result := False;
           Exit;
         end;
 
-        if not SaveOrderCard(nBillID,FIn.FData) then
+        if not SaveOrderCard(nBillID,nCardNo) then
         begin
           nMsg := '保存采购单[ %s ]的磁卡信息[ %s ]失败';
-          nMsg := Format(nMsg,[nBillID,FIn.FData]);
-          nData := nMsg;
+          nMsg := Format(nMsg,[nBillID,nCardNo]);
           Result := False;
           Exit;
         end;
@@ -3403,6 +3408,34 @@ begin
   with gDBConnManager.WorkerQuery(FDBConn, nStr) do
   begin
     Result := fieldbyname('frozen').AsFloat;
+  end;
+end;
+
+//验证车辆是否是长期卡，为TRUE吞卡
+function TWorkerBusinessCommander.GetCardLength(
+  var nData: string): Boolean;
+var nStr: string;
+begin
+  Result := True;
+
+  nStr := 'select * from %s where T_Card=''%s''';
+  nStr := Format(nStr, [sTable_Truck, FIn.FData]);
+
+  with gDBConnManager.WorkerQuery(FDBConn, nStr) do
+  begin
+    if RecordCount > 0 then
+    begin
+      Result := False;
+      exit;
+    end;
+  end;
+
+  nStr := 'select * from %s where O_Card=''%s'' and O_CType=''%s''';
+  nStr := Format(nStr, [sTable_Order, FIn.FData, sFlag_OrderCardG]);
+  with gDBConnManager.WorkerQuery(FDBConn, nStr) do
+  begin
+    if RecordCount > 0 then
+      Result := False;
   end;
 end;
 

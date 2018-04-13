@@ -126,13 +126,12 @@ begin
   IdTCPClient1.Port := nPlcPort;
   try
     if not IdTCPClient1.Connected then
-    begin
       IdTCPClient1.Connect;
-    end;
   except
     on E:Exception do
     begin
-      ShowMessage('PLC连接失败：'+e.Message);
+      ShowMessage('PLC连接失败,原因：'+e.Message);
+      exit;
     end;
   end;
   Fcontroller := TPLCController.Create(IdTCPClient1);
@@ -156,77 +155,77 @@ var
   nbyte1, nbyte2, nbyte2_2, nbyte3: Byte;
 begin
   try
-  if  Fcontroller.GetStatus(1,1) then
-  begin
-    FormMain.Caption := '定置装车控制系统';
-    nBackOrd := Fcontroller.StatusOrd;
-    //Memo1.Lines.add(IdBytesToAnsiString(nBackOrd));
-    for i :=  0 to gPoundTunnelManager.Tunnels.Count-1 do//20  (Length(nBackOrd) div 2)-2  do
+    if  Fcontroller.GetStatus(1,1) then
     begin
-      nbyte1 := nbackord[12*i+4];
-      nbyte2 := nbackord[12*i+6];
-      nbyte2_2 := nbackord[12*i+5];
-      nbyte3 := nbackord[12*i+10];
+      FormMain.Caption := '定置装车控制系统';
+      nBackOrd := Fcontroller.StatusOrd;
+      //Memo1.Lines.add(IdBytesToAnsiString(nBackOrd));
+      for i :=  0 to gPoundTunnelManager.Tunnels.Count-1 do//20  (Length(nBackOrd) div 2)-2  do
+      begin
+        nbyte1 := nbackord[12*i+4];
+        nbyte2 := nbackord[12*i+6];
+        nbyte2_2 := nbackord[12*i+5];
+        nbyte3 := nbackord[12*i+10];
 
-      if (nbyte1 and Control_UP)=Control_UP then TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).lblUpdown.Caption := '上升';
-      //有上升状态
-      if (nbyte1 and Control_DOWN)=Control_DOWN then TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).lblUpdown.Caption := '下降';
-      //有下降状态
-      if (nbyte1 and Control_Add)=Control_Add then
-        TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).shpAdd.Brush.Color := clGreen
-      else
-        TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).shpAdd.Brush.Color := clRed;
-      //有加料状态
-      if (nbyte1 and Control_Pause)=Control_Pause then TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).shpAdd.Brush.Color :=clBlue;
-      //有暂停加料状态
-      if (nbyte1 and Control_Reset)=Control_Reset then TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).Label1.Caption := '复位';
-      //有复位状态
-      if nbyte1 = 0 then TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).Label1.Caption := '';
+        if (nbyte1 and Control_UP)=Control_UP then TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).lblUpdown.Caption := '上升';
+        //有上升状态
+        if (nbyte1 and Control_DOWN)=Control_DOWN then TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).lblUpdown.Caption := '下降';
+        //有下降状态
+        if (nbyte1 and Control_Add)=Control_Add then
+          TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).shpAdd.Brush.Color := clGreen
+        else
+          TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).shpAdd.Brush.Color := clRed;
+        //有加料状态
+        if (nbyte1 and Control_Pause)=Control_Pause then TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).shpAdd.Brush.Color :=clBlue;
+        //有暂停加料状态
+        if (nbyte1 and Control_Reset)=Control_Reset then TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).Label1.Caption := '复位';
+        //有复位状态
+        if nbyte1 = 0 then TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).Label1.Caption := '';
 
-      if (nbyte2 and Feedback_ready) = Feedback_ready then
-        TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).shpReady.Brush.Color := clGreen
-      else
-        TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).shpReady.Brush.Color := clRed;
-      //备妥
-      if (nbyte2 and Feedback_switch) = Feedback_switch then
-        TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).shpKw.Brush.Color := clGreen
-      else
-        TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).shpKw.Brush.Color := clRed;
-      //料位
-      if (nbyte2 and Feedback_FanStatus) = Feedback_FanStatus then
-        TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).shpFan.Brush.Color := clGreen
-      else
-        TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).shpFan.Brush.Color := clRed;
-      //提升机故障
-      if (nbyte2 and Feedback_ErrUp) = Feedback_ErrUp then
-        TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).pnlUpErr.Visible := True
-      else
-        TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).pnlUpErr.Visible := False;
-      //移动机故障
-      if (nbyte2 and Feedback_ErrMove) = Feedback_ErrMove then
-        TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).pnlMoveErr.Visible := True
-      else
-        TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).pnlMoveErr.Visible := False;
-      //通信故障
-      if (nbyte2 and Feedback_ErrSignal) = Feedback_ErrSignal then
-        TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).pnlSignalErr.Visible := True
-      else
-        TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).pnlSignalErr.Visible := False;
-      //系统总故障
-      if (nbyte2 and Feedback_ErrTotle) = Feedback_ErrTotle then
-        TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).pnlTotle.Visible := True
-      else
-        TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).pnlTotle.Visible := False;
-      //风机未备妥
-      if (nbyte2_2 and Feedback_ErrFan) = Feedback_ErrFan then
-        TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).pnlFanErr.Visible := True
-      else
-        TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).pnlFanErr.Visible := False;
+        if (nbyte2 and Feedback_ready) = Feedback_ready then
+          TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).shpReady.Brush.Color := clGreen
+        else
+          TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).shpReady.Brush.Color := clRed;
+        //备妥
+        if (nbyte2 and Feedback_switch) = Feedback_switch then
+          TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).shpKw.Brush.Color := clGreen
+        else
+          TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).shpKw.Brush.Color := clRed;
+        //料位
+        if (nbyte2 and Feedback_FanStatus) = Feedback_FanStatus then
+          TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).shpFan.Brush.Color := clGreen
+        else
+          TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).shpFan.Brush.Color := clRed;
+        //提升机故障
+        if (nbyte2 and Feedback_ErrUp) = Feedback_ErrUp then
+          TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).pnlUpErr.Visible := True
+        else
+          TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).pnlUpErr.Visible := False;
+        //移动机故障
+        if (nbyte2 and Feedback_ErrMove) = Feedback_ErrMove then
+          TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).pnlMoveErr.Visible := True
+        else
+          TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).pnlMoveErr.Visible := False;
+        //通信故障
+        if (nbyte2 and Feedback_ErrSignal) = Feedback_ErrSignal then
+          TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).pnlSignalErr.Visible := True
+        else
+          TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).pnlSignalErr.Visible := False;
+        //系统总故障
+        if (nbyte2 and Feedback_ErrTotle) = Feedback_ErrTotle then
+          TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).pnlTotle.Visible := True
+        else
+          TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).pnlTotle.Visible := False;
+        //风机未备妥
+        if (nbyte2_2 and Feedback_ErrFan) = Feedback_ErrFan then
+          TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).pnlFanErr.Visible := True
+        else
+          TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).pnlFanErr.Visible := False;
 
-      TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).editFD.Text := IntToStr(word(nbyte3));
-      //阀度
-    end;
-  end
+        TFrame1(FindComponent('fFramePlcCtrl'+inttostr(i))).editFD.Text := IntToStr(word(nbyte3));
+        //阀度
+      end;
+    end
   except
     Memo1.Lines.Add('读取状态失败！');
     Exit;

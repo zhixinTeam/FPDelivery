@@ -41,6 +41,10 @@ type
     //保存岗位采购单
     function GetOrderTestNo(var nData: string):Boolean;
     //生成采购化验单号
+    function SaveHysYS(var nData: string):Boolean;
+    //保存化验室验收状态
+    function GetHysYsStatus(var nData: string):Boolean;
+    //获取化验室验收结果
   public
     constructor Create; override;
     destructor destroy; override;
@@ -116,6 +120,8 @@ begin
    cBC_SavePostOrders       : Result := SavePostOrderItems(nData);
    cBC_GetGYOrderValue      : Result := GetGYOrderValue(nData);
    cBC_GetTestNo            : Result := GetOrderTestNo(nData);
+   cBC_SaveHysYS            : Result := SaveHysYS(nData);
+   cBC_GetHysYsStatus       : Result := GetHysYsStatus(nData);
    else
     begin
       Result := False;
@@ -1126,18 +1132,20 @@ function TWorkerBusinessOrders.GetOrderTestNo(var nData: string): Boolean;
 var
   nStr, nPcNum, nPcNow, nProID, nStockNo: string;
   nTestRule: Integer;
+  nPrint: string;
 begin
-  gSysLoger.AddLog('aaaaaaaaaaaaa');
   Result := False;
   nProID := FIn.FData;
   nStockNo := FIn.FExtParam;
+
+  nPrint := 'Y';
 
   //查询检验规则
   nStr := 'select * from %s where D_Name=''%s'' and D_Value=''%s''';
   nStr := Format(nStr, [sTable_SysDict, sFlag_TestRules, nStockNo]);
   with gDBConnManager.WorkerQuery(FDBConn, nStr) do
   begin
-    if RecordCount < 0 then Exit;
+    if RecordCount <= 0 then Exit;
     nTestRule := FieldByName('D_ParamA').AsInteger;
   end;
 
@@ -1164,16 +1172,17 @@ begin
       end;
     end
     else
-    begin
+    begin   //查询 当天，该品种，该供货商 最大批次，并获取该批次号
       nPcNow := fields[0].asstring;
-      
+
+      //查询 当天，该品种，该供货商 最大批次已经使用的次数，和规则对比
       nStr := 'select count(D_TestNo) from %s where D_ProID=''%s'' and '+
               'D_StockNo =''%s'' and D_TestNo= ''%s'' and convert(varchar,D_InTime,120) like ''%s''';
       nStr := Format(nStr, [sTable_OrderDtl,nProID,nStockNo,nPcNow,Date2Str(Now,False)+'%']);
       with gDBConnManager.WorkerQuery(FDBConn, nStr) do
       begin
         if Fields[0].AsInteger >= nTestRule then
-        begin
+        begin  //如果大于批次规则，则检索当天最大批次号
           nStr := 'select max(D_TestNo) from %s where convert(varchar,D_InTime,120) like ''%s''';
           nStr := Format(nStr, [sTable_OrderDtl,Date2Str(Now,True)+'%']);
           with gDBConnManager.WorkerQuery(FDBConn, nStr) do
@@ -1190,12 +1199,65 @@ begin
         else
         begin
           nPcNum := nPcNow;
+          nPrint := 'N';
         end;
       end;
     end;
   end;
-  FOut.FData := nPcNum;
+  FOut.FData := nPcNum+'@'+nPrint;
   Result := True;
+end;
+
+//2018-04-12
+//保存化验室验收状态
+function TWorkerBusinessOrders.SaveHysYS(var nData: string): Boolean;
+var
+  nPound: TLadingBillItems;
+  nSQL: string;
+begin
+  Result := False;
+  
+  AnalyseBillItems(FIn.FData, nPound);
+  with nPound[0] do
+  begin
+    try
+      nSQL := MakeSQLByStr([
+                SF('D_YTime1', sField_SQLServer_Now, sfVal),
+                SF('D_YMan1', FIn.FBase.FFrom.FUser),
+                SF('D_TestNo', FTestNo),
+                SF('D_YS1', 'Y')
+                ], sTable_OrderDtl, SF('D_ID', FID), False);
+      gDBConnManager.WorkerExec(FDBConn, nSQL);
+      Result := True;
+    except
+      raise;
+    end;
+  end;
+end;
+
+//2018-04-12
+//Param: 物料编号;采购订单ID
+//desc:获取化验室验收状态
+function TWorkerBusinessOrders.GetHysYsStatus(var nData: string): Boolean;
+var
+  nStr: string;
+begin
+  Result := False;
+  nStr := 'select * from %s where M_ID=''%s''';
+  nStr := Format(nStr,[sTable_Materails,FIn.FData]);
+  with gDBConnManager.WorkerQuery(FDBConn, nStr) do
+  begin
+    if FieldByName('M_IsMei').AsString = sFlag_Yes then
+    begin
+      nStr := 'select * from %s where D_ID=''%s''';
+      nStr := Format(nStr,[sTable_OrderDtl,FIn.FExtParam]);
+      with gDBConnManager.WorkerQuery(FDBConn, nStr) do
+      begin
+        if FieldByName('D_YS1').AsString <> sFlag_Yes then
+          Result := True;
+      end;
+    end;
+  end;
 end;
 
 initialization

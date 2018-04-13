@@ -206,6 +206,8 @@ function LogoutOrderCard(const nCard: string): Boolean;
 //注销指定磁卡
 function ChangeOrderTruckNo(const nOrder,nTruck: string): Boolean;
 //修改车牌号
+function GetHysYsStatus(const nStockNo,nOrderId: string): Boolean;
+//获取化验室验收状态
 
 function GetPurchaseOrders(const nCard,nPost: string;
  var nBills: TLadingBillItems): Boolean;
@@ -1811,6 +1813,15 @@ function ChangeOrderTruckNo(const nOrder,nTruck: string): Boolean;
 var nOut: TWorkerBusinessCommand;
 begin
   Result := CallBusinessPurchaseOrder(cBC_ModifyBillTruck, nOrder, nTruck, @nOut);
+end;
+
+//Date: 2018-04-13
+//Parm: 采购物料号;订单号
+//Desc: 获取采购物料化验室验收状态
+function GetHysYsStatus(const nStockNo,nOrderId: string): Boolean;
+var nOut: TWorkerBusinessCommand;
+begin
+  Result := CallBusinessPurchaseOrder(cBC_GetHysYsStatus, nStockNo, nOrderId, @nOut);
 end;
 
 //Date: 2014-09-17

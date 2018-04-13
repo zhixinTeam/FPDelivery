@@ -34,7 +34,7 @@ implementation
 uses
   UNFCManager,FMX.Helpers.Android,Androidapi.Helpers,
 
-  UMainFrom,UShowOrderInfo;
+  UMainFrom,UShowOrderInfo, UBusinessConst;
 
 {$R *.fmx}
 

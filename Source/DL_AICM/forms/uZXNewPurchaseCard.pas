@@ -12,7 +12,8 @@ uses
   cxContainer, cxEdit, cxLabel, Menus, StdCtrls, cxButtons, cxGroupBox,
   cxRadioGroup, cxTextEdit, cxCheckBox, ExtCtrls, dxLayoutcxEditAdapters,
   dxLayoutControl, cxDropDownEdit, cxMaskEdit, cxButtonEdit,
-  USysConst, cxListBox, ComCtrls,Uszttce_api,Contnrs,UFormCtrl;
+  USysConst, cxListBox, ComCtrls,Uszttce_api,Contnrs,UFormCtrl,
+  dxSkinsCore, dxSkinsDefaultPainters;
 
 type
   TfFormNewPurchaseCard = class(TForm)
@@ -626,6 +627,7 @@ begin
   if Key=Char(vk_return) then
   begin
     key := #0;
+    btnQuery.SetFocus;
     btnQuery.Click;
   end;
 end;

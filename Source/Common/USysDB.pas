@@ -522,7 +522,7 @@ const
        'C_Phone varChar(15), C_Fax varChar(15), C_Tax varChar(32),' +
        'C_Bank varChar(35), C_Account varChar(18), C_SaleMan varChar(15),' +
        'C_Param varChar(32), C_Memo varChar(50), C_XuNi Char(1),'+
-       'C_Parent varchar(20))';
+       'C_Parent varchar(20), C_WeChartAccount varchar(50))';
   {-----------------------------------------------------------------------------
    客户信息表: Customer
    *.R_ID: 记录号
@@ -878,6 +878,7 @@ const
        'D_YLine varChar(15), D_YLineName varChar(32), ' +
        'D_DelMan varChar(32), D_DelDate DateTime, D_YSResult Char(1), ' +
        'D_OutFact DateTime, D_OutMan varChar(32),D_TestNo varchar(20),'+
+       'D_YTime1 DateTime,D_YMan1 varChar(32),D_YS1 Char(1) Default ''N'','+
        'D_TestJG1 $Float,D_TestJG2 $Float, D_Memo varChar(500))';
   {-----------------------------------------------------------------------------
    采购订单明细表: OrderDetail
@@ -906,6 +907,8 @@ const
    *.D_TestNo：化验编号
    *.D_TestJG1:化验结果1 热值
    *.D_TestJG2:化验结果2 水分
+   *.D_YTime1:第一次验收时间
+   *.D_YMan1:第一次验收人
   -----------------------------------------------------------------------------}
 
   sSQL_NewCard = 'Create Table $Table(R_ID $Inc, C_Card varChar(16),' +
@@ -937,7 +940,7 @@ const
        'T_PlateColor varChar(12),T_Type varChar(12), T_LastTime DateTime, ' +
        'T_Card varChar(32), T_CardUse Char(1), T_NoVerify Char(1),' +
        'T_Valid Char(1), T_VIPTruck Char(1), T_HasGPS Char(1), '+
-       'T_LoadStand varchar(5),T_SBTare $Float, T_WebID varchar(50) )';
+       'T_LoadStand varchar(5),T_SBTare $Float, T_WebID varchar(50),T_NoLimit char(1))';
   {-----------------------------------------------------------------------------
    车辆信息:Truck
    *.R_ID: 记录号
@@ -965,6 +968,7 @@ const
    *.T_HasGPS:安装GPS(Y/N)
    *.T_LoadStand:限载标准，存ID
    *.T_SBTare:申报皮重
+   *.T_NoLimit :不限载
    有效平均皮重算法:
    T_PValue = (T_PValue * T_PTime + 新皮重) / (T_PTime + 1)
   -----------------------------------------------------------------------------}
@@ -1255,7 +1259,7 @@ const
   sSQL_NewMaterails = 'Create Table $Table(R_ID $Inc, M_ID varChar(32),' +
        'M_Name varChar(80),M_PY varChar(80),M_Unit varChar(20),M_Price $Float,' +
        'M_PrePValue Char(1), M_PrePTime Integer, M_Memo varChar(50), ' +
-       'M_IsSale Char(1) Default ''N'')';
+       'M_IsSale Char(1) Default ''N'',M_IsMei Char(1) Default ''N'')';
   {-----------------------------------------------------------------------------
    物料表: Materails
    *.M_ID: 编号
@@ -1266,6 +1270,7 @@ const
    *.M_PrePTime: 皮重时长(天)
    *.M_Memo: 备注
    *.M_IsSale: 销售品种
+   *.M_IsMei: 煤类
   -----------------------------------------------------------------------------}
 
   sSQL_NewStockParam = 'Create Table $Table(P_ID varChar(15), P_Stock varChar(30),' +
@@ -1391,7 +1396,7 @@ const
   -----------------------------------------------------------------------------}
 
   sSQL_NewStockBatcode = 'Create Table $Table(R_ID $Inc, B_Stock varChar(32),' +
-       'B_Name varChar(80), B_Prefix varChar(5), B_UseYear Char(1),' +
+       'B_Name varChar(80), B_Prefix varChar(20), B_UseYear Char(1),' +
        'B_Base Integer, B_Incement Integer, B_Length Integer, ' +
        'B_Value $Float, B_Low $Float, B_High $Float, B_Interval Integer,' +
        'B_AutoNew Char(1), B_UseDate Char(1), B_FirstDate DateTime,' +

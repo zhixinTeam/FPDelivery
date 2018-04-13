@@ -638,6 +638,12 @@ object Frame1: TFrame1
       Width = 75
       Height = 25
       Caption = #20999#25442#25163#21160
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clRed
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 13
       OnClick = btnHandCtrlClick
     end

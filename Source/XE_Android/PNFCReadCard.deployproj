@@ -6,7 +6,8 @@
     <PropertyGroup>
         <DeviceId Condition="'$(Platform)'=='Android'"/>
     </PropertyGroup>
-    <ItemGroup Condition="'$(Platform)'=='Win32'">
+    <ItemGroup Condition="'$(Platform)'=='iOSDevice64'"/>
+    <ItemGroup Condition="'$(Platform)'=='Win64'">
         <DeployFile Include="res\xml\nfc_tech_discovered_filter.xml" Condition="'$(Config)'=='Debug'">
             <RemoteDir>PNFCReadCard\</RemoteDir>
             <RemoteName>nfc_tech_discovered_filter.xml</RemoteName>
@@ -17,7 +18,8 @@
             <Overwrite>True</Overwrite>
         </DeployFile>
     </ItemGroup>
-    <ItemGroup Condition="'$(Platform)'=='Win64'">
+    <ItemGroup Condition="'$(Platform)'=='iOSDevice32'"/>
+    <ItemGroup Condition="'$(Platform)'=='Win32'">
         <DeployFile Include="res\xml\nfc_tech_discovered_filter.xml" Condition="'$(Config)'=='Debug'">
             <RemoteDir>PNFCReadCard\</RemoteDir>
             <RemoteName>nfc_tech_discovered_filter.xml</RemoteName>
@@ -187,6 +189,26 @@
             <RemoteDir>PNFCReadCard\res\drawable-normal\</RemoteDir>
             <RemoteName>splash_image.png</RemoteName>
             <DeployClass>Android_SplashImage470</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+    </ItemGroup>
+    <ItemGroup Condition="'$(Platform)'=='iOSSimulator'">
+        <DeployFile Include="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib">
+            <RemoteDir>PNFCReadCard.app\</RemoteDir>
+            <RemoteName>libcgunwind.1.0.dylib</RemoteName>
+            <DeployClass>DependencyModule</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="$(BDS)\Redist\iossimulator\libPCRE.dylib">
+            <RemoteDir>PNFCReadCard.app\</RemoteDir>
+            <RemoteName>libPCRE.dylib</RemoteName>
+            <DeployClass>DependencyModule</DeployClass>
             <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>

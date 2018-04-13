@@ -109,6 +109,9 @@ const
   cBC_ShowLedTxt                   = $0110;   //向led屏幕发送内容
   cBC_GetLimitValue                = $0111;   //获取车辆最大限载值
   cBC_GetWebOrderByCard            = $0112;   //通过卡号取微信订单
+  cBC_GetCardLength                = $0113;   //获取磁卡是否是长期卡
+  cBC_GetHysYsStatus               = $0114;   //获取化验室验收状态
+  cBC_SaveHysYS                    = $0115;   //化验室验收
 
   cBC_WX_VerifPrintCode       = $0501;   //微信：验证喷码信息
   cBC_WX_WaitingForloading    = $0502;   //微信：工厂待装查询

@@ -12,7 +12,8 @@ uses
   UMgrPoundTunnels, UBusinessConst, UFrameBase, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, StdCtrls,
   UTransEdit, ExtCtrls, cxRadioGroup, cxTextEdit, cxMaskEdit,
-  cxDropDownEdit, cxLabel, ULEDFont, DateUtils;
+  cxDropDownEdit, cxLabel, ULEDFont, DateUtils, dxSkinsCore,
+  dxSkinsDefaultPainters;
 
 type
   TfFrameAutoPoundItem = class(TBaseFrame)
@@ -406,6 +407,19 @@ begin
                  (FNextStatus = sFlag_TruckBFM);
     //可称重状态判定
 
+    //供应类业务,且化验室未验收，则直接跳出循环
+    if (FCardUsed=sFlag_Provide) and GetHysYsStatus(FStockNo,FID) then
+    begin
+      nInt := 0;
+      nVoice := '化验室未验收,车辆 %s 不能过磅';
+      nVoice := Format(nVoice, [FTruck]);
+
+      nStr := '※.单号:[ %s ] 状态: 化验室未验收';
+      nstr := Format(nStr,[FID]);
+      nHint := nStr;
+      Break;
+    end;
+
     if FSelected then
     begin
       Inc(nInt);
@@ -637,14 +651,21 @@ begin
   if (FUIData.FPData.FValue > 0) and (FUIData.FMData.FValue > 0) then
   begin
     {$IFDEF FPST}
-      nStr := 'select a.T_SBTare,b.S_CarModel,S_Value '+
+      nStr := 'select a.T_SBTare,b.S_CarModel,S_Value,T_NoLimit '+
             'from %s a left join %s b on t_loadstand=b.S_NO where T_Truck=''%s''';
       nStr := Format(nStr,[sTable_Truck,sTable_LoadStandard,FUIData.FTruck]);
       with FDM.QueryTemp(nStr) do
       begin
-        if recordcount = 0 then exit;
+        if recordcount = 0 then
+        begin
+          nStr := '未查到车型限载信息，请到开票室核验车型';
+          WriteLog(nStr);
+          PlayVoice(nStr);
+          exit;
+        end;
         //限载值 + 限载允许误差
-        if FUIData.FMData.FValue > FieldByName('S_Value').AsFloat + gSysParam.FLoadLimitWC then
+        if (FieldByName('S_Value').AsString <> 'Y') and
+          (FUIData.FMData.FValue > FieldByName('S_Value').AsFloat + gSysParam.FLoadLimitWC) then
         begin
           nStr := '超出最大限载重量，请返厂卸车';
           WriteLog(nStr);
@@ -946,8 +967,16 @@ begin
   else Timer_SaveFail.Enabled := True;
 
   if FBarrierGate then
-    OpenDoorByReader(FLastReader, sFlag_No);
-  //打开副道闸
+  begin
+    if not nRet then
+    begin
+      OpenDoorByReader(FLastReader, sFlag_Yes);
+      Exit;
+    end
+    else
+      OpenDoorByReader(FLastReader, sFlag_No);
+    //打开副道闸
+  end;
 end;
 
 procedure TfFrameAutoPoundItem.TimerDelayTimer(Sender: TObject);

@@ -12,12 +12,12 @@ inherited fFormTruck: TfFormTruck
     inherited BtnOK: TButton
       Left = 170
       Top = 307
-      TabOrder = 11
+      TabOrder = 12
     end
     inherited BtnExit: TButton
       Left = 240
       Top = 307
-      TabOrder = 12
+      TabOrder = 13
     end
     object EditTruck: TcxTextEdit [2]
       Left = 81
@@ -57,7 +57,7 @@ inherited fFormTruck: TfFormTruck
       Style.BorderStyle = ebsSingle
       TabOrder = 6
       Transparent = True
-      Width = 80
+      Width = 165
     end
     object CheckVerify: TcxCheckBox [6]
       Left = 23
@@ -66,7 +66,7 @@ inherited fFormTruck: TfFormTruck
       ParentFont = False
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
-      TabOrder = 9
+      TabOrder = 10
       Transparent = True
       Width = 165
     end
@@ -77,7 +77,7 @@ inherited fFormTruck: TfFormTruck
       ParentFont = False
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
-      TabOrder = 7
+      TabOrder = 8
       Transparent = True
       Width = 165
     end
@@ -88,7 +88,7 @@ inherited fFormTruck: TfFormTruck
       ParentFont = False
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
-      TabOrder = 8
+      TabOrder = 9
       Transparent = True
       Width = 100
     end
@@ -99,7 +99,7 @@ inherited fFormTruck: TfFormTruck
       ParentFont = False
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
-      TabOrder = 10
+      TabOrder = 11
       Transparent = True
       Width = 100
     end
@@ -136,6 +136,18 @@ inherited fFormTruck: TfFormTruck
       Style.HotTrack = False
       TabOrder = 4
       Width = 121
+    end
+    object checkNoLimit: TcxCheckBox [13]
+      Left = 193
+      Top = 222
+      Caption = 'VIP'#23458#25143
+      ParentFont = False
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
+      Style.HotTrack = False
+      TabOrder = 7
+      Transparent = True
+      Width = 98
     end
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
@@ -182,11 +194,23 @@ inherited fFormTruck: TfFormTruck
       object dxGroup2: TdxLayoutGroup [1]
         CaptionOptions.Text = #36710#36742#21442#25968
         ButtonOptions.Buttons = <>
-        object dxLayout1Item4: TdxLayoutItem
-          CaptionOptions.Text = 'cxCheckBox1'
-          CaptionOptions.Visible = False
-          Control = CheckValid
-          ControlOptions.ShowBorder = False
+        object dxLayout1Group5: TdxLayoutGroup
+          ButtonOptions.Buttons = <>
+          Hidden = True
+          LayoutDirection = ldHorizontal
+          ShowBorder = False
+          object dxLayout1Item4: TdxLayoutItem
+            CaptionOptions.Text = 'cxCheckBox1'
+            CaptionOptions.Visible = False
+            Control = CheckValid
+            ControlOptions.ShowBorder = False
+          end
+          object dxLayout1Item14: TdxLayoutItem
+            CaptionOptions.Text = 'cxCheckBox1'
+            CaptionOptions.Visible = False
+            Control = checkNoLimit
+            ControlOptions.ShowBorder = False
+          end
         end
         object dxLayout1Group2: TdxLayoutGroup
           CaptionOptions.Visible = False

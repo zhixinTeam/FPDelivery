@@ -11,7 +11,7 @@ uses
   UDataModule, StdCtrls, ExtCtrls, dxLayoutControl, cxContainer, cxEdit,
   cxTextEdit, cxControls, cxMemo, UFormBase, cxGraphics, cxLookAndFeels,
   cxLookAndFeelPainters, cxImage, jpeg, DB, cxMaskEdit, cxDropDownEdit,
-  dxLayoutcxEditAdapters, UFormCtrl;
+  dxLayoutcxEditAdapters, UFormCtrl, dxSkinsCore, dxSkinsDefaultPainters;
 
 type
   TfFormAuditTruck = class(TBaseForm)
@@ -210,7 +210,11 @@ begin
       Values['Type']     := '-1';
     end;
 
-    if UpLoadAuditTruck(PackerEncodeStr(nList.Text)) <> sFlag_Yes then Exit;
+    if UpLoadAuditTruck(PackerEncodeStr(nList.Text)) <> sFlag_Yes then
+    begin
+      FDM.ADOConn.RollbackTrans;
+      Exit;
+    end;
     //call remote
 
     nStr := 'update %s set A_Status=''%s'', A_Memo= ''%s'',' +

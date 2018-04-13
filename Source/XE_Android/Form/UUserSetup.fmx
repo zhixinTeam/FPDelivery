@@ -122,6 +122,14 @@ inherited FrmSetup: TFrmSetup
         OnChange = EditUserChange
         OnMouseEnter = EditMouseEnter
       end
+      object CheckBox1: TCheckBox
+        StyledSettings = [Family, Style, FontColor]
+        Position.X = 24.000000000000000000
+        Position.Y = 288.000000000000000000
+        TabOrder = 9
+        Text = #21270#39564#23460#20351#29992
+        TextSettings.Font.Size = 18.000000000000000000
+      end
     end
   end
 end

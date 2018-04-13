@@ -10,7 +10,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   UFrameBase, cxGraphics, cxControls, cxLookAndFeels,
-  cxLookAndFeelPainters, StdCtrls, ComCtrls, ExtCtrls, cxSplitter;
+  cxLookAndFeelPainters, StdCtrls, ComCtrls, ExtCtrls, cxSplitter,
+  dxSkinsCore, dxSkinsDefaultPainters;
 
 type
   TfFramePoundAuto = class(TBaseFrame)

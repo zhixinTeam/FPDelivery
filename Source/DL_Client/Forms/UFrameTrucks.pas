@@ -322,16 +322,20 @@ begin
         Values['Man']  := gSysParam.FUserID;
         Values['Type']     := '0';
       end;
-      if UpLoadAuditTruck(PackerEncodeStr(nList.Text)) <> sFlag_Yes then Exit;
+      {if UpLoadAuditTruck(PackerEncodeStr(nList.Text)) <> sFlag_Yes then
+      begin
+        FDM.ADOConn.RollbackTrans;
+        Exit;
+      end;}
       //call remote 同步到微信端
-
-      nStr := '取消车辆 [ '+ nTruck +' ]与磁卡[ '+nStr+' ]的关联';
-      FDM.WriteSysLog(sFlag_TruckItem,nTruck,nStr);
 
       FDM.ADOConn.CommitTrans;
 
-      InitFormData(FWhere);
+      nStr := '取消车辆 [ '+ nTruck +' ]与磁卡[ '+nStr+' ]的关联';
+      FDM.WriteSysLog(sFlag_TruckItem,nTruck,nStr);
       ShowMsg(nStr, sHint);
+
+      InitFormData(FWhere);
     except
       FDM.ADOConn.RollbackTrans;
       ShowMsg('取消关联失败.', sHint);

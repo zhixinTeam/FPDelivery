@@ -186,7 +186,11 @@ begin
           Values['Type']     := '1';
         end;
 
-        if UpLoadAuditTruck(PackerEncodeStr(nList.Text)) <> sFlag_Yes then Exit;
+        {if UpLoadAuditTruck(PackerEncodeStr(nList.Text)) <> sFlag_Yes then
+        begin
+          FDM.ADOConn.RollbackTrans;
+          Exit;
+        end; }
         //call remote同步到微信端
       end;
     end;

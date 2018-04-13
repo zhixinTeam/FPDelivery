@@ -655,22 +655,22 @@ end;
 function TBusWorkerBusinessWebchat.GetOrderList(var nData: string): Boolean;
 var nStr, nType: string;
     nNode: TXmlNode;
-    nValue,nMoney: Double;
+    nValue,nMoney,nYuE: Double;
     nFixMoney:Double;  //限提金额
 begin
   Result := False;
   BuildDefaultXML;
-  nMoney := 0 ;
+  nYuE := 0 ;
   {$IFDEF UseCustomertMoney}
-  nMoney := GetCustomerValidMoney(FIn.FData);
+  nYuE := GetCustomerValidMoney(FIn.FData);
   {$ENDIF}
 
   {$IFDEF UseERP_K3}
-  nMoney := GetCustomerValidMoneyFromK3(FIn.FData);
+  nYuE := GetCustomerValidMoneyFromK3(FIn.FData);
   {$ENDIF}
 
   nStr := 'select D_ZID,' +                     //销售卡片编号
-        '  Z_Name ' +                           //纸卡名称
+        '  Z_Name,' +                           //纸卡名称
         '  D_Type,' +                           //类型(袋,散)
         '  D_StockNo,' +                        //水泥编号
         '  D_StockName,' +                      //水泥名称
@@ -686,10 +686,10 @@ begin
         '  Z_CID ' +                            //合同编号
         'from %s a join %s b on a.Z_ID = b.D_ZID ' +
         'where Z_Verified=''%s'' and (Z_InValid<>''%s'' or Z_InValid is null) '+
-        'and Z_Customer=''%s''';
+        ' and (Z_Freeze<>''%s'' or Z_Freeze is null) and Z_Customer=''%s''';
         //订单已审核 有效
   nStr := Format(nStr,[sTable_ZhiKa,sTable_ZhiKaDtl,sFlag_Yes,sFlag_Yes,
-                       FIn.FData]);
+                       sFlag_Yes,FIn.FData]);
   WriteLog('获取订单列表sql:'+nStr);
   with gDBConnManager.WorkerQuery(FDBConn, nStr),FPacker.XMLBuilder do
   begin
@@ -722,21 +722,23 @@ begin
     begin
       with nNode.NodeNew('Item') do
       begin
-        if FieldByName('D_Type').AsString = 'D' then
+        if trim(FieldByName('D_Type').AsString) = 'D' then
              nType := '袋装'
         else nType := '散装';
 
         NodeNew('SetDate').ValueAsString    := FieldByName('Z_Date').AsString;
         NodeNew('BillNumber').ValueAsString := FieldByName('D_ZID').AsString;
         NodeNew('StockNo').ValueAsString    := FieldByName('D_StockNo').AsString;
-        NodeNew('StockName').ValueAsString  := FieldByName('D_StockName').AsString;
+        NodeNew('StockName').ValueAsString  := FieldByName('D_StockName').AsString+nType;
         NodeNew('BillName').ValueAsString   := FieldByName('Z_Name').AsString;
 
         nValue := FieldByName('D_Value').AsFloat;
         {$IFDEF UseCustomertMoney}
         try
           if FieldByName('Z_OnlyMoney').AsString = 'Y' then
-            nMoney := FieldByName('Z_FixedMoney').AsFloat;
+            nMoney := FieldByName('Z_FixedMoney').AsFloat
+          else
+            nMoney := nYuE;
 
           nValue := nMoney / FieldByName('D_Price').AsFloat;
           nValue := Float2PInt(nValue, cPrecision, False) / cPrecision;
@@ -2059,17 +2061,31 @@ begin
   with FPacker.XMLBuilder do
   begin
     ReadFromString(nStr);
-    if not ParseDefault(nData) then Exit;
+    //if not ParseDefault(nData) then Exit;
+
+    FListA.Clear;
+    FListB.Clear;
 
     nNode := Root.FindNode('Items');
     if not (Assigned(nNode)) then
     begin
-      nData := '无效参数节点(Items Null).';
-      Exit;
-    end;
+      //nData := '无效参数节点(Items Null).';
+      //Exit;
+      FListB.Values['order_id']      := '';
+      FListB.Values['order_type']    := 'NULL';
+      FListB.Values['fac_order_no']  := '';
+      FListB.Values['ordernumber']   := '';
+      FListB.Values['goodsID']       := '';
+      FListB.Values['goodstype']     := '';
+      FListB.Values['goodsname']     := '';
+      FListB.Values['tracknumber']   := '';
+      FListB.Values['data']          := '';
 
-    FListA.Clear;
-    FListB.Clear;
+      nStr := StringReplace(FListB.Text, '\n', #13#10, [rfReplaceAll]);
+
+      FListA.Add(nStr);
+    end
+    else
     for nInt := 0 to nNode.NodeCount - 1 do
     begin
       nTmp := nNode.Nodes[nInt];

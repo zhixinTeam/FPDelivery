@@ -115,8 +115,8 @@ object fFormNewCard: TfFormNewCard
       TabOrder = 0
       TabStop = False
       object BtnOK: TButton
-        Left = 487
-        Top = 285
+        Left = 580
+        Top = 269
         Width = 250
         Height = 41
         Caption = #30830#35748#26080#35823#24182#21150#21345
@@ -130,8 +130,8 @@ object fFormNewCard: TfFormNewCard
         OnClick = BtnOKClick
       end
       object BtnExit: TButton
-        Left = 743
-        Top = 285
+        Left = 836
+        Top = 269
         Width = 92
         Height = 41
         Caption = #21462#28040
@@ -146,7 +146,7 @@ object fFormNewCard: TfFormNewCard
       end
       object EditValue: TcxTextEdit
         Left = 470
-        Top = 230
+        Top = 214
         ParentFont = False
         Style.BorderColor = clWindowFrame
         Style.BorderStyle = ebs3D
@@ -173,11 +173,11 @@ object fFormNewCard: TfFormNewCard
         Style.Font.Style = []
         Style.IsFontAssigned = True
         TabOrder = 0
-        Width = 339
+        Width = 838
       end
       object EditCName: TcxTextEdit
         Left = 78
-        Top = 71
+        Top = 55
         ParentFont = False
         Properties.ReadOnly = True
         Style.BorderColor = clWindowFrame
@@ -193,7 +193,7 @@ object fFormNewCard: TfFormNewCard
       end
       object EditStock: TcxTextEdit
         Left = 78
-        Top = 144
+        Top = 128
         ParentFont = False
         Properties.ReadOnly = True
         Style.BorderColor = clWindowFrame
@@ -209,7 +209,7 @@ object fFormNewCard: TfFormNewCard
       end
       object EditSName: TcxTextEdit
         Left = 470
-        Top = 144
+        Top = 128
         ParentFont = False
         Properties.ReadOnly = True
         Style.BorderColor = clWindowFrame
@@ -225,7 +225,7 @@ object fFormNewCard: TfFormNewCard
       end
       object EditTruck: TcxButtonEdit
         Left = 78
-        Top = 230
+        Top = 214
         ParentFont = False
         Properties.Buttons = <
           item
@@ -246,7 +246,7 @@ object fFormNewCard: TfFormNewCard
       end
       object EditType: TcxComboBox
         Left = 78
-        Top = 187
+        Top = 171
         ParentFont = False
         Properties.DropDownListStyle = lsEditFixedList
         Properties.ItemHeight = 18
@@ -270,7 +270,7 @@ object fFormNewCard: TfFormNewCard
       end
       object EditPrice: TcxButtonEdit
         Left = 470
-        Top = 187
+        Top = 171
         ParentFont = False
         Properties.Buttons = <
           item
@@ -290,82 +290,87 @@ object fFormNewCard: TfFormNewCard
         Width = 353
       end
       object dxLayoutGroup1: TdxLayoutGroup
-        AutoAligns = [aaHorizontal]
-        ShowCaption = False
+        AlignHorz = ahParentManaged
+        AlignVert = avTop
+        CaptionOptions.Visible = False
+        ButtonOptions.Buttons = <>
         Hidden = True
         ShowBorder = False
         object dxGroup1: TdxLayoutGroup
-          AutoAligns = [aaVertical]
           AlignHorz = ahClient
-          Caption = #22522#26412#20449#24687
+          CaptionOptions.Text = #22522#26412#20449#24687
+          ButtonOptions.Buttons = <>
           object dxlytmLayout1Item3: TdxLayoutItem
-            AutoAligns = [aaVertical]
             AlignHorz = ahClient
-            Caption = #23458#25143#32534#21495':'
+            CaptionOptions.Text = #23458#25143#32534#21495':'
             Control = EditCus
             ControlOptions.ShowBorder = False
           end
           object dxlytmLayout1Item4: TdxLayoutItem
-            AutoAligns = [aaVertical]
             AlignHorz = ahClient
-            Caption = #23458#25143#21517#31216':'
+            CaptionOptions.Text = #23458#25143#21517#31216':'
             Control = EditCName
             ControlOptions.ShowBorder = False
           end
         end
         object dxGroup2: TdxLayoutGroup
-          AutoAligns = [aaVertical]
-          Caption = #25552#21333#20449#24687
+          AlignHorz = ahLeft
+          CaptionOptions.Text = #25552#21333#20449#24687
+          ButtonOptions.Buttons = <>
           object dxLayout1Group1: TdxLayoutGroup
-            AutoAligns = [aaVertical]
-            ShowCaption = False
+            AlignHorz = ahLeft
+            CaptionOptions.Visible = False
+            ButtonOptions.Buttons = <>
             Hidden = True
             LayoutDirection = ldHorizontal
             ShowBorder = False
             object dxlytmLayout1Item9: TdxLayoutItem
-              Caption = #27700#27877#32534#21495':'
+              CaptionOptions.Text = #27700#27877#32534#21495':'
               Control = EditStock
               ControlOptions.ShowBorder = False
             end
             object dxlytmLayout1Item10: TdxLayoutItem
-              Caption = #27700#27877#21517#31216':'
+              CaptionOptions.Text = #27700#27877#21517#31216':'
               Control = EditSName
               ControlOptions.ShowBorder = False
             end
           end
           object dxGroupLayout1Group5: TdxLayoutGroup
-            AutoAligns = [aaVertical]
-            ShowCaption = False
+            AlignHorz = ahLeft
+            CaptionOptions.Visible = False
+            ButtonOptions.Buttons = <>
             Hidden = True
             ShowBorder = False
             object dxLayout1Group2: TdxLayoutGroup
-              ShowCaption = False
+              CaptionOptions.Visible = False
+              ButtonOptions.Buttons = <>
               Hidden = True
               LayoutDirection = ldHorizontal
               ShowBorder = False
               object dxlytmLayout1Item13: TdxLayoutItem
-                Caption = #25552#36135#36890#36947':'
+                CaptionOptions.Text = #25552#36135#36890#36947':'
                 Control = EditType
                 ControlOptions.ShowBorder = False
               end
               object dxLayout1Item11: TdxLayoutItem
-                Caption = #27700#27877#21333#20215':'
+                CaptionOptions.Text = #27700#27877#21333#20215':'
                 Control = EditPrice
                 ControlOptions.ShowBorder = False
               end
             end
             object dxGroupLayout1Group6: TdxLayoutGroup
-              ShowCaption = False
+              CaptionOptions.Visible = False
+              ButtonOptions.Buttons = <>
               Hidden = True
               LayoutDirection = ldHorizontal
               ShowBorder = False
               object dxlytmLayout1Item12: TdxLayoutItem
-                Caption = #25552#36135#36710#36742':'
+                CaptionOptions.Text = #25552#36135#36710#36742':'
                 Control = EditTruck
                 ControlOptions.ShowBorder = False
               end
               object dxLayout1Item8: TdxLayoutItem
-                Caption = #21150#29702#21544#25968':'
+                CaptionOptions.Text = #21150#29702#21544#25968':'
                 Control = EditValue
                 ControlOptions.ShowBorder = False
               end
@@ -373,20 +378,18 @@ object fFormNewCard: TfFormNewCard
           end
         end
         object dxLayoutGroup3: TdxLayoutGroup
-          AutoAligns = [aaVertical]
           AlignHorz = ahClient
-          ShowCaption = False
+          CaptionOptions.Visible = False
+          ButtonOptions.Buttons = <>
           Hidden = True
           LayoutDirection = ldHorizontal
           ShowBorder = False
           object dxLayoutItem1: TdxLayoutItem
-            AutoAligns = [aaVertical]
             AlignHorz = ahRight
             Control = BtnOK
             ControlOptions.ShowBorder = False
           end
           object dxLayout1Item2: TdxLayoutItem
-            AutoAligns = [aaVertical]
             AlignHorz = ahRight
             Control = BtnExit
             ControlOptions.ShowBorder = False
