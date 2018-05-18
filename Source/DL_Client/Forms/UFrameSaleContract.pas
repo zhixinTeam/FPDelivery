@@ -14,7 +14,8 @@ uses
   cxTextEdit, cxMaskEdit, cxButtonEdit, ADODB, cxLabel, UBitmapPanel,
   cxSplitter, cxGridLevel, cxClasses, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid,
-  ComCtrls, ToolWin;
+  ComCtrls, ToolWin, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxLayoutcxEditAdapters;
 
 type
   TfFrameSaleContract = class(TfFrameNormal)
@@ -40,6 +41,7 @@ type
     N5: TMenuItem;
     N6: TMenuItem;
     N7: TMenuItem;
+    N8: TMenuItem;
     procedure EditIDPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
     procedure BtnAddClick(Sender: TObject);
@@ -50,6 +52,7 @@ type
     procedure N1Click(Sender: TObject);
     procedure N3Click(Sender: TObject);
     procedure N5Click(Sender: TObject);
+    procedure N8Click(Sender: TObject);
   private
     { Private declarations }
   protected
@@ -65,7 +68,7 @@ implementation
 {$R *.dfm}
 uses
   ULibFun, UMgrControl,UDataModule, UFrameBase, UFormBase, USysBusiness,
-  USysConst, USysDB;
+  USysConst, USysDB, UFormInputbox;
 
 //------------------------------------------------------------------------------
 class function TfFrameSaleContract.FrameID: integer;
@@ -83,7 +86,8 @@ begin
   //xxxxx
 
   if nWhere = '' then
-       Result := Result + ' Where IsNull(C_Freeze, '''')<>''$Yes'''
+       Result := Result + ' Where IsNull(C_Freeze, '''')<>''$Yes'''+
+                  ' and IsNull(C_EndCot, '''')<>''$Yes'''
   else Result := Result + ' Where (' + nWhere + ')';
 
   Result := MacroValue(Result, [MI('$Con', sTable_SaleContract),
@@ -138,7 +142,7 @@ end;
 
 //Desc: 删除
 procedure TfFrameSaleContract.BtnDelClick(Sender: TObject);
-var nStr,nSQL: string;
+var nStr,nSQL, nReson: string;
 begin
   if cxView1.DataController.GetSelectedCount < 1 then
   begin
@@ -152,10 +156,18 @@ begin
   with FDM.QueryTemp(nSQL) do
   if Fields[0].AsInteger > 0 then
   begin
-    ShowMsg('该合同不允许删除', '已办纸卡'); Exit;
+    ShowMsg('该合同不允许删除', '已办订单'); Exit;
   end;
 
   if not QueryDlg('确定要删除编号为[ ' + nStr + ' ]的合同吗?', sAsk) then Exit;
+
+  if not ShowInputBox('请输入删除原因:', sHint, nReson) then Exit;
+  if nReson = '' then
+  begin
+    ShowDlg('删除原因不能为空.',sHint);
+    Exit;
+  end;
+
   FDM.ADOConn.BeginTrans;
   try
     nSQL := 'Delete From %s Where C_ID=''%s''';
@@ -165,6 +177,9 @@ begin
     nSQL := 'Delete From %s Where E_CID=''%s'' ';
     nSQL := Format(nSQL, [sTable_SContractExt, nStr]);
     FDM.ExecuteSQL(nSQL);
+
+    FDM.WriteSysLog(sFlag_ContractItem, nStr, '删除合同:[ '+ nStr+' - '+
+            SQLQuery.FieldByName('C_Project').AsString +' ], 原因:' + nReson);
 
     FDM.ADOConn.CommitTrans;
     InitFormData(FWhere);
@@ -275,6 +290,40 @@ begin
     FDM.ExecuteSQL(nSQL);
     InitFormData(FWhere);
     ShowMsg('操作成功', sHint);
+  end;
+end;
+
+procedure TfFrameSaleContract.N8Click(Sender: TObject);
+var
+  nStr, nSQL: string;
+begin
+  if cxView1.DataController.GetSelectedCount < 1 then
+  begin
+    ShowMsg('请选择要终止的记录', sHint);
+    Exit;
+  end;
+
+  nStr := SQLQuery.FieldByName('C_ID').AsString;
+  if not QueryDlg('确定要终止编号为[ ' + nStr + ' ]的合同吗?'+
+                  #13+'一旦终止将不可再用.', sAsk) then Exit;
+
+  try
+    FDM.ADOConn.BeginTrans;
+
+    nSQL := 'Update %s Set C_EndCot=''%s'',C_EndUser=''%s'','+
+            'C_EndTime=''%s'' Where C_ID=''%s''';
+    nSQL := Format(nSQL, [sTable_SaleContract, sFlag_Yes, gSysParam.FUserName,
+            DateTime2Str(Now), nStr]);
+    FDM.ExecuteSQL(nSQL);
+
+    FDM.WriteSysLog(sFlag_ContractItem, '终止合同' ,'终止合同:'+nstr);
+
+    FDM.ADOConn.CommitTrans;
+    InitFormData(FWhere);
+    ShowMsg('操作成功', sHint);
+  except
+    FDM.ADOConn.RollbackTrans;
+    ShowMsg('操作失败.',sHint);
   end;
 end;
 

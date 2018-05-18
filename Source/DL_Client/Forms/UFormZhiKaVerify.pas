@@ -11,7 +11,7 @@ uses
   UFormNormal, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, cxLabel, cxMaskEdit,
   cxDropDownEdit, cxMemo, cxTextEdit, cxMCListBox, dxLayoutControl,
-  StdCtrls;
+  StdCtrls, dxSkinsCore, dxSkinsDefaultPainters, dxLayoutcxEditAdapters;
 
 type
   TfFormZhiKaVerify = class(TfFormNormal)
@@ -83,7 +83,7 @@ begin
   
   with TfFormZhiKaVerify.Create(Application) do
   begin
-    Caption := '纸卡审核';
+    Caption := '订单审核';
     with EditMoney,gPopedomManager do
       Properties.ReadOnly := not HasPopedom(nPopedom, sPopedom_Edit);  
     LoadFormData(nP.FParamA);
@@ -174,7 +174,7 @@ begin
   begin
     nStr := '有效量[ %.2f ]吨,合计需[ %.2f ]元';
     EditInfo.Text := Format(nStr, [FDtlValue, FDtlMoney]);
-  end else EditInfo.Text := '该纸卡无明细,可不用审核.';
+  end else EditInfo.Text := '该订单无明细,可不用审核.';
 end;
 
 //Desc: 验证数据
@@ -203,7 +203,7 @@ begin
     if nVal < gInfo.FDtlMoney then
     begin
       nStr := '*.该客户当前可用金为: %.2f元' + #13#10 +
-              '*.当前纸卡办理金额为: %.2f元 差额: %.2f元' + #13#10 + #13#10 +
+              '*.当前订单办理金额为: %.2f元 差额: %.2f元' + #13#10 + #13#10 +
               '客户资金余额不足,会导致无法提货!要继续审核吗?' + #13#10 +
               '继续审核请点"是"按钮.';
       nStr := Format(nStr, [nVal, gInfo.FDtlMoney, gInfo.FDtlMoney - nVal]);
@@ -227,7 +227,7 @@ begin
 
   EditDesc.Text := Trim(EditDesc.Text);
   if EditDesc.Text = '' then
-    EditDesc.Text := Format('审核纸卡[ %s ]时缴纳', [gInfo.FZhiKa]);
+    EditDesc.Text := Format('审核订单[ %s ]时缴纳', [gInfo.FZhiKa]);
   //xxxxx
 
   nStr := 'Insert Into $IOM(M_SaleMan,M_CusID,M_CusName,M_Type,M_Money,' +
@@ -251,14 +251,14 @@ begin
   begin
     nP.FCommand := cCmd_AddData;
     nP.FParamA := gInfo.FCusName;
-    nP.FParamB := Format('审核纸卡[ %s ]时缴纳水泥款', [gInfo.FZhiKa]);
+    nP.FParamB := Format('审核订单[ %s ]时缴纳水泥款', [gInfo.FZhiKa]);
     nP.FParamC := EditMoney.Text;
     CreateBaseFormItem(cFI_FormShouJu, '', @nP);
   end;
 
   nDefault := False;
   ModalResult := mrOk;
-  ShowMsg('纸卡审核成功', sHint);
+  ShowMsg('订单审核成功', sHint);
 end;
 
 initialization

@@ -12,7 +12,8 @@ uses
   cxButtonEdit, cxLabel, cxTextEdit, cxContainer, cxEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, cxGraphics, cxLookAndFeels,
   cxLookAndFeelPainters, cxRadioGroup, cxCheckComboBox, cxCheckBox,
-  cxGroupBox, cxCheckGroup, cxCheckListBox, ImgList;
+  cxGroupBox, cxCheckGroup, cxCheckListBox, ImgList, dxSkinsCore,
+  dxSkinsDefaultPainters, dxLayoutcxEditAdapters;
 
 type
   TfFormZKFreeze = class(TfFormNormal)
@@ -70,7 +71,7 @@ begin
 
   with TfFormZKFreeze.Create(Application) do
   begin
-    Caption := '纸卡冻结';
+    Caption := '订单冻结';
     InitFormData;
     
     nP.FCommand := cCmd_ModalResult;
@@ -185,7 +186,7 @@ begin
     ShowMsg('请选择有效的水泥品种', sHint); Exit;
   end;
 
-  nStr := '确定要%s所有包含被选中品种的纸卡吗?';
+  nStr := '确定要%s所有包含被选中品种的订单吗?';
   if Radio1.Checked then
        nStr := Format(nStr, ['冻结', nStock])
   else nStr := Format(nStr, ['解冻', nStock]);

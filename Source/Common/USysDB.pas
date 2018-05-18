@@ -214,6 +214,9 @@ const
 
   sFlag_ProviderItem  = 'ProviderItem';              //供应商信息项
   sFlag_MaterailsItem = 'MaterailsItem';             //原材料信息项
+  sFlag_PoundItem     = 'PoundItem';                 //过磅信息项
+  sFlag_CreditItem    = 'CreditItem';                //信用信息项
+
 
   sFlag_HardSrvURL    = 'HardMonURL';
   sFlag_MITSrvURL     = 'MITServiceURL';             //服务地址
@@ -342,6 +345,7 @@ const
   sTable_BackCashRule = 'S_BackCashRule';            //返现
   sTable_BackCashRuleTmp = 'S_BackCashRuleTmp';      //返现临时表
   sTable_BackRecord      = 'S_BackRecord';           //返现记录表
+  sTable_WorkTimes       = 'S_WorkTimes';            //班次
 
 
   {*新建表*}
@@ -640,7 +644,8 @@ const
        'C_Project varChar(100),C_SaleMan varChar(15), C_Customer varChar(15),' +
        'C_Date varChar(20), C_Area varChar(50), C_Addr varChar(50),' +
        'C_Delivery varChar(50), C_Payment varChar(20), C_Approval varChar(30),' +
-       'C_ZKDays Integer, C_XuNi Char(1), C_Freeze Char(1), C_Memo varChar(50))';
+       'C_ZKDays Integer, C_XuNi Char(1), C_Freeze Char(1), C_Memo varChar(50),'+
+       'C_EndCot char(1),C_EndUser varchar(20), C_EndTime DateTime)';
   {-----------------------------------------------------------------------------
    销售合同: SalesContract
    *.R_ID: 编号
@@ -657,6 +662,9 @@ const
    *.C_XuNi: 虚拟合同
    *.C_Freeze: 是否冻结
    *.C_Memo: 备注信息
+   *.C_EndCot: 终止合同
+   *.C_EndUser: 终止人
+   *.C_EndTime: 终止时间
   -----------------------------------------------------------------------------}
 
   sSQL_NewSContractExt = 'Create Table $Table(R_ID $Inc,' +
@@ -879,7 +887,8 @@ const
        'D_DelMan varChar(32), D_DelDate DateTime, D_YSResult Char(1), ' +
        'D_OutFact DateTime, D_OutMan varChar(32),D_TestNo varchar(20),'+
        'D_YTime1 DateTime,D_YMan1 varChar(32),D_YS1 Char(1) Default ''N'','+
-       'D_TestJG1 $Float,D_TestJG2 $Float, D_Memo varChar(500))';
+       'D_TestJG1 $Float,D_TestJG2 $Float,D_HysKZ $Float,D_HysMemo varchar(200),'+
+       'D_HysUser varchar(30), D_Memo varChar(500))';
   {-----------------------------------------------------------------------------
    采购订单明细表: OrderDetail
    *.R_ID: 编号
@@ -1328,7 +1337,8 @@ const
        'R_3DYa4 varChar(20), R_3DYa5 varChar(20), R_3DYa6 varChar(20),' +
        'R_28Ya1 varChar(20), R_28Ya2 varChar(20), R_28Ya3 varChar(20),' +
        'R_28Ya4 varChar(20), R_28Ya5 varChar(20), R_28Ya6 varChar(20),' +
-       'R_Date DateTime, R_Man varChar(32))';
+       'R_Date DateTime, R_Man varChar(32), R_7DayActive varchar(20),'+
+       'R_28DayActive varchar(20),R_Flow varchar(20))';
   {-----------------------------------------------------------------------------
    检验记录:StockRecord
    *.R_ID:记录编号
@@ -1374,6 +1384,9 @@ const
    *.R_28Ya6:28抗压强度6
    *.R_Date:取样日期
    *.R_Man:录入人
+   *.R_7DayActive:7天活性
+   *.R_28DayActive:28天活性
+   *.R_Flow:流动度比
   -----------------------------------------------------------------------------}
 
   sSQL_NewStockHuaYan = 'Create Table $Table(H_ID $Inc, H_No varChar(15),' +
@@ -1530,6 +1543,17 @@ const
    *.R_Valid:是否有效 Y=无效
   -----------------------------------------------------------------------------}
 
+  sSQL_NewWorkTimes = 'Create Table $Table(R_ID $Inc,'
+      +'W_WorkName varchar(40),W_DateBegin Datetime,W_DateEnd Datetime)';
+  {-----------------------------------------------------------------------------
+   班次表: WorkTimes
+   *.R_ID: 记录编号
+   *.W_WorkName:名称
+   *.W_DateBegin:开始时间
+   *.W_DateEnd:结束时间
+  -----------------------------------------------------------------------------}
+
+
 function CardStatusToStr(const nStatus: string): string;
 //磁卡状态
 function TruckStatusToStr(const nStatus: string): string;
@@ -1669,6 +1693,7 @@ begin
   AddSysTableItem(sTable_BackCashRule, sSQL_NewBackCashRule);
   AddSysTableItem(sTable_BackCashRuleTmp, sSQL_NewBackCashRule);
   AddSysTableItem(sTable_BackRecord, sSQL_NewBackRecord);
+  AddSysTableItem(sTable_WorkTimes, sSQL_NewWorkTimes);
 end;
 
 //Desc: 清理系统表

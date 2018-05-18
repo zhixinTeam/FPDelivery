@@ -178,7 +178,7 @@ inherited fFormGetZhiKa: TfFormGetZhiKa
         CaptionOptions.Text = '2.'#36873#25321#32440#21345
         ButtonOptions.Buttons = <>
         object dxLayout1Item4: TdxLayoutItem
-          CaptionOptions.Text = #32440#21345#21015#34920':'
+          CaptionOptions.Text = #35746#21333#21015#34920':'
           Control = EditZK
           ControlOptions.ShowBorder = False
         end

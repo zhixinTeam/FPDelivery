@@ -183,6 +183,10 @@ const
   cFI_FormTruckCard     = $1105;                     //车辆绑定长期卡(富平)
   cFI_FormBackCashRule  = $1107;                     //为纸卡设置返现规则(富平)
   cFI_FormBackCash      = $1108;                     //计算返现
+  cFI_FormTestRecOther  = $1109;                     //煤之外其他检验结果录入
+  cFI_FrameTestResult   = $1110;                     //化验结果查询
+  cFI_FormQryCard       = $1111;                     //查询磁卡信息
+  cFI_FormAdjustCredit  = $1112;                     //信用金额调拨
 
 
 
@@ -354,6 +358,9 @@ begin
   AddMenuModuleItem('MAIN_C10', cFI_FormAdjustMoney, mtForm);
   AddMenuModuleItem('MAIN_B07', cFI_FrameAuditTruck);
   AddMenuModuleItem('MAIN_C11', cFI_FormBackCash, mtForm);
+  AddMenuModuleItem('MAIN_K09', cFI_FormTestRecOther, mtForm);
+  AddMenuModuleItem('MAIN_K10', cFI_FrameTestResult);
+  AddMenuModuleItem('MAIN_D11', cFI_FormQryCard, mtForm);
   {$ELSE}
   AddMenuModuleItem('MAIN_B02', cFI_FrameCustomer);
   {$ENDIF}

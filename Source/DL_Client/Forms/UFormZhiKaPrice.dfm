@@ -54,7 +54,7 @@ inherited fFormZKPrice: TfFormZKPrice
     object Check1: TcxCheckBox [5]
       Left = 23
       Top = 111
-      Caption = #26032#21333#20215#29983#25928#21518#35299#20923#32440#21345'.'
+      Caption = #26032#21333#20215#29983#25928#21518#35299#20923#35746#21333'.'
       ParentFont = False
       State = cbsChecked
       Style.BorderColor = clWindowFrame

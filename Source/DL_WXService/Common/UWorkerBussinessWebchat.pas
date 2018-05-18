@@ -455,7 +455,8 @@ begin
                                   FPackOut := True;
                                   Result := DownLoadPic(nData);
                                 end;
-   cBC_WX_get_shoporderbyTruck :
+   cBC_WX_get_shoporderbyTruck :Result := get_shoporderByTruck(nData);
+   cBC_WX_get_shoporderbyTruckClt :
                                 begin
                                   FPackOut := True;
                                   Result := get_shoporderByTruck(nData);
@@ -2071,18 +2072,9 @@ begin
     begin
       //nData := '无效参数节点(Items Null).';
       //Exit;
-      FListB.Values['order_id']      := '';
       FListB.Values['order_type']    := 'NULL';
-      FListB.Values['fac_order_no']  := '';
-      FListB.Values['ordernumber']   := '';
-      FListB.Values['goodsID']       := '';
-      FListB.Values['goodstype']     := '';
-      FListB.Values['goodsname']     := '';
-      FListB.Values['tracknumber']   := '';
-      FListB.Values['data']          := '';
-
       nStr := StringReplace(FListB.Text, '\n', #13#10, [rfReplaceAll]);
-
+      WriteLog('获取订单信息出参解码后:'+nStr);
       FListA.Add(nStr);
     end
     else

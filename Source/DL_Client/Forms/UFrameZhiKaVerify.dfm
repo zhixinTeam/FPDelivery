@@ -30,9 +30,11 @@ inherited fFrameZhiKaVerify: TfFrameZhiKaVerify
     Height = 135
     object cxTextEdit1: TcxTextEdit [0]
       Left = 259
-      Top = 96
+      Top = 93
       Hint = 'T.Z_ID'
       ParentFont = False
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 4
       Width = 115
     end
@@ -46,6 +48,9 @@ inherited fFrameZhiKaVerify: TfFrameZhiKaVerify
           Kind = bkEllipsis
         end>
       Properties.OnButtonClick = EditTruckPropertiesButtonClick
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
+      Style.ButtonStyle = btsHotFlat
       TabOrder = 0
       OnKeyPress = OnCtrlKeyPress
       Width = 115
@@ -60,6 +65,9 @@ inherited fFrameZhiKaVerify: TfFrameZhiKaVerify
           Kind = bkEllipsis
         end>
       Properties.OnButtonClick = EditTruckPropertiesButtonClick
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
+      Style.ButtonStyle = btsHotFlat
       TabOrder = 1
       OnKeyPress = OnCtrlKeyPress
       Width = 115
@@ -75,58 +83,64 @@ inherited fFrameZhiKaVerify: TfFrameZhiKaVerify
         end>
       Properties.ReadOnly = True
       Properties.OnButtonClick = EditDatePropertiesButtonClick
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
+      Style.ButtonStyle = btsHotFlat
       TabOrder = 2
       Width = 185
     end
     object cxTextEdit4: TcxTextEdit [4]
       Left = 81
-      Top = 96
+      Top = 93
       Hint = 'T.Z_CID'
       ParentFont = False
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 3
       Width = 115
     end
     object cxTextEdit2: TcxTextEdit [5]
       Left = 437
-      Top = 96
+      Top = 93
       Hint = 'T.M_Memo'
       ParentFont = False
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 5
       Width = 121
     end
     inherited dxGroup1: TdxLayoutGroup
       inherited GroupSearch1: TdxLayoutGroup
         object dxLayout1Item2: TdxLayoutItem
-          Caption = #23458#25143#21517#31216':'
+          CaptionOptions.Text = #23458#25143#21517#31216':'
           Control = EditCus
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item3: TdxLayoutItem
-          Caption = #32440#21345#32534#21495':'
+          CaptionOptions.Text = #35746#21333#32534#21495':'
           Control = EditZK
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item6: TdxLayoutItem
-          Caption = #26085#26399#31579#36873':'
+          CaptionOptions.Text = #26085#26399#31579#36873':'
           Control = EditDate
           ControlOptions.ShowBorder = False
         end
       end
       inherited GroupDetail1: TdxLayoutGroup
         object dxLayout1Item7: TdxLayoutItem
-          Caption = #21512#21516#32534#21495':'
+          CaptionOptions.Text = #21512#21516#32534#21495':'
           Control = cxTextEdit4
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item1: TdxLayoutItem
-          Caption = #32440#21345#32534#21495':'
+          CaptionOptions.Text = #35746#21333#32534#21495':'
           Control = cxTextEdit1
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item4: TdxLayoutItem
-          AutoAligns = [aaVertical]
           AlignHorz = ahClient
-          Caption = #22791#27880#20449#24687':'
+          CaptionOptions.Text = #22791#27880#20449#24687':'
           Control = cxTextEdit2
           ControlOptions.ShowBorder = False
         end
@@ -140,7 +154,7 @@ inherited fFrameZhiKaVerify: TfFrameZhiKaVerify
   inherited TitlePanel1: TZnBitmapPanel
     Width = 686
     inherited TitleBar: TcxLabel
-      Caption = #32440#21345#23457#26680#35760#24405
+      Caption = #35746#21333#23457#26680#35760#24405
       Style.IsFontAssigned = True
       Width = 686
       AnchorX = 343

@@ -188,6 +188,9 @@ function get_shoporderbyno(const nXmlStr: string): string;
 function get_shopPurchaseByno(const nXmlStr:string):string;
 //根据货单号获取供货信息
 
+function GetBillByTruck(const nData: string):string;
+//根据车牌号获取订单信息
+
 function CallBusinessCommand(const nCmd: Integer; const nData,nExt: string;
   const nOut: PWorkerBusinessCommand; const nWarn: Boolean = True): Boolean;
 
@@ -1611,6 +1614,15 @@ begin
   Result := '';
   if CallBusinessWechat(cBC_WX_get_shopPurchasebyNO, nXmlStr, '', '', @nOut,False) then
     Result := nOut.FData;
+end;
+
+//根据车牌获取订单信息
+function GetBillByTruck(const nData: string):string;
+var nOut: TWorkerBusinessCommand;
+begin
+  if CallBusinessWechat(cBC_WX_get_shoporderbyTruckClt, nData, '', '', @nOut,False) then
+    Result := nOut.FData
+    else Result := '';
 end;
 
 end.

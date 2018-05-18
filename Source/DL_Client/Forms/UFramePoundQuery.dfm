@@ -32,6 +32,8 @@ inherited fFramePoundQuery: TfFramePoundQuery
       Top = 94
       Hint = 'T.P_Truck'
       ParentFont = False
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 6
       Width = 125
     end
@@ -45,6 +47,9 @@ inherited fFramePoundQuery: TfFramePoundQuery
           Kind = bkEllipsis
         end>
       Properties.OnButtonClick = EditTruckPropertiesButtonClick
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
+      Style.ButtonStyle = btsHotFlat
       TabOrder = 1
       OnKeyPress = OnCtrlKeyPress
       Width = 125
@@ -59,6 +64,9 @@ inherited fFramePoundQuery: TfFramePoundQuery
           Kind = bkEllipsis
         end>
       Properties.OnButtonClick = EditTruckPropertiesButtonClick
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
+      Style.ButtonStyle = btsHotFlat
       TabOrder = 2
       OnKeyPress = OnCtrlKeyPress
       Width = 125
@@ -68,6 +76,8 @@ inherited fFramePoundQuery: TfFramePoundQuery
       Top = 94
       Hint = 'T.P_ID'
       ParentFont = False
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 5
       Width = 125
     end
@@ -76,6 +86,8 @@ inherited fFramePoundQuery: TfFramePoundQuery
       Top = 94
       Hint = 'T.P_PDate'
       ParentFont = False
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 7
       Width = 125
     end
@@ -90,6 +102,9 @@ inherited fFramePoundQuery: TfFramePoundQuery
         end>
       Properties.ReadOnly = True
       Properties.OnButtonClick = EditDatePropertiesButtonClick
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
+      Style.ButtonStyle = btsHotFlat
       TabOrder = 3
       Width = 185
     end
@@ -98,6 +113,8 @@ inherited fFramePoundQuery: TfFramePoundQuery
       Top = 94
       Hint = 'T.P_MDate'
       ParentFont = False
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 8
       Width = 125
     end
@@ -106,6 +123,8 @@ inherited fFramePoundQuery: TfFramePoundQuery
       Top = 36
       Caption = #26597#35810#24050#21024#38500
       ParentFont = False
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 4
       Transparent = True
       OnClick = Check1Click
@@ -121,6 +140,9 @@ inherited fFramePoundQuery: TfFramePoundQuery
           Kind = bkEllipsis
         end>
       Properties.OnButtonClick = EditTruckPropertiesButtonClick
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
+      Style.ButtonStyle = btsHotFlat
       TabOrder = 0
       OnKeyPress = OnCtrlKeyPress
       Width = 125
@@ -128,50 +150,50 @@ inherited fFramePoundQuery: TfFramePoundQuery
     inherited dxGroup1: TdxLayoutGroup
       inherited GroupSearch1: TdxLayoutGroup
         object dxLayout1Item9: TdxLayoutItem
-          Caption = #30917#21333#32534#21495':'
+          CaptionOptions.Text = #30917#21333#32534#21495':'
           Control = EditPID
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item2: TdxLayoutItem
-          Caption = #36710#29260#21495#30721':'
+          CaptionOptions.Text = #36710#29260#21495#30721':'
           Control = EditTruck
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item3: TdxLayoutItem
-          Caption = #23458#25143#21517#31216':'
+          CaptionOptions.Text = #23458#25143#21517#31216':'
           Control = EditCus
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item6: TdxLayoutItem
-          Caption = #26085#26399#31579#36873':'
+          CaptionOptions.Text = #26085#26399#31579#36873':'
           Control = EditDate
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item8: TdxLayoutItem
-          Caption = 'cxCheckBox1'
-          ShowCaption = False
+          CaptionOptions.Text = 'cxCheckBox1'
+          CaptionOptions.Visible = False
           Control = Check1
           ControlOptions.ShowBorder = False
         end
       end
       inherited GroupDetail1: TdxLayoutGroup
         object dxLayout1Item4: TdxLayoutItem
-          Caption = #30917#21333#32534#21495':'
+          CaptionOptions.Text = #30917#21333#32534#21495':'
           Control = cxTextEdit2
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item1: TdxLayoutItem
-          Caption = #36710#29260#21495#30721':'
+          CaptionOptions.Text = #36710#29260#21495#30721':'
           Control = cxTextEdit1
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item5: TdxLayoutItem
-          Caption = #30382#37325#26102#38388':'
+          CaptionOptions.Text = #30382#37325#26102#38388':'
           Control = cxTextEdit3
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item7: TdxLayoutItem
-          Caption = #27611#37325#26102#38388':'
+          CaptionOptions.Text = #27611#37325#26102#38388':'
           Control = cxTextEdit4
           ControlOptions.ShowBorder = False
         end

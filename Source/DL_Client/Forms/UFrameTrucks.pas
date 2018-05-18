@@ -15,7 +15,7 @@ uses
   ADODB, cxLabel, UBitmapPanel, cxSplitter, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGrid, ComCtrls, ToolWin, Menus,
-  dxLayoutcxEditAdapters;
+  dxLayoutcxEditAdapters, dxSkinscxPCPainter;
 
 type
   TfFrameTrucks = class(TfFrameNormal)
@@ -64,7 +64,7 @@ implementation
 {$R *.dfm}
 uses
   ULibFun, UMgrControl, USysBusiness, USysConst, USysDB, UDataModule, UFormBase,
-  UFormTruckCard, UBusinessPacker;
+  UFormTruckCard, UBusinessPacker,UFormInputbox;
 
 class function TfFrameTrucks.FrameID: integer;
 begin
@@ -111,7 +111,7 @@ end;
 
 //Desc: 删除
 procedure TfFrameTrucks.BtnDelClick(Sender: TObject);
-var nStr,nTruck,nEvent: string;
+var nStr,nTruck,nEvent,nReson: string;
 begin
   if cxView1.DataController.GetSelectedCount > 0 then
   begin
@@ -119,12 +119,19 @@ begin
     nStr   := Format('确定要删除车辆[ %s ]吗?', [nTruck]);
     if not QueryDlg(nStr, sAsk) then Exit;
 
+    if not ShowInputBox('请输入删除原因:', sHint, nReson) then Exit;
+    if nReson = '' then
+    begin
+      ShowDlg('删除原因不能为空.',sHint);
+      Exit;
+    end;
+
     nStr := 'Delete From %s Where R_ID=%s';
     nStr := Format(nStr, [sTable_Truck, SQLQuery.FieldByName('R_Id').AsString]);
 
     FDM.ExecuteSQL(nStr);
 
-    nEvent := '删除[ %s ]档案信息.';
+    nEvent := '删除[ %s ]档案信息, 原因：'+nReson;
     nEvent := Format(nEvent, [nTruck]);
     FDM.WriteSysLog(sFlag_CommonItem, nTruck, nEvent);
 

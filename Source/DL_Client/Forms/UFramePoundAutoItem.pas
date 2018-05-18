@@ -408,7 +408,7 @@ begin
     //可称重状态判定
 
     //供应类业务,且化验室未验收，则直接跳出循环
-    if (FCardUsed=sFlag_Provide) and GetHysYsStatus(FStockNo,FID) then
+    if (FCardUsed=sFlag_Provide) and (FNextStatus = sFlag_TruckBFM) and GetHysYsStatus(FStockNo,FID) then
     begin
       nInt := 0;
       nVoice := '化验室未验收,车辆 %s 不能过磅';
@@ -664,7 +664,7 @@ begin
           exit;
         end;
         //限载值 + 限载允许误差
-        if (FieldByName('S_Value').AsString <> 'Y') and
+        if (FieldByName('T_NoLimit').AsString <> 'Y') and
           (FUIData.FMData.FValue > FieldByName('S_Value').AsFloat + gSysParam.FLoadLimitWC) then
         begin
           nStr := '超出最大限载重量，请返厂卸车';

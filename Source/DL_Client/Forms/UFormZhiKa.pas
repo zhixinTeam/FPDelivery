@@ -12,7 +12,8 @@ uses
   cxLookAndFeelPainters, ComCtrls, cxContainer, cxEdit, Menus,
   cxDropDownEdit, cxCalendar, cxCheckBox, cxLabel, cxMaskEdit,
   cxButtonEdit, cxTextEdit, cxListView, dxLayoutControl, StdCtrls,
-  dxLayoutcxEditAdapters, cxCurrencyEdit;
+  dxLayoutcxEditAdapters, cxCurrencyEdit, dxSkinsCore,
+  dxSkinsDefaultPainters;
 
 type
   TStockItem = record
@@ -160,7 +161,7 @@ begin
     with TfFormZhiKa.Create(Application) do
     begin
       FRecordID := '';
-      Caption := '纸卡 - 办理';
+      Caption := '订单 - 办理';
 
       InitFormData('');
       nP.FCommand := cCmd_ModalResult;
@@ -171,7 +172,7 @@ begin
     with TfFormZhiKa.Create(Application) do
     begin
       FRecordID := nP.FParamA;
-      Caption := '纸卡 - 修改';
+      Caption := '订单 - 修改';
 
       InitFormData(FRecordID);
       nP.FCommand := cCmd_ModalResult;
@@ -193,7 +194,7 @@ begin
       with gForm  do
       begin
         FRecordID := nP.FParamA;
-        Caption := '纸卡 - ' + FRecordID;
+        Caption := '订单 - ' + FRecordID;
         
         InitFormData(FRecordID);
         if not Showing then Show;
@@ -258,7 +259,7 @@ var nStr: string;
     nDStr: TDynamicStrArray;
     nItem: array of TStockItem;
 begin
-  EditName.Text := '标准纸卡';
+  EditName.Text := '标准订单';
   FZhiKa.FContract := '';
   FZhiKa.FIsValid := False;
   SetLength(FStockList, 0);
@@ -828,7 +829,7 @@ begin
     begin
       nZID := GetSerialNo(sFlag_BusGroup, sFlag_ZhiKa, True);
       if nZID = '' then
-        raise Exception.Create('获取纸卡号失败');
+        raise Exception.Create('获取订单号失败');
       //xxxxx
 
       nList.Add(Format('Z_ID=''%s''', [nZID]));
@@ -900,7 +901,7 @@ begin
     nList.Free;
     if FDM.ADOConn.InTransaction then
       FDM.ADOConn.RollbackTrans;
-    ShowMsg('纸卡保存失败', sError); Exit;
+    ShowMsg('订单保存失败', sError); Exit;
   end;
 
   if Check1.Checked then
@@ -920,7 +921,7 @@ begin
   //print report
 
   ModalResult := mrOK;
-  ShowMsg('纸卡已保存', sHint);
+  ShowMsg('订单已保存', sHint);
 end;
 
 procedure TfFormZhiKa.EditLadingPropertiesChange(Sender: TObject);

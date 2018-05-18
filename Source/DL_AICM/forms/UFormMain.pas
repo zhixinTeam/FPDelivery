@@ -35,6 +35,7 @@ type
     imgCard: TImage;
     ImageSep: TImage;
     imgPurchaseCard: TImage;
+    lblCusName: TcxLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure ComPort1RxChar(Sender: TObject; Count: Integer);
@@ -72,6 +73,7 @@ type
     procedure QueryCard(const nCard: string);
     //查询卡信息
     procedure QueryPorderinfo(const nCard: string);
+    procedure QueryWXService(const nCard:string);
   end;
 
 var
@@ -85,7 +87,7 @@ uses
   IniFiles, ULibFun, CPortTypes, USysLoger, USysDB, USmallFunc, UDataModule,
   UFormConn, uZXNewCard,USysConst,UClientWorker,UMITPacker,USysModule,USysBusiness,
   UDataReport,UFormInputbox,UFormBarcodePrint,uZXNewPurchaseCard,
-  UFormBase,DateUtils;
+  UFormBase,DateUtils, UBusinessPacker;
 
 type
   TReaderType = (ptT800, pt8142);
@@ -257,6 +259,7 @@ begin
     LabelNum.Caption := '开放道数:';
     LabelTon.Caption := '提货数量:';
     LabelHint.Caption := '请您刷卡';
+    lblCusName.Caption := '客户名称:';
   end else
   begin
     LabelDec.Caption := IntToStr(FTimeCounter) + ' ';
@@ -306,7 +309,8 @@ begin
         Exit;
       end
       else begin
-        LabelDec.Caption := '磁卡号无效';
+        //LabelDec.Caption := '磁卡号无效';
+        QueryWXService(nCardno);
         Exit;
       end;
     end;
@@ -383,6 +387,7 @@ begin
       LabelTruck.Caption := '车牌号码: ' + FieldByName('L_Truck').AsString;
       LabelStock.Caption := '品种名称: ' + FieldByName('L_StockName').AsString;
       LabelTon.Caption := '提货数量: ' + FieldByName('L_Value').AsString + '吨';
+      lblCusName.Caption := '客户名称:'+ FieldByName('L_CusName').AsString ;
     end;
     WriteLog('TfFormMain.QueryCard(nCard='''+nCard+''')查询提货单[nStr]-耗时：'+InttoStr(MilliSecondsBetween(Now, nBeginTotal))+'ms');
     //--------------------------------------------------------------------------
@@ -618,7 +623,7 @@ begin
     nTop := nIni.ReadInteger('screen','top',0);
     nWidth := nIni.ReadInteger('screen','width',1024);
     nHeight := nIni.ReadInteger('screen','height',768);
-    nItemHeigth := nHeight div 8;
+    nItemHeigth := nHeight div 9;
 
     LabelTruck.Height := nItemHeigth;
     LabelDec.Height := nItemHeigth;
@@ -688,6 +693,102 @@ begin
       WriteLog(E.Message);
     end;
   end;}
+end;
+
+procedure TfFormMain.QueryWXService(const nCard: string);
+var
+  nBeginTotal:TDateTime;
+  nStr, nTruck, nData, nSQL:string;
+  nList, nTmp, nListBill:TStrings;
+begin
+  if (nCard = FLastCard) and (GetTickCount - FLastQuery < 8 * 1000) then
+  begin
+    LabelDec.Caption := '请不要频繁读卡';
+    Exit;
+  end;
+
+  nBeginTotal := Now;
+  try
+    FTimeCounter := 10;
+    TimerReadCard.Enabled := True;
+
+    nStr := 'Select * From %s Where T_Card=''%s''';
+    nStr := Format(nStr, [sTable_Truck, nCard]);
+    FBegin := Now;
+    with FDM.QuerySQL(nStr) do
+    begin
+      if RecordCount < 1 then
+      begin
+        FTimeCounter := 1;
+        LabelDec.Caption := '磁卡号无效';
+        Exit;
+      end;
+
+      nTruck := FieldByName('T_Truck').AsString;
+    end;
+
+    nStr := GetBillByTruck(PackerEncodeStr(nTruck));
+    if nStr = '' then
+    begin
+      FTimeCounter := 1;
+      LabelDec.Caption := '磁卡号无效';
+      Exit;
+    end;
+
+    nData := PackerDecodeStr(nStr);
+    nList := TStringList.Create;
+    nList.Text := nData;
+
+    if Trim(nList.Values['order_type']) = 'NULL' then
+    begin
+      FTimeCounter := 1;
+      LabelDec.Caption := '磁卡号无效';
+      Exit;
+    end;
+
+    LabelTruck.Caption := '车牌号码:' + nList.Values['tracknumber'];
+    LabelStock.Caption := '品种名称:' + nList.Values['goodsname'];
+
+    if Trim(nList.Values['order_type']) = 'S' then
+    begin
+      LabelTon.Caption := '提货数量:' + nList.Values['data'];
+      LabelOrder.Caption := '销售订单:'+nList.Values['fac_order_no'];
+
+      nStr := 'select C_Name from %s a,%s b where a.Z_Customer=b.C_ID and a.Z_ID=''%s''';
+      nStr := Format(nStr,[sTable_ZhiKa,sTable_Customer,nList.Values['fac_order_no']]);
+      with FDM.QuerySQL(nStr) do
+      begin
+        lblCusName.Caption := '客户名称:'+ FieldByName('C_Name').AsString;
+      end;
+
+      nStr := 'Select Count(*) From %s ' +
+              'Where Z_StockNo=''%s'' And Z_Valid=''%s'' And Z_VipLine=''%s''';
+      nStr := Format(nStr, [sTable_ZTLines, nList.Values['goodsID'], sFlag_Yes,'C']);
+      with FDM.QuerySQL(nStr) do
+      begin
+        LabelNum.Caption := '开放道数: ' + Fields[0].AsString + '个';
+      end;
+      FLastCard := nCard;
+    end
+    else
+    begin
+      LabelOrder.Caption := '采购订单:'+nList.Values['fac_order_no'];
+      LabelTon.Caption := '供货数量:' + nList.Values['data'];
+
+      nStr := 'select b_proid as provider_code,b_proname as provider_name,'+
+              'b_stockno as con_materiel_Code,b_restvalue as '+
+              'con_remain_quantity from %s where b_id=''%s''';
+      nStr := Format(nStr,[sTable_OrderBase,nList.Values['fac_order_no']]);
+      with FDM.QuerySQL(nStr) do
+      begin
+        lblCusName.Caption := '供应商名:'+ FieldByName('provider_name').AsString;
+      end;
+      FLastCard := nCard;
+    end;
+  except
+    LabelDec.Caption := '磁卡无效';
+    Exit;
+  end;
 end;
 
 end.

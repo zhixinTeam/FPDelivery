@@ -11,7 +11,8 @@ uses
   UDataModule, cxGraphics, dxLayoutControl, cxButtonEdit, StdCtrls,
   cxMaskEdit, cxDropDownEdit, cxMCListBox, cxMemo, cxContainer, cxEdit,
   cxTextEdit, cxControls, UFormBase, cxCheckBox, cxLookAndFeels,
-  cxLookAndFeelPainters;
+  cxLookAndFeelPainters, dxSkinsCore, dxSkinsDefaultPainters,
+  dxLayoutcxEditAdapters;
 
 type
   TfFormSalesMan = class(TBaseForm)
@@ -60,7 +61,7 @@ type
       AButtonIndex: Integer);
   private
     { Private declarations }
-    FSalesManID: string;
+    FSalesManID, FSaleManName: string;
     //业务员标识
     procedure InitFormData(const nID: string);
     //载入数据
@@ -251,6 +252,7 @@ begin
     nStr := 'Select * From %s Where S_ID=''%s''';
     nStr := Format(nStr, [sTable_Salesman, nID]);
     LoadDataToCtrl(FDM.QueryTemp(nStr), Self, '', SetData);
+    FSaleManName := FDM.SqlTemp.fieldbyname('S_Name').AsString;
 
     InfoList1.Clear;
     nStr := MacroValue(sQuery_ExtInfo, [MI('$Table', sTable_ExtInfo),
@@ -333,6 +335,26 @@ begin
   begin
     EditName.SetFocus;
     ShowMsg('请填写业务员名称', sHint); Exit;
+  end;
+
+  if FSalesManID = '' then
+  begin
+    nStr := 'select * from %s where S_Name=''%s''';
+    nStr := Format(nStr,[sTable_Salesman,EditName.Text]);
+  end
+  else
+  begin
+    nStr := 'select * from %s where S_Name=''%s'' and S_Name<>''%s''';
+    nStr := Format(nStr,[sTable_Salesman,EditName.Text, FSaleManName]);
+  end;
+  with FDM.QueryTemp(nStr) do
+  begin
+    if recordcount > 0 then
+    begin
+      ActiveControl := EditName;
+      ShowMsg('业务员已经存在！', sHint);
+      Exit;
+    end;
   end;
 
   nList := TStringList.Create;

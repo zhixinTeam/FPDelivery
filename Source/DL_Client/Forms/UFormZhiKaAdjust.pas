@@ -16,7 +16,8 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   UFormNormal, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, ComCtrls, cxListView,
-  cxLabel, StdCtrls, cxRadioGroup, dxLayoutControl;
+  cxLabel, StdCtrls, cxRadioGroup, dxLayoutControl, dxSkinsCore,
+  dxSkinsDefaultPainters, dxLayoutcxEditAdapters;
 
 type
   TfFormZhiKaAdjust = class(TfFormNormal)
@@ -220,7 +221,7 @@ begin
      (ListZK.ItemIndex < 0) then
   begin
     ListZK.SetFocus;
-    ShowMsg('请选择要调整的纸卡', sHint); Exit;
+    ShowMsg('请选择要调整的订单', sHint); Exit;
   end;
 
   nStr := '注意: 该操作不可以撤销,请您慎重!' + #13#10 + '要继续吗?';

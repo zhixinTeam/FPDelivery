@@ -14,7 +14,8 @@ uses
   cxTextEdit, cxMaskEdit, cxButtonEdit, ADODB, cxLabel, UBitmapPanel,
   cxSplitter, cxGridLevel, cxClasses, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid,
-  ComCtrls, ToolWin, dxLayoutcxEditAdapters;
+  ComCtrls, ToolWin, dxLayoutcxEditAdapters, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter;
 
 type
   TfFrameZhiKa = class(TfFrameNormal)
@@ -45,6 +46,7 @@ type
     N8: TMenuItem;
     N9: TMenuItem;
     N10: TMenuItem;
+    N11: TMenuItem;
     procedure EditIDPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
     procedure BtnAddClick(Sender: TObject);
@@ -57,6 +59,7 @@ type
     procedure cxView1DblClick(Sender: TObject);
     procedure N8Click(Sender: TObject);
     procedure N10Click(Sender: TObject);
+    procedure N11Click(Sender: TObject);
   private
     { Private declarations }
   protected
@@ -77,7 +80,7 @@ implementation
 {$R *.dfm}
 uses
   ULibFun, UMgrControl, UDataModule, UFormBase, USysConst, USysDB, USysBusiness,
-  UFormDateFilter;
+  UFormDateFilter, UFormInputbox;
 
 //------------------------------------------------------------------------------
 class function TfFrameZhiKa.FrameID: integer;
@@ -115,7 +118,7 @@ begin
   Result := MacroValue(Result, [MI('$ZK', sTable_ZhiKa), 
              MI('$Con', sTable_SaleContract), MI('$SM', sTable_Salesman),
              MI('$Cus', sTable_Customer), MI('$Yes', sFlag_Yes),
-             MI('$ST', Date2Str(FStart)), MI('$End', Date2Str(FEnd + 1))]);
+             MI('$ST', Date2Str(FStart)), MI('$End', Date2Str(FEnd +1))]);
   //xxxxx
 end;
 
@@ -154,7 +157,7 @@ end;
 
 //Desc: 删除
 procedure TfFrameZhiKa.BtnDelClick(Sender: TObject);
-var nStr,nID: string;
+var nStr,nID, nReson: string;
 begin
   if cxView1.DataController.GetSelectedCount < 1 then
   begin
@@ -168,15 +171,25 @@ begin
   with FDM.QueryTemp(nStr) do
   if Fields[0].AsInteger > 0 then
   begin
-    ShowMsg('该纸卡不能删除', '已提货'); Exit;
+    ShowMsg('该订单不能删除', '已提货'); Exit;
   end;
 
-  nStr := Format('确定要删除编号为[ %s ]的纸卡吗?', [nID]);
+  nStr := Format('确定要删除编号为[ %s ]的订单吗?', [nID]);
   if not QueryDlg(nStr, sAsk) then Exit;
+
+  if not ShowInputBox('请输入删除原因:', sHint, nReson) then Exit;
+  if nReson = '' then
+  begin
+    ShowDlg('删除原因不能为空.',sHint);
+    Exit;
+  end;
 
   FDM.ADOConn.BeginTrans;
   try
     DeleteZhiKa(nID);
+
+    FDM.WriteSysLog(sFlag_ZhiKaItem, nID, '删除订单:[ '+ nID +' ], 原因:' + nReson);
+
     FDM.ADOConn.CommitTrans;
     
     InitFormData(FWhere);
@@ -273,7 +286,7 @@ begin
      10:
        if SQLQuery.FieldByName('Z_Freeze').AsString <> sFlag_Yes then
        begin
-         nFlag := sFlag_Yes; nMsg := '纸卡已成功冻结';
+         nFlag := sFlag_Yes; nMsg := '订单已成功冻结';
        end else Exit;
      20:
        if SQLQuery.FieldByName('Z_Freeze').AsString = sFlag_Yes then
@@ -308,6 +321,39 @@ begin
   if (nP.FCommand = cCmd_ModalResult) and (nP.FParamA = mrOK) then
   begin
     InitFormData(FWhere);
+  end;
+end;
+
+procedure TfFrameZhiKa.N11Click(Sender: TObject);
+var
+  nStr, nID, nStrMoney: string;
+  nMOney: Double;
+begin
+  if SQLQuery.FieldByName('Z_OnlyMoney').AsString <> sFlag_Yes then
+  begin
+    ShowDlg('此纸卡没有限提,不能充值.',sHint);
+    exit;
+  end;
+
+  nStrMoney := '';
+  if not ShowInputBox('请输入提货磁卡号:', sHint, nStrMoney) then Exit;
+  try
+    nMOney := StrToFloat(nStrMoney);
+  except
+    ShowDlg('充值失败,请输入合法的金额.',sHint);
+    Exit;
+  end;
+  try
+    nID := SQLQuery.FieldByName('Z_ID').AsString;
+    nStr := 'Update %s set Z_FixedMoney = Z_FixedMoney+%s where Z_ID=''%s''';
+    nStr := Format(nStr,[sTable_ZhiKa, nStrMoney, nID]);
+    FDM.ExecuteSQL(nStr);
+
+    FDM.WriteSysLog(sFlag_ZhiKaItem, nID, '为纸卡[ '+ nID +' ]充值, 金额:' + nStrMoney);
+    InitFormData(FWhere);
+    ShowMsg('充值成功.',sHint);
+  except
+    ShowMsg('充值失败.',sHint);
   end;
 end;
 

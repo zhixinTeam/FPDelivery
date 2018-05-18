@@ -11,7 +11,8 @@ uses
   UFormNormal, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, ComCtrls, cxLabel,
   cxListView, cxButtonEdit, cxTextEdit, cxMaskEdit, cxDropDownEdit,
-  dxLayoutControl, StdCtrls;
+  dxLayoutControl, StdCtrls, dxSkinsCore, dxSkinsDefaultPainters,
+  dxLayoutcxEditAdapters;
 
 type
   TfFormGetContract = class(TfFormNormal)
@@ -187,9 +188,9 @@ begin
   nStr := 'Select sc.*,S_Name,C_Name From $SC sc ' +
           ' Left Join $SM sm On sm.S_ID=sc.C_SaleMan' +
           ' Left Join $Cus cus On cus.C_ID=sc.C_Customer ' +
-          'Where IsNull(C_Freeze,'''')<>''$Yes''';
+          'Where IsNull(C_Freeze,'''')<>''$Yes'' and IsNull(C_EndCot,'''')<>''$Yes''';
   //xxxxx
-  
+
   if nWhere <> '' then
     nStr := nStr + ' And (' + nWhere + ')';
   nStr := nStr + ' Order By sc.C_ID';
@@ -197,7 +198,7 @@ begin
   nStr := MacroValue(nStr, [MI('$SC', sTable_SaleContract),
           MI('$SM', sTable_Salesman), MI('$Cus', sTable_Customer),
           MI('$ID', EditCID.Text), MI('$SID', GetCtrlData(EditSMan)),
-          MI('$Yes', sFlag_Yes), MI('$CID', GetCtrlData(EditCustom)),
+          MI('$Yes', sFlag_Yes),MI('$Yes', sFlag_Yes), MI('$CID', GetCtrlData(EditCustom)),
           MI('$CPY', EditCustom.Text)]);
   //xxxxx
 

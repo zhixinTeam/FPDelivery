@@ -1,81 +1,85 @@
 inherited fFormZKFreeze: TfFormZKFreeze
   Left = 327
   Top = 288
-  ClientHeight = 388
-  ClientWidth = 556
+  ClientHeight = 310
+  ClientWidth = 445
   OnClose = FormClose
   OnCreate = FormCreate
-  PixelsPerInch = 120
-  TextHeight = 15
+  PixelsPerInch = 96
+  TextHeight = 12
   inherited dxLayout1: TdxLayoutControl
-    Width = 556
-    Height = 388
+    Width = 445
+    Height = 310
     inherited BtnOK: TButton
-      Left = 374
-      Top = 346
+      Left = 299
+      Top = 277
       TabOrder = 6
     end
     inherited BtnExit: TButton
-      Left = 461
-      Top = 346
+      Left = 369
+      Top = 277
       TabOrder = 7
     end
     object Radio1: TcxRadioButton [2]
-      Left = 29
-      Top = 264
-      Width = 141
-      Height = 21
-      Caption = #20923#32467#21253#21547#35813#21697#31181#30340#25152#26377#32440#21345'.'
+      Left = 23
+      Top = 216
+      Width = 113
+      Height = 17
+      Caption = #20923#32467#21253#21547#35813#21697#31181#30340#25152#26377#35746#21333'.'
       Checked = True
       ParentColor = False
       TabOrder = 4
       TabStop = True
     end
     object Radio2: TcxRadioButton [3]
-      Left = 29
-      Top = 290
-      Width = 141
-      Height = 21
-      Caption = #35299#38500#20923#32467#21253#21547#35813#21697#31181#30340#32440#21345'.'
+      Left = 23
+      Top = 238
+      Width = 113
+      Height = 17
+      Caption = #35299#38500#20923#32467#21253#21547#35813#21697#31181#30340#35746#21333'.'
       ParentColor = False
       TabOrder = 5
     end
     object Check1: TcxCheckBox [4]
-      Left = 29
-      Top = 220
+      Left = 23
+      Top = 177
       Caption = #20840#36873'/'#20840#19981#36873'('#34955#35013')'
       ParentFont = False
       Properties.OnEditValueChanged = Check1PropertiesEditValueChanged
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 1
       Transparent = True
-      Width = 169
+      Width = 135
     end
     object cxLabel1: TcxLabel [5]
-      Left = 29
-      Top = 249
+      Left = 23
+      Top = 203
       AutoSize = False
       ParentFont = False
       Properties.LineOptions.Alignment = cxllaBottom
       Properties.LineOptions.Visible = True
       Transparent = True
-      Height = 10
-      Width = 452
+      Height = 8
+      Width = 362
     end
     object Check2: TcxCheckBox [6]
-      Left = 203
-      Top = 220
+      Left = 163
+      Top = 177
       Caption = #20840#36873'/'#20840#19981#36873'('#25955#35013')'
       ParentFont = False
       Properties.OnEditValueChanged = Check1PropertiesEditValueChanged
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 2
       Transparent = True
-      Width = 169
+      Width = 136
     end
     object ListStock: TcxCheckListBox [7]
-      Left = 29
-      Top = 45
-      Width = 492
-      Height = 170
+      Left = 23
+      Top = 36
+      Width = 394
+      Height = 136
       Images = cxImageList1
       Items = <>
       ParentFont = False
@@ -85,47 +89,48 @@ inherited fFormZKFreeze: TfFormZKFreeze
     end
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
-        Caption = #27700#27877#21697#31181
+        CaptionOptions.Text = #27700#27877#21697#31181
         object dxLayout1Item9: TdxLayoutItem
-          Caption = #21697#31181#21015#34920':'
-          ShowCaption = False
+          CaptionOptions.Text = #21697#31181#21015#34920':'
+          CaptionOptions.Visible = False
           Control = ListStock
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Group2: TdxLayoutGroup
-          ShowCaption = False
+          CaptionOptions.Visible = False
+          ButtonOptions.Buttons = <>
           Hidden = True
           LayoutDirection = ldHorizontal
           ShowBorder = False
           object dxLayout1Item7: TdxLayoutItem
-            Caption = 'cxCheckBox1'
-            ShowCaption = False
+            CaptionOptions.Text = 'cxCheckBox1'
+            CaptionOptions.Visible = False
             Control = Check1
             ControlOptions.ShowBorder = False
           end
           object dxLayout1Item8: TdxLayoutItem
-            Caption = 'cxCheckBox1'
-            ShowCaption = False
+            CaptionOptions.Text = 'cxCheckBox1'
+            CaptionOptions.Visible = False
             Control = Check2
             ControlOptions.ShowBorder = False
           end
         end
         object dxLayout1Item5: TdxLayoutItem
-          Caption = 'cxLabel1'
-          ShowCaption = False
+          CaptionOptions.Text = 'cxLabel1'
+          CaptionOptions.Visible = False
           Control = cxLabel1
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item3: TdxLayoutItem
-          Caption = 'cxRadioButton1'
-          ShowCaption = False
+          CaptionOptions.Text = 'cxRadioButton1'
+          CaptionOptions.Visible = False
           Control = Radio1
           ControlOptions.AutoColor = True
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item4: TdxLayoutItem
-          Caption = 'cxRadioButton2'
-          ShowCaption = False
+          CaptionOptions.Text = 'cxRadioButton2'
+          CaptionOptions.Visible = False
           Control = Radio2
           ControlOptions.AutoColor = True
           ControlOptions.ShowBorder = False

@@ -11,17 +11,17 @@ inherited fFormGetContract: TfFormGetContract
   PixelsPerInch = 96
   TextHeight = 12
   inherited dxLayout1: TdxLayoutControl
-    Width = 437
-    Height = 273
+    Width = 429
+    Height = 262
     inherited BtnOK: TButton
-      Left = 291
-      Top = 240
+      Left = 283
+      Top = 229
       Caption = #30830#23450
       TabOrder = 5
     end
     inherited BtnExit: TButton
-      Left = 361
-      Top = 240
+      Left = 353
+      Top = 229
       TabOrder = 6
     end
     object EditSMan: TcxComboBox [2]
@@ -32,6 +32,10 @@ inherited fFormGetContract: TfFormGetContract
       Properties.DropDownRows = 20
       Properties.ItemHeight = 18
       Properties.OnEditValueChanged = EditSManPropertiesEditValueChanged
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
+      Style.ButtonStyle = btsHotFlat
+      Style.PopupBorderStyle = epbsSingle
       TabOrder = 1
       Width = 121
     end
@@ -42,6 +46,10 @@ inherited fFormGetContract: TfFormGetContract
       Properties.DropDownRows = 20
       Properties.ItemHeight = 18
       Properties.OnEditValueChanged = EditCustomPropertiesEditValueChanged
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
+      Style.ButtonStyle = btsHotFlat
+      Style.PopupBorderStyle = epbsSingle
       TabOrder = 2
       OnKeyPress = EditCustomKeyPress
       Width = 121
@@ -56,6 +64,9 @@ inherited fFormGetContract: TfFormGetContract
           Kind = bkEllipsis
         end>
       Properties.OnButtonClick = EditCIDPropertiesButtonClick
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
+      Style.ButtonStyle = btsHotFlat
       TabOrder = 0
       OnKeyPress = OnCtrlKeyPress
       Width = 121
@@ -98,38 +109,38 @@ inherited fFormGetContract: TfFormGetContract
     end
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
-        Caption = #26597#35810#26465#20214
+        CaptionOptions.Text = #26597#35810#26465#20214
         object dxLayout1Item5: TdxLayoutItem
-          Caption = #21512#21516#32534#21495':'
+          CaptionOptions.Text = #21512#21516#32534#21495':'
           Control = EditCID
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Group2: TdxLayoutGroup
-          ShowCaption = False
+          CaptionOptions.Visible = False
+          ButtonOptions.Buttons = <>
           Hidden = True
           ShowBorder = False
           object dxLayout1Item3: TdxLayoutItem
-            Caption = #19994#21153#20154#21592':'
+            CaptionOptions.Text = #19994#21153#20154#21592':'
             Control = EditSMan
             ControlOptions.ShowBorder = False
           end
           object dxLayout1Item4: TdxLayoutItem
-            Caption = #23458#25143#21517#31216':'
+            CaptionOptions.Text = #23458#25143#21517#31216':'
             Control = EditCustom
             ControlOptions.ShowBorder = False
           end
         end
         object dxLayout1Item7: TdxLayoutItem
-          Caption = 'cxLabel1'
-          ShowCaption = False
+          CaptionOptions.Text = 'cxLabel1'
+          CaptionOptions.Visible = False
           Control = cxLabel1
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item6: TdxLayoutItem
-          AutoAligns = [aaHorizontal]
           AlignVert = avClient
-          Caption = #26597#35810#32467#26524':'
-          ShowCaption = False
+          CaptionOptions.Text = #26597#35810#32467#26524':'
+          CaptionOptions.Visible = False
           Control = ListContract
           ControlOptions.ShowBorder = False
         end

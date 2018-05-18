@@ -1,60 +1,51 @@
 inherited fFormTestResult: TfFormTestResult
   Left = 519
   Top = 261
-  Height = 221
-  Caption = #26816#39564#32467#26524#24405#20837
+  Width = 379
+  Height = 316
+  Caption = #29028#26816#39564#32467#26524#24405#20837
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 12
   object dxLayoutControl1: TdxLayoutControl
     Left = 0
     Top = 0
-    Width = 329
-    Height = 183
+    Width = 363
+    Height = 278
     Align = alClient
     TabOrder = 0
     TabStop = False
     LayoutLookAndFeel = FDM.dxLayoutWeb1
-    object Label1: TLabel
-      Left = 11
-      Top = 121
-      Width = 276
-      Height = 24
-      Caption = #27880#65306#33509#26679#21697#20026#29028#65292#21017#28909#20540#24405#20837#32467#26524'1'#65292#27700#20998#24405#20837#32467#26524'2'#13#10'    '#20854#20182#26679#21697#21482#38656#24405#20837#32467#26524'1'#21363#21487
-      Color = clWindow
-      ParentColor = False
-      Transparent = True
-    end
     object EditTestNo: TcxTextEdit
-      Left = 87
+      Left = 81
       Top = 36
       ParentFont = False
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
       TabOrder = 0
       OnKeyPress = EditLadingKeyPress
-      Width = 219
+      Width = 202
     end
     object BtnExit: TButton
-      Left = 243
-      Top = 150
+      Left = 277
+      Top = 245
       Width = 75
       Height = 22
       Caption = #21462#28040
       ModalResult = 2
-      TabOrder = 4
+      TabOrder = 5
     end
     object BtnOK: TButton
-      Left = 163
-      Top = 150
+      Left = 197
+      Top = 245
       Width = 75
       Height = 22
       Caption = #30830#23450
-      TabOrder = 3
+      TabOrder = 4
       OnClick = BtnOKClick
     end
     object EditResult1: TcxCurrencyEdit
-      Left = 87
+      Left = 81
       Top = 61
       ParentFont = False
       Properties.DisplayFormat = '0.00;-0.00'
@@ -66,7 +57,7 @@ inherited fFormTestResult: TfFormTestResult
       Width = 121
     end
     object EditResult2: TcxCurrencyEdit
-      Left = 87
+      Left = 81
       Top = 86
       ParentFont = False
       Properties.DisplayFormat = '0.00;-0.00'
@@ -76,6 +67,14 @@ inherited fFormTestResult: TfFormTestResult
       TabOrder = 2
       OnKeyPress = EditLadingKeyPress
       Width = 121
+    end
+    object Memo1: TMemo
+      Left = 82
+      Top = 112
+      Width = 257
+      Height = 119
+      BorderStyle = bsNone
+      TabOrder = 3
     end
     object dxLayoutGroup1: TdxLayoutGroup
       AlignHorz = ahClient
@@ -95,21 +94,19 @@ inherited fFormTestResult: TfFormTestResult
           ControlOptions.ShowBorder = False
         end
         object dxLayoutControl1Item1: TdxLayoutItem
-          CaptionOptions.Text = #32467'    '#26524'1:'
+          CaptionOptions.Text = #28909'    '#20540':'
           Control = EditResult1
           ControlOptions.ShowBorder = False
         end
         object dxLayoutControl1Item2: TdxLayoutItem
-          CaptionOptions.Text = #32467'    '#26524'2:'
+          CaptionOptions.Text = #27700'    '#20998':'
           Control = EditResult2
           ControlOptions.ShowBorder = False
         end
-      end
-      object dxLayoutControl1Item3: TdxLayoutItem
-        CaptionOptions.Visible = False
-        Control = Label1
-        ControlOptions.AutoColor = True
-        ControlOptions.ShowBorder = False
+        object dxLayoutControl1Item4: TdxLayoutItem
+          CaptionOptions.Text = #22791'    '#27880':'
+          Control = Memo1
+        end
       end
       object dxLayoutControl1Group2: TdxLayoutGroup
         AlignHorz = ahRight

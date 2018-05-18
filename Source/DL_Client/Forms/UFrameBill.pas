@@ -15,7 +15,8 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid,
   ComCtrls, ToolWin, cxTextEdit, cxMaskEdit, cxButtonEdit, Menus,
   UBitmapPanel, cxSplitter, cxLookAndFeels, cxLookAndFeelPainters,
-  cxCheckBox;
+  cxCheckBox, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
+  dxLayoutcxEditAdapters;
 
 type
   TfFrameBill = class(TfFrameNormal)
@@ -51,6 +52,7 @@ type
     CheckDelete: TcxCheckBox;
     N10: TMenuItem;
     N11: TMenuItem;
+    N12: TMenuItem;
     procedure EditIDPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
     procedure BtnDelClick(Sender: TObject);
@@ -66,6 +68,7 @@ type
     procedure CheckDeleteClick(Sender: TObject);
     procedure N10Click(Sender: TObject);
     procedure N11Click(Sender: TObject);
+    procedure N12Click(Sender: TObject);
   protected
     FStart,FEnd: TDate;
     //时间区间
@@ -76,6 +79,7 @@ type
     function FilterColumnField: string; override;
     function InitFormDataSQL(const nWhere: string): string; override;
     procedure AfterInitFormData; override;
+    procedure PrintHYSample(var nBill:string);
     {*查询SQL*}
   public
     { Public declarations }
@@ -87,7 +91,7 @@ implementation
 {$R *.dfm}
 uses
   ULibFun, UMgrControl, UDataModule, UFormBase, UFormInputbox, USysPopedom,
-  USysConst, USysDB, USysBusiness, UFormDateFilter;
+  USysConst, USysDB, USysBusiness, UFormDateFilter, UDataReport;
 
 //------------------------------------------------------------------------------
 class function TfFrameBill.FrameID: integer;
@@ -225,7 +229,7 @@ end;
 
 //Desc: 删除
 procedure TfFrameBill.BtnDelClick(Sender: TObject);
-var nStr: string;
+var nStr, nReson: string;
 begin
   if cxView1.DataController.GetSelectedCount < 1 then
   begin
@@ -236,8 +240,18 @@ begin
   nStr := Format(nStr, [SQLQuery.FieldByName('L_ID').AsString]);
   if not QueryDlg(nStr, sAsk) then Exit;
 
+  if not ShowInputBox('请输入删除原因:', sHint, nReson) then Exit;
+  if nReson = '' then
+  begin
+    ShowDlg('删除原因不能为空.',sHint);
+    Exit;
+  end;
+
   if DeleteBill(SQLQuery.FieldByName('L_ID').AsString) then
   begin
+    FDM.WriteSysLog(sFlag_BillItem, SQLQuery.FieldByName('L_ID').AsString,
+    '删除订单:[ '+ SQLQuery.FieldByName('L_ID').AsString +' ], 原因:' + nReson);
+
     InitFormData(FWhere);
     ShowMsg('提货单已删除', sHint);
   end;
@@ -349,7 +363,7 @@ begin
     nStr := SQLQuery.FieldByName('L_ZhiKa').AsString;
     if nStr = nP.FParamB then
     begin
-      ShowMsg('相同纸卡不能调拨', sHint);
+      ShowMsg('相同订单不能调拨', sHint);
       Exit;
     end;
 
@@ -361,7 +375,7 @@ begin
     begin
       if RecordCount < 1 then
       begin
-        ShowMsg('纸卡信息无效', sHint);
+        ShowMsg('订单信息无效', sHint);
         Exit;
       end;
 
@@ -384,7 +398,7 @@ begin
     nStr := SQLQuery.FieldByName('L_ID').AsString;
     if BillSaleAdjust(nStr, nP.FParamB) then
     begin
-      nTmp := '销售调拨给纸卡[ %s ].';
+      nTmp := '销售调拨给订单[ %s ].';
       nTmp := Format(nTmp, [nP.FParamB]);
 
       FDM.WriteSysLog(sFlag_BillItem, nStr, nTmp, False);
@@ -411,6 +425,52 @@ begin
   begin
     nStr := SQLQuery.FieldByName('L_ID').AsString;
     PrintBillFYDReport(nStr, False);
+  end;
+end;
+
+procedure TfFrameBill.N12Click(Sender: TObject);
+var
+  nStr: string;
+begin
+  if cxView1.DataController.GetSelectedCount > 0 then
+  begin
+    nStr := SQLQuery.FieldByName('L_ID').AsString;
+    PrintHYSample(nStr);
+  end;
+end;
+
+procedure TfFrameBill.PrintHYSample(var nBill: string);
+var
+  nStr:string;
+begin
+  nStr := 'select a.*,b.*,c.* from $Bill c ' +
+              ' join $SR b on b.R_SerialNo=c.L_HYDan ' +
+              ' left join $SP a on a.P_ID=b.R_PID ' +
+              'where c.L_ID= ''$ID''';
+  nStr := MacroValue(nStr, [MI('$Bill', sTable_Bill), MI('$ID', nBill),
+          MI('$SR', sTable_StockRecord), MI('$SP', sTable_StockParam)]);
+  //xxxxx
+  with FDM.QueryTemp(nStr) do
+  begin
+    if recordcount < 1 then
+    begin
+      nStr := '提货单[ %s ]没有对应的化验单';
+      nStr := Format(nStr, [nBill]);
+      ShowDlg(nStr,sHint);
+      Exit;
+    end;
+    nStr := FieldByName('P_Stock').AsString;
+    nStr := GetReportFileByStock(nStr);
+
+    if not FDR.LoadReportFile(nStr) then
+    begin
+      nStr := '无法正确加载报表文件';
+      ShowMsg(nStr, sHint);
+      Exit;
+    end;
+    
+    FDR.Dataset1.DataSet := FDM.SqlTemp;
+    FDR.PrintReport;
   end;
 end;
 

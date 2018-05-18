@@ -11,7 +11,8 @@ uses
   UFormBase, UFormNormal, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, cxDropDownEdit, cxMemo,
   cxButtonEdit, cxLabel, cxTextEdit, cxMaskEdit, cxCalendar,
-  dxLayoutControl, StdCtrls;
+  dxLayoutControl, StdCtrls, dxSkinsCore, dxSkinsDefaultPainters,
+  dxLayoutcxEditAdapters;
 
 type
   TfFormBillHK = class(TfFormNormal)
@@ -157,7 +158,7 @@ begin
   nStr := nP.FParamB;
   if nStr = FOldZK then
   begin
-    ShowMsg('合卡时不能使用相同纸卡', sHint);
+    ShowMsg('合卡时不能使用相同订单', sHint);
     Exit;
   end else EditZhiKa.Text := nStr;
 
@@ -170,7 +171,7 @@ begin
   begin
     if RecordCount < 1 then
     begin
-      ShowMsg('纸卡已无效', sHint);
+      ShowMsg('订单已无效', sHint);
       Exit;
     end;
 
@@ -199,7 +200,7 @@ begin
   begin
     if RecordCount < 1 then
     begin
-      ShowMsg('纸卡上没有可发货品种', sHint);
+      ShowMsg('订单上没有可发货品种', sHint);
       Exit;
     end;
 
@@ -216,7 +217,7 @@ begin
     end;
 
     if not Result then
-      ShowMsg('纸卡上没有同品种水泥', sHint);
+      ShowMsg('订单上没有同品种水泥', sHint);
     //xxxxx
   end;
 end;
@@ -226,7 +227,7 @@ var nStr: string;
 begin
   if EditZhiKa.Text = '' then
   begin
-    ShowMsg('请选择待合卡纸卡', sHint);
+    ShowMsg('请选择待合卡订单', sHint);
     Exit;
   end;
 

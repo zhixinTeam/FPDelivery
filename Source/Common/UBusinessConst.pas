@@ -136,7 +136,8 @@ const
   cBC_WX_GetAuditTruck        = $0520;   //微信：获取审核车辆
   cBC_WX_UpLoadAuditTruck     = $0521;   //微信：审核车辆结果上传
   cBC_WX_DownLoadPic          = $0522;   //微信：下载图片
-  cBC_WX_get_shoporderbyTruck = $0523;   //微信：根据车牌号获取订单信息
+  cBC_WX_get_shoporderbyTruck = $0523;   //微信：根据车牌号获取订单信息 业务中间件用
+  cBC_WX_get_shoporderbyTruckClt = $0524;   //微信：根据车牌号获取订单信息  客户端用
 
 type
   PWorkerQueryFieldData = ^TWorkerQueryFieldData;
@@ -197,6 +198,7 @@ type
     FTestNo     : string;          //化验编号
     FSeal       : string;          //封签号
     FMustSeal   : Boolean;         //必须录入封签号
+    FHysKZ      : Double;          //化验室扣重
   end;
 
   TLadingBillItems = array of TLadingBillItem;

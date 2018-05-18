@@ -672,7 +672,7 @@ begin
   end;
 
   nStr := 'Select D_ID,D_OID,D_PID,D_YLine,D_Status,D_NextStatus,' +
-          'D_KZValue,D_Memo,D_YSResult,D_TestNo,' +
+          'D_KZValue,D_Memo,D_YSResult,D_TestNo,D_HysKZ,' +
           'P_PStation,P_PValue,P_PDate,P_PMan,' +
           'P_MStation,P_MValue,P_MDate,P_MMan ' +
           'From $OD od Left join $PD pd on pd.P_Order=od.D_ID ' +
@@ -762,7 +762,8 @@ begin
         FYSValid  := FieldByName('D_YSResult').AsString;
         FSelected := True;
         FTestNo   := FieldByName('D_TestNo').AsString;
-
+        FHysKZ    := FieldByName('D_HysKZ').AsFloat;
+                                  
         Inc(nIdx);
         Next;
       end;
@@ -937,7 +938,7 @@ begin
       nStr := SF('P_Order', FID);
       //where
 
-      nVal := FMData.FValue - FPData.FValue -FKZValue;
+      nVal := FMData.FValue - FPData.FValue -FKZValue - FHysKZ;
       if FNextStatus = sFlag_TruckBFP then
       begin
         nSQL := MakeSQLByStr([

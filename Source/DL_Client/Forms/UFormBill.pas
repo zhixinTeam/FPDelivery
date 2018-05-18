@@ -12,7 +12,8 @@ uses
   UFormNormal, cxGraphics, cxControls, cxLookAndFeels,Dialogs,
   cxLookAndFeelPainters, dxLayoutControl, dxLayoutcxEditAdapters, ComCtrls,
   cxContainer, cxEdit, cxCheckBox, cxMaskEdit, cxDropDownEdit, cxTextEdit,
-  cxListView, cxMCListBox, StdCtrls, cxButtonEdit;
+  cxListView, cxMCListBox, StdCtrls, cxButtonEdit, dxSkinsCore,
+  dxSkinsDefaultPainters;
 
 type
   TfFormBill = class(TfFormNormal)
@@ -359,14 +360,14 @@ begin
     end;
   end else
   begin
-    nStr := Format('纸卡[ %s ]没有可提的水泥品种,已终止.', [gInfo.FZhiKa]);
+    nStr := Format('订单[ %s ]没有可提的水泥品种,已终止.', [gInfo.FZhiKa]);
     ShowDlg(nStr, sHint);
     BtnOK.Enabled := False; Exit;
   end;
 
   if gInfo.FPriceChanged then
   begin
-    nStr := '管理员已调整纸卡[ %s ]的价格,明细如下: ' + #13#10#13#10 +
+    nStr := '管理员已调整订单[ %s ]的价格,明细如下: ' + #13#10#13#10 +
             AdjustHintToRead(nStr) + #13#10 +
             '请询问客户是否接受新单价,接受点"是"按钮.' ;
     nStr := Format(nStr, [gInfo.FZhiKa]);
@@ -767,7 +768,7 @@ begin
   Result := False;
   if TruckNo = '' then exit;
   nStr := 'select a.T_Card,a.T_SBTare,b.S_CarModel,S_Value,S_Value-t_sbtare as MaxValue '+
-          'from %s a left join %s b on t_loadstand=b.S_NO where T_Truck=''%s''';
+          ',a.T_Valid from %s a left join %s b on t_loadstand=b.S_NO where T_Truck=''%s''';
   nStr := Format(nStr,[sTable_Truck,sTable_LoadStandard,TruckNo]);
   with FDM.QueryTemp(nStr) do
   begin
@@ -780,6 +781,13 @@ begin
       editCard.Text := '';
       exit;
     end;
+    if FieldByName('T_Valid').AsString = sFlag_No then
+    begin
+      ShowDlg('该车禁止开单.',sHint);
+      EditTruck.SetFocus;
+      Exit;
+    end;
+
     EditCarModel.Text :=  FieldByName('S_CarModel').AsString;
     EditSBTare.Text   :=  FieldByName('T_SBTare').AsString;
     EditXZValue.Text  :=  FieldByName('S_Value').AsString;

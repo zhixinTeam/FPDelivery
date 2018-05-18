@@ -6,7 +6,8 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, UFormBase, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, dxLayoutcxEditAdapters,
-  dxLayoutControl, StdCtrls, cxTextEdit, cxCurrencyEdit;
+  dxLayoutControl, StdCtrls, cxTextEdit, cxCurrencyEdit, dxSkinsCore,
+  dxSkinsDefaultPainters;
 
 type
   TfFormTestResult = class(TBaseForm)
@@ -20,12 +21,12 @@ type
     dxLayoutControl1Group2: TdxLayoutGroup;
     dxLayoutControl1Item8: TdxLayoutItem;
     dxLayoutControl1Item7: TdxLayoutItem;
-    dxLayoutControl1Item3: TdxLayoutItem;
-    Label1: TLabel;
     EditResult1: TcxCurrencyEdit;
     dxLayoutControl1Item1: TdxLayoutItem;
     EditResult2: TcxCurrencyEdit;
     dxLayoutControl1Item2: TdxLayoutItem;
+    Memo1: TMemo;
+    dxLayoutControl1Item4: TdxLayoutItem;
     procedure EditLadingKeyPress(Sender: TObject; var Key: Char);
     procedure BtnOKClick(Sender: TObject);
   private
@@ -112,7 +113,7 @@ begin
     while not Eof do
     begin
       nStockNo := FieldByName('D_StockNo').AsString;
-      NetValue := FieldByName('D_Value').AsFloat;
+      NetValue := FieldByName('D_MValue').AsFloat - FieldByName('D_PValue').AsFloat - FieldByName('D_KZValue').AsFloat;
       nID := FieldByName('D_ID').AsString;
 
       //检索内控标准
@@ -157,7 +158,9 @@ begin
                 SF('D_TestJG1', nTestJG1, sfVal),
                 SF('D_TestJG2', nTestJG2, sfVal),
                 SF('D_Value', NetValue-KZLast, sfVal),
-                SF('D_KZValue',KZLast , sfVal)
+                SF('D_HysMemo', Memo1.Text),
+                SF('D_HysUser', gSysParam.FUserID),
+                SF('D_HysKZ',KZLast , sfVal)
                 ], sTable_OrderDtl, SF('D_ID', nID), False);
        FListA.Add(nSQL);
        Next;
@@ -167,6 +170,10 @@ begin
     FDM.ADOConn.BeginTrans;
     for i := 0 to FListA.Count -1 do
       FDM.ExecuteSQL(FListA[i]);
+
+    nStr := '录入物料['+EditTestNo.Text+']的检验结果,热值:['+editresult1.Text+
+            '],水分:'+editresult1.text;
+    FDM.WriteSysLog(sFlag_MaterailsItem,(EditTestNo.Text),nStr);
     FDM.ADOConn.CommitTrans;
   except
     FDM.ADOConn.RollbackTrans;

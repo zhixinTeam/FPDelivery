@@ -11,7 +11,8 @@ uses
   UFormNormal, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, ComCtrls, cxListView,
   cxDropDownEdit, cxTextEdit, cxMaskEdit, cxButtonEdit, cxMCListBox,
-  dxLayoutControl, StdCtrls, dxLayoutcxEditAdapters;
+  dxLayoutControl, StdCtrls, dxLayoutcxEditAdapters, dxSkinsCore,
+  dxSkinsDefaultPainters;
 
 type
   TfFormGetZhiKa = class(TfFormNormal)
@@ -74,7 +75,7 @@ begin
 
   with TfFormGetZhiKa.Create(Application) do
   try
-    Caption := '—°‘Ò÷Ωø®';
+    Caption := '—°‘Ò∂©µ•';
     InitFormData('');
     FShowPrice := gPopedomManager.HasPopedom(nPopedom, sPopedom_ViewPrice);
     
@@ -277,7 +278,7 @@ procedure TfFormGetZhiKa.BtnOKClick(Sender: TObject);
 begin
   if EditZK.ItemIndex < 0 then
   begin
-    ShowMsg('«Î—°‘Ò÷Ωø®', sHint);
+    ShowMsg('«Î—°‘Ò∂©µ•', sHint);
     Exit;
   end;
 

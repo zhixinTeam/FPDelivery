@@ -312,7 +312,7 @@ inherited fFormZhiKa: TfFormZhiKa
           LayoutDirection = ldHorizontal
           ShowBorder = False
           object dxLayout1Item13: TdxLayoutItem
-            CaptionOptions.Text = #32440#21345#21517#31216':'
+            CaptionOptions.Text = #35746#21333#21517#31216':'
             Control = EditName
             ControlOptions.ShowBorder = False
           end

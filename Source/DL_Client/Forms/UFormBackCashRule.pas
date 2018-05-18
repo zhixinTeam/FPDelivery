@@ -6,7 +6,8 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, UFormNormal, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, dxLayoutControl, StdCtrls, dxLayoutcxEditAdapters,
-  cxContainer, cxEdit, cxTextEdit, cxMCListBox, ComCtrls, cxListView;
+  cxContainer, cxEdit, cxTextEdit, cxMCListBox, ComCtrls, cxListView,
+  dxSkinsCore, dxSkinsDefaultPainters;
 
 type
   TfFormBackCashRule = class(TfFormNormal)
@@ -229,7 +230,7 @@ begin
     for i := 0 to nList.Count-1 do
       fdm.ExecuteSQL(nList[i]);
 
-    FDM.WriteSysLog(sFlag_ZhiKaItem, editZhika.Text, '修改纸卡返现规则.', False);
+    FDM.WriteSysLog(sFlag_ZhiKaItem, editZhika.Text, '修改订单返现规则.', False);
 
     FDM.ADOConn.CommitTrans;
   except

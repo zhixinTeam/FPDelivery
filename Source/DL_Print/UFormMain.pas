@@ -56,13 +56,19 @@ type
 
 var
   fFormMain: TfFormMain;
+type
+  TWeightItem = record
+    FMValue: Double;
+    FValue: Double;
+  end;
+
 
 implementation
 
 {$R *.dfm}
 uses
   IniFiles, Registry, ULibFun, UDataModule, UDataReport, USysLoger, UFormConn,
-  DB, USysDB;
+  DB, USysDB, Math;
 
 var
   gPath: string;               //程序路径
@@ -247,6 +253,96 @@ begin
   end;
 end;
 
+function SmallTOBig(small: real): string;
+var
+  SmallMonth, BigMonth: string;
+  wei1, qianwei1: string[2];
+  qianwei, dianweizhi, qian: integer;
+  fs_bj: boolean;
+begin
+  if small < 0 then
+    fs_bj := True
+  else
+    fs_bj := False;
+  small      := abs(small);
+  {------- 修改参数令值更精确 -------}
+  {小数点后的位置，需要的话也可以改动-2值}
+  qianwei    := -2;
+  {转换成货币形式，需要的话小数点后加多几个零}
+  Smallmonth := formatfloat('0.00', small);
+  {---------------------------------}
+  dianweizhi := pos('.', Smallmonth);{小数点的位置}
+  {循环小写货币的每一位，从小写的右边位置到左边}
+  for qian := length(Smallmonth) downto 1 do
+  begin
+    {如果读到的不是小数点就继续}
+    if qian <> dianweizhi then
+    begin
+      {位置上的数转换成大写}
+      case StrToInt(Smallmonth[qian]) of
+        1: wei1 := '壹';
+        2: wei1 := '贰';
+        3: wei1 := '叁';
+        4: wei1 := '肆';
+        5: wei1 := '伍';
+        6: wei1 := '陆';
+        7: wei1 := '柒';
+        8: wei1 := '捌';
+        9: wei1 := '玖';
+        0: wei1 := '零';
+      end;
+      {判断大写位置，可以继续增大到real类型的最大值}
+      case qianwei of
+        -3: qianwei1 := '';
+        -2: qianwei1 := '';
+        -1: qianwei1 := '';
+        0: qianwei1  := '点';
+        1: qianwei1  := '拾';
+        2: qianwei1  := '佰';
+        3: qianwei1  := '仟';
+        4: qianwei1  := '万';
+        5: qianwei1  := '拾';
+        6: qianwei1  := '佰';
+        7: qianwei1  := '仟';
+        8: qianwei1  := '亿';
+        9: qianwei1  := '拾';
+        10: qianwei1 := '佰';
+        11: qianwei1 := '仟';
+      end;
+      inc(qianwei);
+      BigMonth := wei1 + qianwei1 + BigMonth;{组合成大写金额}
+    end;
+  end;
+
+  BigMonth := StringReplace(BigMonth, '零拾', '零', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '零佰', '零', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '零仟', '零', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '零零', '', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '零', '零', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '零', '', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '零零', '零', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '零零', '零', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '零零', '零', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '零亿', '亿', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '零万', '万', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '零', '', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '亿万', '亿', [rfReplaceAll]);
+  BigMonth := BigMonth + '吨';
+  BigMonth := StringReplace(BigMonth, '点吨', '吨', [rfReplaceAll]);
+
+  if BigMonth = '吨整' then
+    BigMonth := '零吨整';
+
+  if copy(BigMonth, 1, 2) = '元' then
+    BigMonth := copy(BigMonth, 3, length(BigMonth) - 2);
+  if copy(BigMonth, 1, 2) = '零' then
+    BigMonth := copy(BigMonth, 3, length(BigMonth) - 2);
+  if fs_bj = True then
+    SmallTOBig := '- ' + BigMonth
+  else
+    SmallTOBig := BigMonth;
+end;
+
 //------------------------------------------------------------------------------
 //Date: 2012-4-1
 //Parm: 交货单号;提示;数据对象;打印机
@@ -255,6 +351,10 @@ function PrintBillReport(const nBill: string; var nHint: string;
  const nPrinter: string = ''; const nMoney: string = '0'): Boolean;
 var nStr: string;
     nDS: TDataSet;
+    nLoadLimit, nWuCha, nMValue, nPValue, nNetValue, nOKNetValue:Double;//限载值,允许误差,超载量
+    nParam: TReportParamItem;
+    WeightList : array of TWeightItem;
+    I, nCount :Integer;
 begin
   nHint := '';
   Result := False;
@@ -270,6 +370,45 @@ begin
     nHint := Format(nHint, [nBill]);
     Exit;
   end;
+  //判断是否需要分页打印
+  nMValue := nDS.FieldByName('L_MValue').AsFloat;
+  nPValue := nDS.FieldByName('L_PValue').AsFloat;
+
+  nStr := 'select b.S_Value from %s a,%s b where a.T_LoadStand=b.S_No and T_Truck=''%s''';
+  nStr := Format(nStr,[sTable_Truck,sTable_LoadStandard,nDS.FieldByName('L_Truck').AsString]);
+  with FDM.SQLQuery(nStr,FDM.SQLTemp) do
+    nLoadLimit := fieldbyname('S_Value').AsFloat;
+
+  nStr := 'select D_Value from %s where D_Memo=''%s''';
+  nStr := Format(nStr,[sTable_SysDict,'LoadLimitWC']);
+  with FDM.SQLQuery(nStr,FDM.SQLTemp) do
+    nWuCha := fieldbyname('D_Value').AsFloat;
+
+
+  SetLength(WeightList,0);
+  //不超限载或者为袋装的
+  if (nLoadLimit + nWuCha >= nMValue) or (nDS.FieldByName('L_Type').AsString = 'D')then
+  begin
+    SetLength(WeightList,1);
+    WeightList[0].FMValue := nMValue;
+    WeightList[0].FValue :=  nDS.FieldByName('L_Value').AsFloat;;
+  end
+  else
+  begin
+    nNetValue := nMValue - nPValue;         //净重
+    nOKNetValue := nLoadLimit - nPValue;    //最大净重
+
+    nCount := Ceil( nNetValue / nOKNetValue );   //打印张数
+    SetLength(WeightList, nCount);
+
+    for i := 0 to nCount -2 do
+    begin
+      WeightList[i].FMValue := nLoadLimit;
+      WeightList[i].FValue := nOKNetValue;
+    end;
+    WeightList[nCount-1].FMValue := nMValue - (nOKNetValue * (nCount-1));
+    WeightList[nCount-1].FValue :=  nNetValue - (nOKNetValue * (nCount-1));
+  end;
 
   nStr := gPath + 'Report\LadingBill.fr3';
   if not FDR.LoadReportFile(nStr) then
@@ -282,8 +421,26 @@ begin
        FDR.Report1.PrintOptions.Printer := 'My_Default_Printer'
   else FDR.Report1.PrintOptions.Printer := nPrinter;
 
-  FDR.Dataset1.DataSet := FDM.SQLQuery1;
-  FDR.PrintReport;
+  //循环打印
+  for i := Low(WeightList) to High(WeightList) do
+  begin
+    nStr := 'Select '+FloatToStrF(WeightList[i].FMValue,ffFixed,5,2)+' as l_Mvalue,'+
+            FloatToStrF(WeightList[i].FValue,ffFixed,5,2)+' as l_Value,'+
+            'L_ID,L_ZhiKa,L_Order,L_Project,L_Area,L_CusID,L_CusName,L_SaleID,L_SaleMan,L_Type,'+
+            'L_StockNo,L_StockName,L_Price,L_Truck,L_InTime,L_InMan,L_PValue,L_PDate,L_PMan,L_MDate,L_MMan,'+
+            'L_OutFact,L_OutMan,L_Seal,L_HYDan,L_PrintHY,L_Man,L_Date,'+
+            '%s As L_ValidMoney From %s b Where L_ID=''%s''';
+    nStr := Format(nStr, [nMoney, sTable_Bill, nBill]);
+    nDS := FDM.SQLQuery(nStr, FDM.SQLQuery1);
+    if not Assigned(nDS) then Exit;
+
+    nParam.FName := 'BigValue';
+    nParam.FValue := SmallTOBig(FDM.SQLQuery1.fieldbyname('L_Value').AsFloat);
+    FDR.AddParamItem(nParam);
+
+    FDR.Dataset1.DataSet := FDM.SQLQuery1;
+    FDR.PrintReport;
+  end;
   Result := FDR.PrintSuccess;
 
   {$IFDEF PrintGLF}
@@ -308,6 +465,7 @@ function PrintOrderReport(const nOrder: string; var nHint: string;
  const nPrinter: string = ''; const nMoney: string = '0'): Boolean;
 var nStr: string;
     nDS: TDataSet;
+    nParam: TReportParamItem;
 begin
   nHint := '';
   Result := False;
@@ -335,6 +493,10 @@ begin
   if nPrinter = '' then
        FDR.Report1.PrintOptions.Printer := 'My_Default_Printer'
   else FDR.Report1.PrintOptions.Printer := nPrinter;
+
+  nParam.FName := 'BigValue';
+  nParam.FValue := SmallTOBig(FDM.SQLQuery1.fieldbyname('D_Value').AsFloat);
+  FDR.AddParamItem(nParam);
 
   FDR.Dataset1.DataSet := FDM.SQLQuery1;
   FDR.PrintReport;
@@ -366,7 +528,7 @@ end;
 //Desc: 打印标识为nHID的化验单
 function PrintHuaYanReport(const nBill: string; var nHint: string;
  const nPrinter: string = ''): Boolean;
-var nStr,nSR: string;
+var nStr: string;
 begin
   nHint := '';
   Result := False;

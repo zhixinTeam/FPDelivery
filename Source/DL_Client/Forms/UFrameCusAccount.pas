@@ -15,7 +15,8 @@ uses
   cxMaskEdit, cxButtonEdit, cxTextEdit, ADODB, cxLabel, UBitmapPanel,
   cxSplitter, cxGridLevel, cxClasses, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid,
-  ComCtrls, ToolWin, dxLayoutcxEditAdapters;
+  ComCtrls, ToolWin, dxLayoutcxEditAdapters, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter;
 
 type
   TfFrameCusAccount = class(TfFrameNormal)
@@ -38,12 +39,14 @@ type
     N4: TMenuItem;
     N5: TMenuItem;
     N6: TMenuItem;
+    N7: TMenuItem;
     procedure N3Click(Sender: TObject);
     procedure EditIDPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
     procedure PMenu1Popup(Sender: TObject);
     procedure N4Click(Sender: TObject);
     procedure N6Click(Sender: TObject);
+    procedure N7Click(Sender: TObject);
   private
     { Private declarations }
   protected
@@ -58,7 +61,7 @@ implementation
 
 {$R *.dfm}
 uses
-  ULibFun, UMgrControl, USysConst, USysDB, UDataModule, USysBusiness;
+  ULibFun, UMgrControl, USysConst, USysDB, UDataModule, USysBusiness, UFormBase;
 
 class function TfFrameCusAccount.FrameID: integer;
 begin
@@ -198,6 +201,41 @@ begin
 
   InitFormData(FWhere);
   ShowMsg('校正完毕', sHint);
+end;
+
+procedure TfFrameCusAccount.N7Click(Sender: TObject);
+var
+  nCID, nStr: string;
+  nParam: TFormCommandParam;
+begin
+  if cxView1.DataController.GetSelectedCount < 1 then Exit;
+
+  if SQLQuery.FieldByName('a_CreditLimit').AsFloat <= 0 then
+  begin
+    ShowDlg('无可用信用金额',sHint);
+    Exit;
+  end;
+  
+  nCID := SQLQuery.FieldByName('A_CID').AsString;
+
+  nStr := 'select * from %s where C_Parent=''%s''';
+  nStr := Format(nStr,[sTable_Customer,nCID]);
+  with FDM.QueryTemp(nStr) do
+  begin
+    if RecordCount < 1 then
+    begin
+      ShowDlg('该客户无下级客户,不能调拨信用.',sHint);
+      Exit;
+    end;
+
+    nParam.FParamA := nCID;
+    CreateBaseFormItem(cFI_FormAdjustCredit, PopedomItem, @nParam);
+
+    if (nParam.FCommand = cCmd_ModalResult) and (nParam.FParamA = mrOK) then
+    begin
+      InitFormData(FWhere);
+    end;
+  end;  
 end;
 
 initialization

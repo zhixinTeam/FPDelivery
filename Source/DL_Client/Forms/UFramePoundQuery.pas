@@ -14,7 +14,8 @@ uses
   cxCheckBox, cxMaskEdit, cxButtonEdit, cxTextEdit, ADODB, cxLabel,
   UBitmapPanel, cxSplitter, cxGridLevel, cxClasses, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid,
-  ComCtrls, ToolWin;
+  ComCtrls, ToolWin, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxLayoutcxEditAdapters;
 
 type
   TfFramePoundQuery = class(TfFrameNormal)
@@ -77,7 +78,7 @@ implementation
 {$R *.dfm}
 uses
   ShellAPI, ULibFun, UMgrControl, UDataModule, USysBusiness, UFormDateFilter,
-  UFormWait, USysConst, USysDB;
+  UFormWait, USysConst, USysDB, UFormInputbox;
 
 class function TfFramePoundQuery.FrameID: integer;
 begin
@@ -240,7 +241,7 @@ end;
 //Desc: 删除榜单
 procedure TfFramePoundQuery.BtnDelClick(Sender: TObject);
 var nIdx: Integer;
-    nStr,nID,nP: string;
+    nStr,nID,nP, nReson: string;
 begin
   if cxView1.DataController.GetSelectedCount < 1 then
   begin
@@ -251,6 +252,13 @@ begin
   nID := SQLQuery.FieldByName('P_ID').AsString;
   nStr := Format('确定要删除编号为[ %s ]的过磅单吗?', [nID]);
   if not QueryDlg(nStr, sAsk) then Exit;
+
+  if not ShowInputBox('请输入删除原因:', sHint, nReson) then Exit;
+  if nReson = '' then
+  begin
+    ShowDlg('删除原因不能为空.',sHint);
+    Exit;
+  end;
 
   nStr := Format('Select * From %s Where 1<>1', [sTable_PoundLog]);
   //only for fields
@@ -279,6 +287,8 @@ begin
     nStr := 'Delete From %s Where P_ID=''%s''';
     nStr := Format(nStr, [sTable_PoundLog, nID]);
     FDM.ExecuteSQL(nStr);
+
+    FDM.WriteSysLog(sFlag_PoundItem, nID, '删除磅房称重记录:[ '+ nID +' ], 原因:' + nReson);
 
     FDM.ADOConn.CommitTrans;
     InitFormData(FWhere);

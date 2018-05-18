@@ -12,7 +12,8 @@ uses
   cxClasses, cxGridCustomView, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGrid, ComCtrls, ToolWin, dxLayoutcxEditAdapters,
   cxMaskEdit, cxButtonEdit, cxTextEdit, cxTreeView, cxTL,
-  cxInplaceContainer, Menus;
+  cxInplaceContainer, Menus, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter;
 
 type
   TfFrameCustomer_FP = class(TfFrameNormal)
@@ -72,7 +73,7 @@ implementation
 {$R *.dfm}
 
 uses
-  USysConst, UMgrControl, ULibFun, USysDB, UDataModule, UFormBase,
+  USysConst, UMgrControl, ULibFun, USysDB, UDataModule, UFormBase, UFormInputbox,
   UBusinessPacker, USysBusiness, USysLoger, uFormGetWechartAccount;
 
 //创建节点
@@ -211,7 +212,7 @@ begin
 end;
 
 procedure TfFrameCustomer_FP.BtnDelClick(Sender: TObject);
-var nStr,nSQL: string;
+var nStr,nSQL,nReson: string;
 begin
   if cxView1.DataController.GetSelectedCount < 1 then
   begin
@@ -233,12 +234,19 @@ begin
   with FDM.QueryTemp(nSQL) do
   if Fields[0].AsInteger > 0 then
   begin
-    ShowMsg('该客户不能删除', '已办纸卡');
+    ShowMsg('该客户不能删除', '已办订单');
     Exit;
   end;
 
   nStr := SQLQuery.FieldByName('C_Name').AsString;
   if not QueryDlg('确定要删除名称为[ ' + nStr + ' ]的客户吗', sAsk) then Exit;
+
+  if not ShowInputBox('请输入删除原因:', sHint, nReson) then Exit;
+  if nReson = '' then
+  begin
+    ShowDlg('删除原因不能为空.',sHint);
+    Exit;
+  end;
 
   FDM.ADOConn.BeginTrans;
   try
@@ -258,6 +266,9 @@ begin
     nSQL := 'Delete From %s Where C_CusID=''%s''';
     nSQL := Format(nSQL, [sTable_CusCredit, nStr]);
     FDM.ExecuteSQL(nSQL);
+
+    FDM.WriteSysLog(sFlag_ZhiKaItem, nStr, '删除客户:[ '+ nStr+ ' - ' +
+          SQLQuery.FieldByName('C_Name').AsString +' ], 原因:' + nReson);
 
     FDM.ADOConn.CommitTrans;
     InitFormData(FWhere);

@@ -14,7 +14,8 @@ uses
   cxTextEdit, cxMaskEdit, cxButtonEdit, ADODB, cxLabel, UBitmapPanel,
   cxSplitter, cxGridLevel, cxClasses, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid,
-  ComCtrls, ToolWin;
+  ComCtrls, ToolWin, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxLayoutcxEditAdapters;
 
 type
   TfFrameCustomerCredit = class(TfFrameNormal)
@@ -38,6 +39,8 @@ type
     EditDate: TcxButtonEdit;
     PMenu1: TPopupMenu;
     N1: TMenuItem;
+    PopupMenu1: TPopupMenu;
+    N2: TMenuItem;
     procedure EditIDPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
     procedure BtnRefreshClick(Sender: TObject);
@@ -50,6 +53,7 @@ type
       AButtonIndex: Integer);
     procedure N1Click(Sender: TObject);
     procedure cxView2DblClick(Sender: TObject);
+    procedure N2Click(Sender: TObject);
   protected
     FStart,FEnd: TDate;
     //时间区间
@@ -75,7 +79,7 @@ implementation
 {$R *.dfm}
 uses
   ULibFun, UMgrControl, UFormBase, USysConst, USysDB, USysGrid, USysDataDict,
-  UDataModule, UFormDateFilter, UFormCtrl;
+  UDataModule, UFormDateFilter, UFormCtrl, UFormAdjustCredit;
 
 class function TfFrameCustomerCredit.FrameID: integer;
 begin
@@ -309,6 +313,44 @@ begin
   if N1.Enabled then
     N1Click(nil);
   //xxxxx
+end;
+
+procedure TfFrameCustomerCredit.N2Click(Sender: TObject);
+var
+  nCID, nStr: string;
+  nParam: TFormCommandParam;
+begin
+  if cxView1.DataController.GetSelectedCount < 1 then Exit;
+
+  if SQLQuery.FieldByName('a_CreditLimit').AsFloat <= 0 then
+  begin
+    ShowDlg('无可用信用金额',sHint);
+    Exit;
+  end;
+  
+  nCID := SQLQuery.FieldByName('C_ID').AsString;
+
+  nStr := 'select * from %s where C_Parent=''%s''';
+  nStr := Format(nStr,[sTable_Customer,nCID]);
+  with FDM.QueryTemp(nStr) do
+  begin
+    if RecordCount < 1 then
+    begin
+      ShowDlg('该客户无下级客户,不能调拨信用.',sHint);
+      Exit;
+    end;
+
+    nParam.FParamA := nCID;
+    nParam.FParamB := SQLQuery.FieldByName('C_Name').AsString;
+    nParam.FParamC := SQLQuery.FieldByName('A_CreditLimit').AsString;
+
+    CreateBaseFormItem(cFI_FormAdjustCredit, PopedomItem, @nParam);
+
+    if (nParam.FCommand = cCmd_ModalResult) and (nParam.FParamA = mrOK) then
+    begin
+      InitFormData(FWhere);
+    end;
+  end;
 end;
 
 initialization

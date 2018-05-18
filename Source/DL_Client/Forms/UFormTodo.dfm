@@ -1,6 +1,6 @@
 inherited fFormTodo: TfFormTodo
-  Left = 530
-  Top = 295
+  Left = 529
+  Top = 160
   Width = 453
   Height = 517
   BorderStyle = bsSizeable
@@ -10,17 +10,17 @@ inherited fFormTodo: TfFormTodo
   PixelsPerInch = 96
   TextHeight = 12
   inherited dxLayout1: TdxLayoutControl
-    Width = 445
-    Height = 490
+    Width = 437
+    Height = 479
     inherited BtnOK: TButton
-      Left = 299
-      Top = 457
+      Left = 291
+      Top = 446
       Caption = #30830#23450
       TabOrder = 6
     end
     inherited BtnExit: TButton
-      Left = 369
-      Top = 457
+      Left = 361
+      Top = 446
       Caption = #20851#38381
       TabOrder = 7
     end
@@ -59,26 +59,32 @@ inherited fFormTodo: TfFormTodo
     end
     object EditDate: TcxTextEdit [4]
       Left = 57
-      Top = 225
+      Top = 214
       ParentFont = False
       Properties.ReadOnly = True
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 2
       Width = 121
     end
     object EditFrom: TcxTextEdit [5]
       Left = 57
-      Top = 250
+      Top = 239
       ParentFont = False
       Properties.ReadOnly = True
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 3
       Width = 121
     end
     object EditEvent: TcxMemo [6]
       Left = 57
-      Top = 275
+      Top = 264
       ParentFont = False
       Properties.ReadOnly = True
       Properties.ScrollBars = ssVertical
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       Style.Edges = []
       TabOrder = 4
       Height = 100
@@ -86,11 +92,13 @@ inherited fFormTodo: TfFormTodo
     end
     object cxRadio1: TcxRadioGroup [7]
       Left = 23
-      Top = 380
+      Top = 369
       Caption = #22788#29702#26041#26696':'
       ParentFont = False
       Properties.Items = <>
       Properties.OnEditValueChanged = cxRadio1PropertiesEditValueChanged
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       Style.Edges = [bLeft, bTop, bRight, bBottom]
       TabOrder = 5
       Transparent = True
@@ -99,44 +107,43 @@ inherited fFormTodo: TfFormTodo
     end
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
-        Caption = #20107#39033#21015#34920
+        CaptionOptions.Text = #20107#39033#21015#34920
         object dxLayout1Item7: TdxLayoutItem
-          Caption = 'cxLabel1'
-          ShowCaption = False
+          CaptionOptions.Text = 'cxLabel1'
+          CaptionOptions.Visible = False
           Control = cxLabel1
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item3: TdxLayoutItem
-          AutoAligns = [aaHorizontal]
           AlignVert = avClient
-          Caption = 'cxListView1'
-          ShowCaption = False
+          CaptionOptions.Text = 'cxListView1'
+          CaptionOptions.Visible = False
           Control = ListTodo
           ControlOptions.ShowBorder = False
         end
       end
       object dxGroup2: TdxLayoutGroup [1]
-        AutoAligns = [aaHorizontal]
         AlignVert = avBottom
-        Caption = #22788#29702#26041#24335':'
+        CaptionOptions.Text = #22788#29702#26041#24335':'
+        ButtonOptions.Buttons = <>
         object dxLayout1Item4: TdxLayoutItem
-          Caption = #26102#38388':'
+          CaptionOptions.Text = #26102#38388':'
           Control = EditDate
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item5: TdxLayoutItem
-          Caption = #26469#28304':'
+          CaptionOptions.Text = #26469#28304':'
           Control = EditFrom
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item6: TdxLayoutItem
-          Caption = #20869#23481':'
+          CaptionOptions.Text = #20869#23481':'
           Control = EditEvent
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item8: TdxLayoutItem
-          Caption = 'cxRadioGroup1'
-          ShowCaption = False
+          CaptionOptions.Text = 'cxRadioGroup1'
+          CaptionOptions.Visible = False
           Control = cxRadio1
           ControlOptions.ShowBorder = False
         end

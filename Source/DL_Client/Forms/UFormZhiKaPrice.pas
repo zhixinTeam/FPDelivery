@@ -12,7 +12,7 @@ uses
   UFormNormal, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, cxCheckBox, cxTextEdit,
   dxLayoutControl, StdCtrls, cxMaskEdit, cxDropDownEdit, cxCalendar,
-  cxLabel, dxLayoutcxEditAdapters;
+  cxLabel, dxLayoutcxEditAdapters, dxSkinsCore, dxSkinsDefaultPainters;
 
 type
   TfFormZKPrice = class(TfFormNormal)
@@ -73,7 +73,7 @@ begin
 
   with TfFormZKPrice.Create(Application) do
   begin
-    Caption := '纸卡调价';
+    Caption := '订单调价';
     FZKList.Text := nP.FParamB;
     InitFormData;
     

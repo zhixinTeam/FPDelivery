@@ -288,8 +288,8 @@ function GetWebOrderByCard(const nCard: string): Boolean;
 var nOut: TWorkerBusinessCommand;
 begin
   Result := CallBusinessCommand(cBC_GetWebOrderByCard, nCard, '', @nOut);
-  if not Result then
-    gSysLoger.AddLog(TBusinessWorkerManager, '业务对象', nOut.FData);
+//  if not Result then
+//    gSysLoger.AddLog(TBusinessWorkerManager, '业务对象zyw:', nOut.FData);
   //xxxxx
 end;
 

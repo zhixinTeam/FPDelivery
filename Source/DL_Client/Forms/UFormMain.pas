@@ -198,6 +198,8 @@ end;
 
 //Desc: 释放
 procedure TfMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
+var
+  nStr: string;
 begin
   {$IFNDEF debug}
   if not QueryDlg(sCloseQuery, sHint) then
@@ -209,6 +211,10 @@ begin
   ShowWaitForm(Self, '正在退出系统', True);
   try
     FormSaveConfig;          //窗体配置
+
+    nStr := 'update %s set U_Mac='''' where U_Name=''%s''';
+    nStr := Format(nStr,[sTable_User,gSysParam.FUserID]);
+    FDM.ExecuteSQL(nStr);
 
     WriteLog('系统关闭');
     {$IFNDEF debug}

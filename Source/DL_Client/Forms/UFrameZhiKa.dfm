@@ -135,7 +135,7 @@ inherited fFrameZhiKa: TfFrameZhiKa
     inherited dxGroup1: TdxLayoutGroup
       inherited GroupSearch1: TdxLayoutGroup
         object dxLayout1Item1: TdxLayoutItem
-          CaptionOptions.Text = #32440#21345#32534#21495':'
+          CaptionOptions.Text = #35746#21333#32534#21495':'
           Control = EditID
           ControlOptions.ShowBorder = False
         end
@@ -157,7 +157,7 @@ inherited fFrameZhiKa: TfFrameZhiKa
       end
       inherited GroupDetail1: TdxLayoutGroup
         object dxLayout1Item7: TdxLayoutItem
-          CaptionOptions.Text = #32440#21345#32534#21495':'
+          CaptionOptions.Text = #35746#21333#32534#21495':'
           Control = cxTextEdit5
           ControlOptions.ShowBorder = False
         end
@@ -187,7 +187,7 @@ inherited fFrameZhiKa: TfFrameZhiKa
   inherited TitlePanel1: TZnBitmapPanel
     Width = 831
     inherited TitleBar: TcxLabel
-      Caption = #32440#21345#35760#24405#26597#35810
+      Caption = #35746#21333#35760#24405#26597#35810
       Style.IsFontAssigned = True
       Width = 831
       AnchorX = 416
@@ -247,6 +247,10 @@ inherited fFrameZhiKa: TfFrameZhiKa
         Caption = #38480#21046#25552#36135
         OnClick = N10Click
       end
+    end
+    object N11: TMenuItem
+      Caption = #35746#21333#20805#20540
+      OnClick = N11Click
     end
   end
 end

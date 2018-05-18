@@ -259,6 +259,7 @@ function PrintRCOrderReport(const nID: string;  const nAsk: Boolean): Boolean;
 //打印采购单
 function PrintPoundReport(const nPound: string; nAsk: Boolean): Boolean;
 //打印榜单
+function GetReportFileByStock(const nStock: string): string;
 function PrintHuaYanReport(const nHID: string; const nAsk: Boolean): Boolean;
 function PrintHeGeReport(const nHID: string; const nAsk: Boolean): Boolean;
 //化验单,合格证
@@ -300,6 +301,8 @@ function GetshoporderbyTruck(const nData: string): string;
 //根据车牌号获取订单
 procedure SaveWebOrderDelMsg(const nLID, nBillType: string);
 //插入推送消息
+function GetBillByTruck(const nData: string):string;
+//根据车牌号获取订单信息
 implementation
 
 //Desc: 记录日志
@@ -1501,7 +1504,7 @@ begin
   end else
   begin
     Result := nil;
-    nHint := '纸卡已无效';
+    nHint := '订单已无效';
   end;
 end;
 
@@ -2106,7 +2109,7 @@ begin
 
   if nAsk then
   begin
-    nStr := '是否要打印纸卡?';
+    nStr := '是否要打印订单?';
     if not QueryDlg(nStr, sAsk) then Exit;
   end;
 
@@ -2118,7 +2121,7 @@ begin
   
   if FDM.QueryTemp(nStr).RecordCount < 1 then
   begin
-    nStr := '纸卡号为[ %s ] 的记录已无效';
+    nStr := '订单号为[ %s ] 的记录已无效';
     nStr := Format(nStr, [nZID]);
     ShowMsg(nStr, sHint); Exit;
   end;
@@ -2127,7 +2130,7 @@ begin
   nStr := Format(nStr, [sTable_ZhiKaDtl, nZID]);
   if FDM.QuerySQL(nStr).RecordCount < 1 then
   begin
-    nStr := '编号为[ %s ] 的纸卡无明细';
+    nStr := '编号为[ %s ] 的订单无明细';
     nStr := Format(nStr, [nZID]);
     ShowMsg(nStr, sHint); Exit;
   end;
@@ -2188,6 +2191,96 @@ begin
   Result := FDR.PrintSuccess;
 end;
 
+function SmallTOBig(small: real): string;
+var
+  SmallMonth, BigMonth: string;
+  wei1, qianwei1: string[2];
+  qianwei, dianweizhi, qian: integer;
+  fs_bj: boolean;
+begin
+  if small < 0 then
+    fs_bj := True
+  else
+    fs_bj := False;
+  small      := abs(small);
+  {------- 修改参数令值更精确 -------}
+  {小数点后的位置，需要的话也可以改动-2值}
+  qianwei    := -2;
+  {转换成货币形式，需要的话小数点后加多几个零}
+  Smallmonth := formatfloat('0.00', small);
+  {---------------------------------}
+  dianweizhi := pos('.', Smallmonth);{小数点的位置}
+  {循环小写货币的每一位，从小写的右边位置到左边}
+  for qian := length(Smallmonth) downto 1 do
+  begin
+    {如果读到的不是小数点就继续}
+    if qian <> dianweizhi then
+    begin
+      {位置上的数转换成大写}
+      case StrToInt(Smallmonth[qian]) of
+        1: wei1 := '壹';
+        2: wei1 := '贰';
+        3: wei1 := '叁';
+        4: wei1 := '肆';
+        5: wei1 := '伍';
+        6: wei1 := '陆';
+        7: wei1 := '柒';
+        8: wei1 := '捌';
+        9: wei1 := '玖';
+        0: wei1 := '零';
+      end;
+      {判断大写位置，可以继续增大到real类型的最大值}
+      case qianwei of
+        -3: qianwei1 := '';
+        -2: qianwei1 := '';
+        -1: qianwei1 := '';
+        0: qianwei1  := '点';
+        1: qianwei1  := '拾';
+        2: qianwei1  := '佰';
+        3: qianwei1  := '仟';
+        4: qianwei1  := '万';
+        5: qianwei1  := '拾';
+        6: qianwei1  := '佰';
+        7: qianwei1  := '仟';
+        8: qianwei1  := '亿';
+        9: qianwei1  := '拾';
+        10: qianwei1 := '佰';
+        11: qianwei1 := '仟';
+      end;
+      inc(qianwei);
+      BigMonth := wei1 + qianwei1 + BigMonth;{组合成大写金额}
+    end;
+  end;
+
+  BigMonth := StringReplace(BigMonth, '零拾', '零', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '零佰', '零', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '零仟', '零', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '零零', '', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '零', '零', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '零', '', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '零零', '零', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '零零', '零', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '零零', '零', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '零亿', '亿', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '零万', '万', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '零', '', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '亿万', '亿', [rfReplaceAll]);
+  BigMonth := BigMonth + '吨';
+  BigMonth := StringReplace(BigMonth, '点吨', '吨', [rfReplaceAll]);
+
+  if BigMonth = '吨整' then
+    BigMonth := '零吨整';
+
+  if copy(BigMonth, 1, 2) = '元' then
+    BigMonth := copy(BigMonth, 3, length(BigMonth) - 2);
+  if copy(BigMonth, 1, 2) = '零' then
+    BigMonth := copy(BigMonth, 3, length(BigMonth) - 2);
+  if fs_bj = True then
+    SmallTOBig := '- ' + BigMonth
+  else
+    SmallTOBig := BigMonth;
+end;
+
 //Desc: 打印提货单
 function PrintBillReport(nBill: string; const nAsk: Boolean): Boolean;
 var nStr: string;
@@ -2228,6 +2321,14 @@ begin
 
   nParam.FName := 'Company';
   nParam.FValue := gSysParam.FHintText;
+  FDR.AddParamItem(nParam);
+
+  nParam.FName := 'BigValue';
+  nParam.FValue := SmallTOBig(FDM.SqlTemp.fieldbyname('L_Value').AsFloat);
+  FDR.AddParamItem(nParam);
+
+  nParam.FName := 'RePrint';
+  nParam.FValue := '补打';
   FDR.AddParamItem(nParam);
 
   FDR.Dataset1.DataSet := FDM.SqlTemp;
@@ -2832,6 +2933,15 @@ begin
   except
     if not nBool then FDM.ADOConn.RollbackTrans;
   end;
+end;
+
+//根据车牌获取订单信息
+function GetBillByTruck(const nData: string):string;
+var nOut: TWorkerBusinessCommand;
+begin
+  if CallBusinessWechat(cBC_WX_get_shoporderbyTruck, nData, '', '', @nOut,False) then
+    Result := nOut.FData
+  else Result := '';
 end;
 
 end.

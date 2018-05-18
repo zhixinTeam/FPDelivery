@@ -1,32 +1,32 @@
 inherited fFormZhiKaFixMoney: TfFormZhiKaFixMoney
   Left = 578
   Top = 226
-  ClientHeight = 480
-  ClientWidth = 475
+  ClientHeight = 384
+  ClientWidth = 380
   OnClose = FormClose
   OnCreate = FormCreate
-  PixelsPerInch = 120
-  TextHeight = 15
+  PixelsPerInch = 96
+  TextHeight = 12
   inherited dxLayout1: TdxLayoutControl
-    Width = 475
-    Height = 480
-    AutoControlAlignment = False
+    Width = 380
+    Height = 384
+    OptionsItem.AutoControlAreaAlignment = False
     inherited BtnOK: TButton
-      Left = 293
-      Top = 438
+      Left = 234
+      Top = 351
       Caption = #30830#23450
       TabOrder = 8
     end
     inherited BtnExit: TButton
-      Left = 380
-      Top = 438
+      Left = 304
+      Top = 351
       TabOrder = 9
     end
     object ListInfo: TcxMCListBox [2]
-      Left = 29
-      Top = 45
-      Width = 467
-      Height = 138
+      Left = 23
+      Top = 36
+      Width = 374
+      Height = 110
       HeaderSections = <
         item
           Text = #20449#24687#39033
@@ -35,142 +35,155 @@ inherited fFormZhiKaFixMoney: TfFormZhiKaFixMoney
         item
           AutoSize = True
           Text = #20449#24687#20869#23481
-          Width = 389
+          Width = 296
         end>
       ParentFont = False
       Style.Edges = [bLeft, bTop, bRight, bBottom]
       TabOrder = 0
     end
     object EditZK: TcxTextEdit [3]
-      Left = 87
-      Top = 220
+      Left = 81
+      Top = 154
       ParentFont = False
       Properties.ReadOnly = True
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 1
-      Width = 132
+      Width = 105
     end
     object EditOut: TcxTextEdit [4]
-      Left = 282
-      Top = 285
+      Left = 249
+      Top = 211
       ParentFont = False
       Properties.ReadOnly = True
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 3
       Text = '0'
-      Width = 152
+      Width = 121
     end
     object EditIn: TcxTextEdit [5]
-      Left = 87
-      Top = 285
+      Left = 81
+      Top = 211
       ParentFont = False
       Properties.MaxLength = 15
       Properties.ReadOnly = True
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 2
       Text = '0'
-      Width = 132
+      Width = 105
     end
     object EditFreeze: TcxTextEdit [6]
-      Left = 87
-      Top = 310
+      Left = 81
+      Top = 236
       ParentFont = False
       Properties.ReadOnly = True
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 4
       Text = '0'
-      Width = 132
+      Width = 105
     end
     object EditValid: TcxTextEdit [7]
-      Left = 282
-      Top = 310
+      Left = 249
+      Top = 236
       ParentFont = False
       Properties.ReadOnly = True
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 5
       Text = '0'
-      Width = 152
+      Width = 121
     end
     object EditMoney: TcxTextEdit [8]
-      Left = 87
-      Top = 375
+      Left = 81
+      Top = 293
       ParentFont = False
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 6
-      Width = 152
+      Width = 121
     end
     object Check1: TcxCheckBox [9]
-      Left = 29
-      Top = 400
-      Caption = #38480#21046#35813#32440#21345#30340#21487#25552#36135#37327'.'
+      Left = 23
+      Top = 318
+      Caption = #38480#21046#35813#35746#21333#30340#21487#25552#36135#37327'.'
       ParentFont = False
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 7
       Transparent = True
       OnClick = Check1Click
-      Width = 151
+      Width = 121
     end
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
-        Caption = #32440#21345#20449#24687
+        CaptionOptions.Text = #32440#21345#20449#24687
         object dxLayout1Item3: TdxLayoutItem
-          AutoAligns = [aaHorizontal]
           AlignVert = avClient
           Control = ListInfo
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item5: TdxLayoutItem
-          Caption = #32440#21345#32534#21495':'
+          CaptionOptions.Text = #35746#21333#32534#21495':'
           Control = EditZK
           ControlOptions.ShowBorder = False
         end
       end
       object dxGroup2: TdxLayoutGroup [1]
-        Caption = #36134#25143#20449#24687
+        CaptionOptions.Text = #36134#25143#20449#24687
+        ButtonOptions.Buttons = <>
         object dxLayout1Group5: TdxLayoutGroup
-          ShowCaption = False
+          CaptionOptions.Visible = False
+          ButtonOptions.Buttons = <>
           Hidden = True
           LayoutDirection = ldHorizontal
           ShowBorder = False
           object dxLayout1Item9: TdxLayoutItem
-            Caption = #20837#37329#24635#39069':'
+            CaptionOptions.Text = #20837#37329#24635#39069':'
             Control = EditIn
             ControlOptions.ShowBorder = False
           end
           object dxLayout1Item8: TdxLayoutItem
-            AutoAligns = [aaVertical]
             AlignHorz = ahClient
-            Caption = #20986#37329#24635#39069':'
+            CaptionOptions.Text = #20986#37329#24635#39069':'
             Control = EditOut
             ControlOptions.ShowBorder = False
           end
         end
         object dxLayout1Group4: TdxLayoutGroup
-          ShowCaption = False
+          CaptionOptions.Visible = False
+          ButtonOptions.Buttons = <>
           Hidden = True
           LayoutDirection = ldHorizontal
           ShowBorder = False
           object dxLayout1Item7: TdxLayoutItem
-            Caption = #20923#32467#37329#39069':'
+            CaptionOptions.Text = #20923#32467#37329#39069':'
             Control = EditFreeze
             ControlOptions.ShowBorder = False
           end
           object dxLayout1Item10: TdxLayoutItem
-            AutoAligns = [aaVertical]
             AlignHorz = ahClient
-            Caption = #21487#29992#37329#39069':'
+            CaptionOptions.Text = #21487#29992#37329#39069':'
             Control = EditValid
             ControlOptions.ShowBorder = False
           end
         end
       end
       object dxGroup3: TdxLayoutGroup [2]
-        Caption = #21487#25552#36135#37329#39069
+        CaptionOptions.Text = #21487#25552#36135#37329#39069
+        ButtonOptions.Buttons = <>
         object dxLayout1Item4: TdxLayoutItem
-          AutoAligns = [aaVertical]
           AlignHorz = ahClient
-          Caption = #37329#39069'('#20803'):'
+          CaptionOptions.Text = #37329#39069'('#20803'):'
           Control = EditMoney
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item11: TdxLayoutItem
-          AutoAligns = [aaVertical]
           AlignHorz = ahClient
-          Caption = 'cxCheckBox1'
-          ShowCaption = False
+          CaptionOptions.Text = 'cxCheckBox1'
+          CaptionOptions.Visible = False
           Control = Check1
           ControlOptions.ShowBorder = False
         end

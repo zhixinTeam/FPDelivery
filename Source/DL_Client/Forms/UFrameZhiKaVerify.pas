@@ -14,7 +14,8 @@ uses
   cxMaskEdit, cxButtonEdit, cxTextEdit, ADODB, cxLabel, UBitmapPanel,
   cxSplitter, cxGridLevel, cxClasses, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid,
-  ComCtrls, ToolWin;
+  ComCtrls, ToolWin, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxLayoutcxEditAdapters;
 
 type
   TfFrameZhiKaVerify = class(TfFrameNormal)
@@ -123,13 +124,13 @@ var nStr: string;
 begin
   if cxView1.DataController.GetSelectedCount < 1 then
   begin
-    ShowMsg('请选择要审核的纸卡', sHint); Exit;
+    ShowMsg('请选择要审核的订单', sHint); Exit;
   end;
 
   nStr := SQLQuery.FieldByName('Z_Verified').AsString;
   if nStr = sFlag_Yes then
   begin
-    ShowMsg('该纸卡已审核通过', sHint); Exit;
+    ShowMsg('该订单已审核通过', sHint); Exit;
   end;
 
   if not BtnAdd.Enabled then Exit;

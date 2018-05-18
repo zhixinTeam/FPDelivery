@@ -14,7 +14,8 @@ uses
   dxLayoutControl, cxMaskEdit, cxButtonEdit, ADODB, cxLabel, UBitmapPanel,
   cxSplitter, cxGridLevel, cxClasses, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid,
-  ComCtrls, ToolWin;
+  ComCtrls, ToolWin, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxLayoutcxEditAdapters;
 
 type
   TfFrameBillCard = class(TfFrameNormal)
@@ -239,7 +240,7 @@ end;
 
 //Desc 删除
 procedure TfFrameBillCard.BtnDelClick(Sender: TObject);
-var nStr,nSQL: string;
+var nStr,nSQL, nReson: string;
 begin
   if cxView1.DataController.GetSelectedCount < 1 then
   begin
@@ -264,9 +265,18 @@ begin
   nSQL := Format(nSQL, [nStr]);
   if not QueryDlg(nSQL, sAsk) then Exit;
 
+  if not ShowInputBox('请输入删除原因:', sHint, nReson) then Exit;
+  if nReson = '' then
+  begin
+    ShowDlg('删除原因不能为空.',sHint);
+    Exit;
+  end;
+
   nSQL := 'Delete From %s Where C_Card=''%s''';
   nSQL := Format(nSQL, [sTable_Card, nStr]);
   FDM.ExecuteSQL(nSQL);
+
+  FDM.WriteSysLog(sFlag_CardItem, nStr, '删除磁卡:[ '+ nStr +' ], 原因:' + nReson);
 
   InitFormData(FWhere);
   ShowMsg('删除操作成功', sHint);

@@ -46,7 +46,7 @@ implementation
 {$R *.dfm}
 uses
   IniFiles, ULibFun, USysConst, USysDB, USysPopedom, USysMenu, UMgrPopedom,
-  USysLoger, UFormWait, UFormConn, UDataModule;
+  USysLoger, UFormWait, UFormConn, UDataModule, USysMAC, USysBusiness;
   
 ResourceString
   sUserLogin = '用户[ %s ]尝试登陆系统';
@@ -176,7 +176,7 @@ end;
 //Desc: 登录
 procedure TfFormLogin.BtnLoginClick(Sender: TObject);
 var nStr: string;
-    nMsg: string;
+    nMsg, nLastMac: string;
     nList: TStrings;
 begin
   Edit_User.Text := Trim(Edit_User.Text);
@@ -222,23 +222,53 @@ begin
       ShowDlg(sConnDBError, sWarn, Handle); Exit;
     end;
 
-    nStr := 'Select U_NAME from $a Where U_NAME=''$b'' and U_PASSWORD=''$c'' ' +
+    nStr := 'Select U_NAME,U_Password,U_Mac from $a Where U_NAME=''$b'' and U_PASSWORD=''$c'' ' +
             'and U_State=$d';
     nStr := MacroValue(nStr, [MI('$a',sTable_User),
                               MI('$b',Edit_User.Text),
                               MI('$c',Edit_Pwd.Text),
                               MI('$d', IntToStr(cPopedomUser_Normal))]);
     //xxxxx
-    
-    if FDM.QuerySQL(nStr).RecordCount <> 1 then
+    with FDM.QuerySQL(nStr) do
     begin
-      Edit_User.SetFocus;
-      nMsg := '错误的用户名或密码,请重新输入'; Exit;
+      if RecordCount <> 1 then
+      begin
+        Edit_User.SetFocus;
+        nMsg := '错误的用户名或密码,请重新输入'; Exit;
+      end;
+      if FieldByName('U_Password').AsString <> Edit_Pwd.Text then
+      begin
+        Edit_Pwd.SetFocus;
+        nMsg := '错误的密码,请重新输入'; Exit;
+      end;
     end;
 
-    gSysParam.FUserID := Edit_User.Text;
-    gSysParam.FUserName := FDM.SqlQuery.Fields[0].AsString;
-    gSysParam.FUserPwd := Edit_Pwd.Text;
+    with gSysParam do
+    begin
+      FUserID := Edit_User.Text;
+      FUserName := FDM.SqlQuery.Fields[0].AsString;
+      FUserPwd := Edit_Pwd.Text;
+      FLocalMAC   := MakeActionID_MAC;
+      GetLocalIPConfig(FLocalName, FLocalIP);
+      nLastMac := FDM.SqlQuery.FieldByName('U_Mac').AsString;
+    end;
+
+    if (gSysParam.FLocalMAC <> nLastMac) and (nLastMac <> '') then
+    begin
+      AddManualEventRecord(gSysParam.FUserID + gSysParam.FLocalMAC,gSysParam.FUserID,'DoubleLogin',
+              nLastMac,sFlag_Solution_YNP,'DealDoubleLogin',True,'');
+
+      nStr := 'update %s set U_Mac=''%s'' where U_Name=''%s''';
+      nStr := Format(nStr,[sTable_User,gSysParam.FLocalMAC,gSysParam.FUserID]);
+      FDM.ExecuteSQL(nStr);
+    end;
+
+    if nLastMac ='' then
+    begin
+      nStr := 'update %s set U_Mac=''%s'' where U_Name=''%s''';
+      nStr := Format(nStr,[sTable_User,gSysParam.FLocalMAC,gSysParam.FUserID]);
+      FDM.ExecuteSQL(nStr);
+    end;
 
     ShowWaitForm(nil, '载入数据');
     {$IFDEF EnableBackupDB}

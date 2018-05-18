@@ -13,7 +13,8 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   UFormNormal, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, cxCheckBox, cxTextEdit,
-  cxMCListBox, dxLayoutControl, StdCtrls;
+  cxMCListBox, dxLayoutControl, StdCtrls, dxSkinsCore,
+  dxSkinsDefaultPainters, dxLayoutcxEditAdapters;
 
 type
   TfFormZhiKaFixMoney = class(TfFormNormal)
@@ -188,11 +189,11 @@ begin
          nTmp := nFixMoney - nVal
     else nTmp := 0;
 
-    nStr := '该纸卡当前有冻结金(开单未提),限提金额需要调整: ' + #13#10#13#10 +
+    nStr := '该订单当前有冻结金(开单未提),限提金额需要调整: ' + #13#10#13#10 +
             '*.冻结金额: %.2f 元' + #13#10 +
             '*.限提金额: %.2f 元' + #13#10 +
             '*.可用总额: %.2f 元' + #13#10#13#10 +
-            '点击[是],纸卡限提总额为[ %.2f ]元.' + #13#10 +
+            '点击[是],订单限提总额为[ %.2f ]元.' + #13#10 +
             '点击[否],请填写有效限提金额,建议限提[ %.2f ]元.';
     nStr := Format(nStr, [nVal, nFixMoney, nFixMoney+nVal, nFixMoney+nVal, nTmp]);
     //xxxxx
@@ -230,10 +231,10 @@ begin
 
   if Check1.Checked then
   begin
-    nStr := '纸卡[ %s ]限提金额[ %.2f -> %.2f ]';
+    nStr := '订单[ %s ]限提金额[ %.2f -> %.2f ]';
     nStr := Format(nStr, [gInfo.FZhiKa, gInfo.FFixMoney,
                           StrToFloat(EditMoney.Text)]);
-  end else nStr := Format('取消限制纸卡[ %s ]的可提货金额', [gInfo.FZhiKa]);
+  end else nStr := Format('取消限制订单[ %s ]的可提货金额', [gInfo.FZhiKa]);
 
   FDM.WriteSysLog(sFlag_ZhiKaItem, gInfo.FZhiKa, nStr, False);
   ModalResult := mrOk;

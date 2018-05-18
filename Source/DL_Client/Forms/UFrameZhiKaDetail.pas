@@ -14,7 +14,8 @@ uses
   cxMaskEdit, cxButtonEdit, cxTextEdit, ADODB, cxLabel, UBitmapPanel,
   cxSplitter, cxGridLevel, cxClasses, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid,
-  ComCtrls, ToolWin;
+  ComCtrls, ToolWin, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxLayoutcxEditAdapters;
 
 type
   TfFrameZhiKaDetail = class(TfFrameNormal)
@@ -345,7 +346,7 @@ begin
       nStr := GetVal(nIdx, 'Z_TJStatus');
       if nStr <> sFlag_TJing then
       begin
-        nStr := '调价前需要冻结纸卡,记录[ %s ]不符合要求.';
+        nStr := '调价前需要冻结订单,记录[ %s ]不符合要求.';
         nStr := Format(nStr, [nRID]);
         ShowDlg(nStr, sHint, Handle); Exit;
       end;
@@ -452,7 +453,7 @@ begin
   else if (Sender as TMenuItem) = N18 then  nFreeze := False
   else Exit;
 
-  nStr := '确定要%s所有合同区域为[%s]的纸卡吗?';
+  nStr := '确定要%s所有合同区域为[%s]的订单吗?';
   if nFreeze then
         nStr := Format(nStr, ['冻结', nArea])
   else  nStr := Format(nStr, ['解冻', nArea]);
@@ -494,7 +495,7 @@ begin
   else if (Sender as TMenuItem) = N19 then  nFreeze := False
   else Exit;
 
-  nStr := '确定要%s所有业务员区域为[%s]的纸卡吗?';
+  nStr := '确定要%s所有业务员区域为[%s]的订单吗?';
   if nFreeze then
         nStr := Format(nStr, ['冻结', nArea])
   else  nStr := Format(nStr, ['解冻', nArea]);

@@ -11,7 +11,8 @@ uses
   UDataModule, UFormNormal, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, ComCtrls, ImgList, DB, ADODB,
   ExtCtrls, cxGroupBox, cxRadioGroup, cxMemo, cxTextEdit, cxListView,
-  cxLabel, dxLayoutControl, StdCtrls;
+  cxLabel, dxLayoutControl, StdCtrls, dxSkinsCore, dxSkinsDefaultPainters,
+  dxLayoutcxEditAdapters;
 
 type
   TfFormTodo = class(TfFormNormal)
@@ -163,7 +164,7 @@ begin
 end;
 
 function TfFormTodo.LoadEventFromDB: Boolean;
-var nStr: string;
+var nStr, nEventID: string;
     nIdx: Integer;
     nBool: Boolean;
     nItem: PEventItem;
@@ -176,7 +177,26 @@ begin
   end;
 
   with ADOQuery1 do
-  try                            
+  begin
+    nStr := 'select * from %s where E_From=''%s'' and E_Key=''%s''';
+    nStr := Format(nStr,[sTable_ManualEvent,gSysParam.FLocalMAC,gSysParam.FUserID]);
+    FDM.QueryData(ADOQuery1, nStr);
+    if RecordCount > 0 then
+    begin
+      try
+        nEventID := FieldByName('E_ID').AsString;
+        nStr:= 'Delete from %s where E_ID=''%s''';
+        nStr := Format(nStr,[sTable_ManualEvent,nEventID]);
+        FDM.ExecuteSQL(nStr);
+        ShowDlg('操作员已在其他电脑登录.',sHint);
+        Application.Terminate;
+      except
+      end;
+    end;
+  end;
+
+  with ADOQuery1 do
+  try
     nStr := 'Select * from %s Where (E_Date>=%s-1 and E_Result Is Null ' +
             'and E_Departmen=''%s'') or (E_Date>=dateadd(hour,-1,%s) and ' +
             'E_Departmen=''%s'') Order By R_ID ASC';

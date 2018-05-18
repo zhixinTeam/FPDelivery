@@ -46,7 +46,8 @@ uses
   UFormHYStock, UFormHYData, UFormHYRecord, UFormGetStockNo,
   UFrameHYStock, UFrameHYData, UFrameHYRecord,
   UFrameCustomer_FP, UFormTestResult, UFormStockItem,
-  UFormSealNum, UFormAdjustMoney, UFormBackCash;
+  UFormSealNum, UFormAdjustMoney, UFormBackCash, UFormTestRecOther,
+  UFrameTestResult, UFormQryCard;
   //UFormpoundAdjust ; 
 
 procedure InitSystemObject;
@@ -81,11 +82,11 @@ end;
 procedure RunSystemObject;
 var nStr: string;
 begin
-  with gSysParam do
+  {with gSysParam do
   begin
     FLocalMAC   := MakeActionID_MAC;
     GetLocalIPConfig(FLocalName, FLocalIP);
-  end;
+  end; }
 
   nStr := 'Select W_Factory,W_Serial,W_Departmen,W_HardUrl,W_MITUrl From %s ' +
           'Where W_MAC=''%s'' And W_Valid=''%s''';
