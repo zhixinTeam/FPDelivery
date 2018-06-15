@@ -72,8 +72,8 @@
   //启用网上商城
   {$DEFINE PrintHYEach}
   //随车开化验单
-  {.$DEFINE StockLimited}
-  //随车开化验单
+  {$DEFINE StockLimited}
+  //日发货量限制
   {$DEFINE M100Reader}
   //吞卡机
   {$DEFINE ChangeBillWhenPriceAdjust}

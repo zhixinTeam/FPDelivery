@@ -508,6 +508,7 @@ begin
 
   //富平判断限提数量
   {$IFDEF StockLimited}
+  //按物料品种日限额
   nSQL := 'select * from %s where D_Name=''%s'' and D_Value=''%s''';
   nSQL := Format(nSQL,[sTable_SysDict,'StockLimited',FListC.Values['StockNO']]);
   with gDBConnManager.WorkerQuery(FDBConn, nSQL) do
@@ -541,6 +542,57 @@ begin
         end;
       end;
     end;
+  end;
+
+  //按客户日限额
+  nSQL := 'select D_Value from %s where D_Name=''%s''';
+  nSQL := Format(nSQL,[sTable_SysDict, sFlag_CusLoadLimit]);
+  with gDBConnManager.WorkerQuery(FDBConn, nSQL) do
+  begin
+    if recordcount > 0 then
+      if FieldByName('D_Value').AsString = sFlag_Yes then  //启用发货限制
+      begin
+        nSQL := 'select * from %s where L_CusNo=''%s''';
+        nSQL := Format(nSQL,[sTable_CusLimit,FListA.Values['CusID']]);
+        with gDBConnManager.WorkerQuery(FDBConn, nSQL) do
+        begin
+          if recordcount > 0 then
+          begin
+            nLimitValue := FieldByName('L_Value').AsFloat;
+            nSQL := 'Select sum(L_Value) as L_Value from %s where L_StockNo=''%s'''+
+                    ' and L_Date >= ''%s'' and L_Date < ''%s''';
+            nSQL := Format(nSQL,[sTable_Bill,FListC.Values['StockNO'],
+                  Date2Str(Date,True)+' 00:00:00',Date2Str(Date+1,True)+' 00:00:00']);
+            with gDBConnManager.WorkerQuery(FDBConn, nSQL) do
+            begin
+              nLeaveValue := nLimitValue - FieldByName('L_Value').AsFloat;
+              if nLeaveValue <= 0 then
+              begin
+                nData := '物料[ %s ]已超出日发货限量，无法开单';
+                nData := Format(nData,[FListC.Values['StockNO']+'-'+FListC.Values['StockName']]);
+                exit;
+              end
+              else
+              begin
+                if nLeaveValue < StrToFloat(FListC.Values['Value']) then
+                begin
+                  nData := '当前客户物料[ %s ]'+#13#10+'单日发货量限额：[ %s ]吨'+#13#10 +
+                           '当前剩余配额：[ %s ]吨';
+                  nData := Format(nData,[FListC.Values['StockNO']+'-'+FListC.Values['StockName'],
+                            FloatToStr(nLimitValue),FloatToStr(nLeaveValue)]);
+                  Exit;
+                end;
+              end;
+            end;
+          end
+          else
+          begin      //如果没有记录则不允许提货
+            nData := '用户 [ %s ] 禁提 [ %s ].';
+            nData := Format(nData,[FListA.Values['CusName'],FListC.Values['StockNO']]);
+            Exit;
+          end;
+        end;
+      end;
   end;
   {$ENDIF}
 

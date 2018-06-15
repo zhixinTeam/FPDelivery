@@ -262,6 +262,7 @@ const
   sFlag_TestRules     = 'TestRules';                 //检验规则
   sFlag_MonitorType   = 'MonitorType';               //磅房监装模式
   sFlag_LoadLimitWC   = 'LoadLimitWC';               //限载允许误差
+  sFlag_CusLoadLimit  = 'CusLoadLimit';              //客户发货日限额
 
   {*数据表*}
   sTable_Group        = 'Sys_Group';                 //用户组
@@ -346,6 +347,7 @@ const
   sTable_BackCashRuleTmp = 'S_BackCashRuleTmp';      //返现临时表
   sTable_BackRecord      = 'S_BackRecord';           //返现记录表
   sTable_WorkTimes       = 'S_WorkTimes';            //班次
+  sTable_CusLimit        = 'S_CusLimit';             //客户限提
 
 
   {*新建表*}
@@ -1553,6 +1555,18 @@ const
    *.W_DateEnd:结束时间
   -----------------------------------------------------------------------------}
 
+  sSQL_NewCusLimit = 'Create Table $Table(R_ID $Inc,L_CusNo varchar(20), '
+      +'L_StockNo varchar(40),L_Value $Float,L_Date DateTime,L_User varchar(20))';
+  {-----------------------------------------------------------------------------
+   限购表: CusLimit
+   *.R_ID: 记录编号
+   *.L_StockNo:物料编号
+   *.L_CusNo:客户编号
+   *.L_Value:限载值
+   *.L_Date:时间
+   *.L_User:操作员
+  -----------------------------------------------------------------------------}
+
 
 function CardStatusToStr(const nStatus: string): string;
 //磁卡状态
@@ -1694,6 +1708,8 @@ begin
   AddSysTableItem(sTable_BackCashRuleTmp, sSQL_NewBackCashRule);
   AddSysTableItem(sTable_BackRecord, sSQL_NewBackRecord);
   AddSysTableItem(sTable_WorkTimes, sSQL_NewWorkTimes);
+  AddSysTableItem(sTable_CusLimit, sSQL_NewCusLimit);
+
 end;
 
 //Desc: 清理系统表

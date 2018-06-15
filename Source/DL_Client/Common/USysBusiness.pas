@@ -2255,16 +2255,21 @@ begin
   BigMonth := StringReplace(BigMonth, '¡„ ∞', '¡„', [rfReplaceAll]);
   BigMonth := StringReplace(BigMonth, '¡„∞€', '¡„', [rfReplaceAll]);
   BigMonth := StringReplace(BigMonth, '¡„«™', '¡„', [rfReplaceAll]);
-  BigMonth := StringReplace(BigMonth, '¡„¡„', '', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '¡„¡„', '¡„', [rfReplaceAll]);
   BigMonth := StringReplace(BigMonth, '¡„', '¡„', [rfReplaceAll]);
-  BigMonth := StringReplace(BigMonth, '¡„', '', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '¡„', '¡„', [rfReplaceAll]);
   BigMonth := StringReplace(BigMonth, '¡„¡„', '¡„', [rfReplaceAll]);
   BigMonth := StringReplace(BigMonth, '¡„¡„', '¡„', [rfReplaceAll]);
   BigMonth := StringReplace(BigMonth, '¡„¡„', '¡„', [rfReplaceAll]);
   BigMonth := StringReplace(BigMonth, '¡„“⁄', '“⁄', [rfReplaceAll]);
   BigMonth := StringReplace(BigMonth, '¡„ÕÚ', 'ÕÚ', [rfReplaceAll]);
-  BigMonth := StringReplace(BigMonth, '¡„', '', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '¡„', '¡„', [rfReplaceAll]);
   BigMonth := StringReplace(BigMonth, '“⁄ÕÚ', '“⁄', [rfReplaceAll]);
+
+  BigMonth := StringReplace(BigMonth, ' ∞¡„', ' ∞', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '∞€¡„', '∞€', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '«™¡„', '«™', [rfReplaceAll]);
+
   BigMonth := BigMonth + '∂÷';
   BigMonth := StringReplace(BigMonth, 'µ„∂÷', '∂÷', [rfReplaceAll]);
 
@@ -2273,8 +2278,8 @@ begin
 
   if copy(BigMonth, 1, 2) = '‘™' then
     BigMonth := copy(BigMonth, 3, length(BigMonth) - 2);
-  if copy(BigMonth, 1, 2) = '¡„' then
-    BigMonth := copy(BigMonth, 3, length(BigMonth) - 2);
+  //if copy(BigMonth, 1, 2) = '¡„' then
+  //  BigMonth := copy(BigMonth, 3, length(BigMonth) - 2);
   if fs_bj = True then
     SmallTOBig := '- ' + BigMonth
   else
@@ -2375,6 +2380,12 @@ begin
 
   nParam.FName := 'UserName';
   nParam.FValue := gSysParam.FUserID;
+  FDR.AddParamItem(nParam);
+
+  nParam.FName := 'BigValue';
+  nParam.FValue := SmallTOBig(FDM.SqlTemp.fieldbyname('D_mValue').AsFloat
+                  - FDM.SqlTemp.fieldbyname('D_PValue').AsFloat
+                  - FDM.SqlTemp.fieldbyname('D_KZValue').AsFloat);
   FDR.AddParamItem(nParam);
 
   nParam.FName := 'Company';

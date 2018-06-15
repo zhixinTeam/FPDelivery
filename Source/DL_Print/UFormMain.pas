@@ -317,16 +317,21 @@ begin
   BigMonth := StringReplace(BigMonth, 'ÁãÊ°', 'Áã', [rfReplaceAll]);
   BigMonth := StringReplace(BigMonth, 'Áã°Û', 'Áã', [rfReplaceAll]);
   BigMonth := StringReplace(BigMonth, 'ÁãÇª', 'Áã', [rfReplaceAll]);
-  BigMonth := StringReplace(BigMonth, 'ÁãÁã', '', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, 'ÁãÁã', 'Áã', [rfReplaceAll]);
   BigMonth := StringReplace(BigMonth, 'Áã', 'Áã', [rfReplaceAll]);
-  BigMonth := StringReplace(BigMonth, 'Áã', '', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, 'Áã', 'Áã', [rfReplaceAll]);
   BigMonth := StringReplace(BigMonth, 'ÁãÁã', 'Áã', [rfReplaceAll]);
   BigMonth := StringReplace(BigMonth, 'ÁãÁã', 'Áã', [rfReplaceAll]);
   BigMonth := StringReplace(BigMonth, 'ÁãÁã', 'Áã', [rfReplaceAll]);
   BigMonth := StringReplace(BigMonth, 'ÁãÒÚ', 'ÒÚ', [rfReplaceAll]);
   BigMonth := StringReplace(BigMonth, 'ÁãÍò', 'Íò', [rfReplaceAll]);
-  BigMonth := StringReplace(BigMonth, 'Áã', '', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, 'Áã', 'Áã', [rfReplaceAll]);
   BigMonth := StringReplace(BigMonth, 'ÒÚÍò', 'ÒÚ', [rfReplaceAll]);
+
+  BigMonth := StringReplace(BigMonth, 'Ê°Áã', 'Ê°', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, '°ÛÁã', '°Û', [rfReplaceAll]);
+  BigMonth := StringReplace(BigMonth, 'ÇªÁã', 'Çª', [rfReplaceAll]);
+
   BigMonth := BigMonth + '¶Ö';
   BigMonth := StringReplace(BigMonth, 'µã¶Ö', '¶Ö', [rfReplaceAll]);
 
@@ -335,13 +340,14 @@ begin
 
   if copy(BigMonth, 1, 2) = 'Ôª' then
     BigMonth := copy(BigMonth, 3, length(BigMonth) - 2);
-  if copy(BigMonth, 1, 2) = 'Áã' then
-    BigMonth := copy(BigMonth, 3, length(BigMonth) - 2);
+  //if copy(BigMonth, 1, 2) = 'Áã' then
+  //  BigMonth := copy(BigMonth, 3, length(BigMonth) - 2);
   if fs_bj = True then
     SmallTOBig := '- ' + BigMonth
   else
     SmallTOBig := BigMonth;
 end;
+
 
 //------------------------------------------------------------------------------
 //Date: 2012-4-1
@@ -387,8 +393,10 @@ begin
 
   SetLength(WeightList,0);
   //²»³¬ÏÞÔØ»òÕßÎª´ü×°µÄ
-  if (nLoadLimit + nWuCha >= nMValue) or (nDS.FieldByName('L_Type').AsString = 'D')then
+  if (Float2Float((nLoadLimit+nWuCha),cPrecision,True) >= Float2Float(nMValue,cPrecision,True))
+      or (nDS.FieldByName('L_Type').AsString = 'D')then
   begin
+    nCount := 1;
     SetLength(WeightList,1);
     WeightList[0].FMValue := nMValue;
     WeightList[0].FValue :=  nDS.FieldByName('L_Value').AsFloat;;
@@ -436,6 +444,14 @@ begin
 
     nParam.FName := 'BigValue';
     nParam.FValue := SmallTOBig(FDM.SQLQuery1.fieldbyname('L_Value').AsFloat);
+    FDR.AddParamItem(nParam);
+
+    nParam.FName := 'PgNum';//µ±Ç°Ò³
+    nParam.FValue := i+1;
+    FDR.AddParamItem(nParam);
+
+    nParam.FName := 'PgCount';//×ÜÒ³Êý
+    nParam.FValue := nCount;
     FDR.AddParamItem(nParam);
 
     FDR.Dataset1.DataSet := FDM.SQLQuery1;

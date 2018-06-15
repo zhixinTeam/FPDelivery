@@ -187,6 +187,7 @@ const
   cFI_FrameTestResult   = $1110;                     //化验结果查询
   cFI_FormQryCard       = $1111;                     //查询磁卡信息
   cFI_FormAdjustCredit  = $1112;                     //信用金额调拨
+  cFI_FormCusLimit      = $1113;                     //客户提货限制
 
 
 
@@ -361,6 +362,7 @@ begin
   AddMenuModuleItem('MAIN_K09', cFI_FormTestRecOther, mtForm);
   AddMenuModuleItem('MAIN_K10', cFI_FrameTestResult);
   AddMenuModuleItem('MAIN_D11', cFI_FormQryCard, mtForm);
+  AddMenuModuleItem('MAIN_D12', cFI_FormCusLimit, mtForm);
   {$ELSE}
   AddMenuModuleItem('MAIN_B02', cFI_FrameCustomer);
   {$ENDIF}
