@@ -712,6 +712,20 @@ begin
     Exit;
   end;
 
+  //判断是否需要录入封签号
+  for nIdx:=Low(nTrucks) to High(nTrucks) do
+  with nTrucks[nIdx] do
+  begin
+    if FMustSeal and (FSeal = '') then
+    begin
+      nStr := '车辆[ %s ] 必须录入封签号.';
+      nStr := Format(nStr, [FTruck, TruckStatusToStr(FNextStatus)]);
+    
+      WriteHardHelperLog(nStr, sPost_Out);
+      Exit;
+    end;
+  end;
+
   if nCardType = sFlag_Provide then
     nRet := SaveLadingOrders(sFlag_TruckOut, nTrucks) else
   if nCardType = sFlag_Sale then

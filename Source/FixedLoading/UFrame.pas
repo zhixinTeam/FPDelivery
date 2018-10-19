@@ -23,7 +23,6 @@ type
     btnReset: TToolButton;
     ToolButton9: TToolButton;
     ToolButton10: TToolButton;
-    ToolButton1: TToolButton;
     ToolBar2: TToolBar;
     btnUp: TToolButton;
     ToolBar3: TToolBar;
@@ -79,9 +78,7 @@ type
     Button2: TButton;
     procedure btnPauseClick(Sender: TObject);
     procedure btnStartClick(Sender: TObject);
-    procedure btnResetClick(Sender: TObject);
     procedure btnStopClick(Sender: TObject);
-    procedure btnUpClick(Sender: TObject);
     procedure btnDownClick(Sender: TObject);
     procedure btnSetOpenClick(Sender: TObject);
     procedure btnUpMouseDown(Sender: TObject; Button: TMouseButton;
@@ -109,6 +106,7 @@ type
     FUIData: TLadingBillItem;     //界面数据
     FPoundTunnel: PPTTunnelItem;  //磅站通道
     HasSet40, HasSet20, HasSet10, HasStop: Boolean;
+    PauseFD: Integer;             //暂停时阀度
     //procedure DoExecute(const nContext: TIdContext);
     //procedure OnGetCardNo(var nBase: TSendDataBase;var nBuf: TIdBytes;nCtx: TIdContext);
     //接收磁卡号
@@ -146,25 +144,30 @@ var
   nmsg:string;
 begin
   StopGetStatus;
+  if HasStop then Exit;
+
   if not btnPause.Down then
   begin
-    if Fcontroller.Pause(FrameId) then
+    PauseFD := editOpenValue.EditValue;
+    if Fcontroller.SetOpening(FrameId,0) then
     begin
-      label1.Caption := '运行状态：已暂停';
+      writelog(GroupBox1.Caption+'暂停'+formatdatetime('yyyy-mm-dd HH:MM:ss',Now));
     end
     else begin
-      nMsg := 'ErrorCode:[%d],ErrorMsg:[%s]';
+      nMsg := 'zyww::ErrorCode:[%d],ErrorMsg:[%s]';
       nMsg := Format(nMsg,[Fcontroller.ErrCode,Fcontroller.ErrMsg]);
       ShowMessage(nMsg);
     end;
   end
-  else begin
-    if Fcontroller.UnPause(FrameId) then
+  else
+  begin
+    if PauseFD = 0 then Exit;
+    if Fcontroller.SetOpening(FrameId,PauseFD) then
     begin
-      Label1.Caption := '运行状态：运行...';
+      writelog(GroupBox1.Caption+'暂停'+formatdatetime('yyyy-mm-dd HH:MM:ss',Now));
     end
     else begin
-      nMsg := 'ErrorCode:[%d],ErrorMsg:[%s]';
+      nMsg := 'zyww::ErrorCode:[%d],ErrorMsg:[%s]';
       nMsg := Format(nMsg,[Fcontroller.ErrCode,Fcontroller.ErrMsg]);
       ShowMessage(nMsg);
     end;
@@ -196,36 +199,6 @@ begin
   end;
 end;
 
-procedure TFrame1.btnResetClick(Sender: TObject);
-var
-  nmsg:string;
-begin
-  {StopGetStatus;
-  if btnReset.Down then
-  begin
-    if Fcontroller.Reset(FrameId) then
-    begin
-      Label1.Caption := '运行状态：复位中...';
-    end
-    else begin
-      nMsg := 'ErrorCode:[%d],ErrorMsg:[%s]';
-      nMsg := Format(nMsg,[Fcontroller.ErrCode,Fcontroller.ErrMsg]);
-      ShowMessage(nMsg);
-    end;
-  end
-  else begin
-    if Fcontroller.UnPause(FrameId) then
-    begin
-      Label1.Caption := '运行状态：复位完毕';
-    end
-    else begin
-      nMsg := 'ErrorCode:[%d],ErrorMsg:[%s]';
-      nMsg := Format(nMsg,[Fcontroller.ErrCode,Fcontroller.ErrMsg]);
-      ShowMessage(nMsg);
-    end;
-  end;  }
-end;
-
 procedure TFrame1.btnStopClick(Sender: TObject);
 var
   nmsg:string;
@@ -243,6 +216,7 @@ begin
     HasSet20 := false;
     HasSet10 := false;
     HasStop := true;
+    btnPause.Down := False;
     ShowLedText(FPoundTunnel.FID, '  欢迎光临  ');
     writelog(GroupBox1.Caption+' 停止放灰, 时间：'+formatdatetime('yyyy-mm-dd HH:MM:ss',Now));
   end
@@ -253,120 +227,10 @@ begin
   end;
 end;
 
-procedure TFrame1.btnUpClick(Sender: TObject);
-var
-  nmsg:string;
-begin
-  {if btnUp.Down then
-  begin
-    if Fcontroller.up(FrameId) then
-    begin
-      Label1.Caption := '运行状态：上移中...';
-    end
-    else begin
-      nMsg := 'ErrorCode:[%d],ErrorMsg:[%s]';
-      nMsg := Format(nMsg,[Fcontroller.ErrCode,Fcontroller.ErrMsg]);
-      ShowMessage(nMsg);
-    end;
-  end
-  else begin
-    if Fcontroller.UnUp(FrameId) then
-    begin
-      Label1.Caption := '运行状态：上移完毕';
-    end
-    else begin
-      nMsg := 'ErrorCode:[%d],ErrorMsg:[%s]';
-      nMsg := Format(nMsg,[Fcontroller.ErrCode,Fcontroller.ErrMsg]);
-      ShowMessage(nMsg);
-    end;
-  end; }
-end;
-
 procedure TFrame1.btnDownClick(Sender: TObject);
-var
-  nmsg:string;
 begin
-  {if btnDown.Down then
-  begin
-    if Fcontroller.Down(FrameId) then
-    begin
-      Label1.Caption := '运行状态：下移中...';
-    end
-    else begin
-      nMsg := 'ErrorCode:[%d],ErrorMsg:[%s]';
-      nMsg := Format(nMsg,[Fcontroller.ErrCode,Fcontroller.ErrMsg]);
-      ShowMessage(nMsg);
-    end;
-  end
-  else begin
-    if Fcontroller.UnDown(FrameId) then
-    begin
-      Label1.Caption := '运行状态：下移完毕';
-    end
-    else begin
-      nMsg := 'ErrorCode:[%d],ErrorMsg:[%s]';
-      nMsg := Format(nMsg,[Fcontroller.ErrCode,Fcontroller.ErrMsg]);
-      ShowMessage(nMsg);
-    end;
-  end;}
+
 end;
-
-{procedure TFrame1.IdTCPServer1Execute(AContext: TIdContext);
-begin
-  try
-    DoExecute(AContext);
-  except
-    on E:Exception do
-    begin
-      WriteLog(E.Message);
-      AContext.Connection.Socket.InputBuffer.Clear;
-    end;
-  end;
-end;  }
-
-{procedure TFrame1.DoExecute(const nContext: TIdContext);
-var nBuf: TIdBytes;
-    nBase: TSendDataBase;
-begin
-  with nContext.Connection do
-  begin
-    Socket.ReadBytes(nBuf, cSizeSendBase, False);
-    BytesToRaw(nBuf, nBase, cSizeSendBase);
-
-    case nBase.FCommand of
-     cCmd_SendCard :
-      begin
-        OnGetCardNo(nBase,nBuf,nContext);
-      end;
-    end;
-  end;
-end;}
-
-{procedure TFrame1.OnGetCardNo(var nBase: TSendDataBase; var nBuf: TIdBytes;
-  nCtx: TIdContext);
-var
-  nTunnel, nCardNo, nStr: string;
-  i: Integer;
-begin
-  nCtx.Connection.Socket.ReadBytes(nBuf, nBase.FDataLen, False);
-  nStr := Trim(BytesToString(nBuf));
-  i := Pos('@',nStr);
-  if i < 0 then Exit;
-
-  nTunnel:= Copy(nStr,0,i-1);
-  nCardNo := Copy(nStr,i+1,Length(nStr));
-
-  //ShowMessage(Format('车道 [%s] 接收到卡号 %s', [nTunnel,nCardNo]));
-  WriteLog(Format('车道 [%s] 接收到卡号 %s', [nTunnel,nCardNo]));
-
-  if FPoundTunnel.FID <> nTunnel then Exit;
-//  if FTunnel.FID <> nTunnel then Exit;
-
-  if FIsBusy then Exit;
-
-  EditBill.Text := nCardNo;
-  LoadBillItems(EditBill.Text);
-end; }
 
 //Parm: 磁卡或交货单号
 //Desc: 读取nCard对应的交货单

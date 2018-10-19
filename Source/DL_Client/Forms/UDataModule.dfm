@@ -1,7 +1,7 @@
 object FDM: TFDM
   OldCreateOrder = False
   OnCreate = DataModuleCreate
-  Left = 399
+  Left = 301
   Top = 390
   Height = 270
   Width = 311

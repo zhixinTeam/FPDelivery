@@ -652,18 +652,21 @@ begin
   begin
     {$IFDEF FPST}
       nStr := 'select a.T_SBTare,b.S_CarModel,S_Value,T_NoLimit '+
-            'from %s a left join %s b on t_loadstand=b.S_NO where T_Truck=''%s''';
+            'from %s a join %s b on t_loadstand=b.S_NO where T_Truck=''%s''';
       nStr := Format(nStr,[sTable_Truck,sTable_LoadStandard,FUIData.FTruck]);
       with FDM.QueryTemp(nStr) do
       begin
         if recordcount = 0 then
         begin
-          nStr := '未查到车型限载信息，请到开票室核验车型';
-          WriteLog(nStr);
-          PlayVoice(nStr);
-          exit;
-        end;
-        //限载值 + 限载允许误差
+          if FUIData.FMData.FValue > 49 + gSysParam.FLoadLimitWC then
+          begin
+            nStr := '超出最大限载重量，请返厂卸车';
+            WriteLog(nStr);
+            PlayVoice(nStr);
+            exit;
+          end;
+        end
+        else  //限载值 + 限载允许误差
         if (FieldByName('T_NoLimit').AsString <> 'Y') and
           (FUIData.FMData.FValue > FieldByName('S_Value').AsFloat + gSysParam.FLoadLimitWC) then
         begin

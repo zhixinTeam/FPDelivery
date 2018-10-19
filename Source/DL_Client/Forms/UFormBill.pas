@@ -306,7 +306,7 @@ begin
   with gInfo do
   begin
     FCusID := nDB.FieldByName('Z_Customer').AsString;
-    FPriceChanged := nDB.FieldByName('Z_TJStatus').AsString = sFlag_TJOver;
+    FPriceChanged := False; //富平要求去掉调价确认nDB.FieldByName('Z_TJStatus').AsString = sFlag_TJOver;
     
     SetCtrlData(EditLading, nDB.FieldByName('Z_Lading').AsString);
     FMoney := GetZhikaValidMoney(gInfo.FZhiKa, gInfo.FOnlyMoney);
@@ -348,6 +348,7 @@ begin
       FValue := 0;
       FSelecte := False;
 
+      //富平要求去掉调价确认
       if gInfo.FPriceChanged then
       begin
         nTmp := '品种:[ %-8s ] 原价:[ %.2f ] 现价:[ %.2f ]' + #32#32;

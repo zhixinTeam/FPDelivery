@@ -47,7 +47,7 @@ uses
   UFrameHYStock, UFrameHYData, UFrameHYRecord,
   UFrameCustomer_FP, UFormTestResult, UFormStockItem,
   UFormSealNum, UFormAdjustMoney, UFormBackCash, UFormTestRecOther,
-  UFrameTestResult, UFormQryCard, UFormCusLimit;
+  UFrameTestResult, UFormQryCard, UFormCusLimit, UFrameZKRechargeLog;
   //UFormpoundAdjust ; 
 
 procedure InitSystemObject;

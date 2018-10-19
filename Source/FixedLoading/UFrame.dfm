@@ -142,9 +142,9 @@ object Frame1: TFrame1
       Visible = False
     end
     object ToolBar1: TToolBar
-      Left = 8
-      Top = 509
-      Width = 155
+      Left = 5
+      Top = 511
+      Width = 180
       Height = 23
       Align = alNone
       AutoSize = True
@@ -173,16 +173,14 @@ object Frame1: TFrame1
       object btnPause: TToolButton
         Left = 45
         Top = 2
-        Width = 4
         Caption = #26242'  '#20572
         Enabled = False
         ImageIndex = 4
-        Style = tbsSeparator
         Visible = False
         OnClick = btnPauseClick
       end
       object ToolButton9: TToolButton
-        Left = 49
+        Left = 82
         Top = 2
         Width = 8
         Caption = 'ToolButton9'
@@ -190,7 +188,7 @@ object Frame1: TFrame1
         Style = tbsSeparator
       end
       object btnStop: TToolButton
-        Left = 57
+        Left = 90
         Top = 2
         Caption = #20572'  '#27490
         Enabled = False
@@ -198,7 +196,7 @@ object Frame1: TFrame1
         OnClick = btnStopClick
       end
       object ToolButton6: TToolButton
-        Left = 94
+        Left = 127
         Top = 2
         Width = 8
         Caption = 'ToolButton6'
@@ -206,7 +204,7 @@ object Frame1: TFrame1
         Style = tbsSeparator
       end
       object ToolButton10: TToolButton
-        Left = 102
+        Left = 135
         Top = 2
         Width = 8
         Caption = 'ToolButton10'
@@ -214,21 +212,12 @@ object Frame1: TFrame1
         Style = tbsSeparator
       end
       object btnReset: TToolButton
-        Left = 110
+        Left = 143
         Top = 2
         Caption = #22797'  '#20301
         ImageIndex = 3
-        OnClick = btnResetClick
         OnMouseDown = btnResetMouseDown
         OnMouseUp = btnResetMouseUp
-      end
-      object ToolButton1: TToolButton
-        Left = 147
-        Top = 2
-        Width = 8
-        Caption = 'ToolButton1'
-        ImageIndex = 4
-        Style = tbsSeparator
       end
     end
     object ToolBar2: TToolBar
@@ -250,7 +239,6 @@ object Frame1: TFrame1
         Top = 2
         Caption = #8593#19978#31227
         ImageIndex = 0
-        OnClick = btnUpClick
         OnMouseDown = btnUpMouseDown
         OnMouseUp = btnUpMouseUp
       end

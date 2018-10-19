@@ -470,7 +470,12 @@ begin
     end;
     
     FDR.Dataset1.DataSet := FDM.SqlTemp;
-    FDR.PrintReport;
+    if FDR.PrintReport then
+    begin
+      nStr := 'update %s set L_HYPrintNum=L_HYPrintNum + 1 where L_ID=''%s''';
+      nStr := Format(nStr,[sTable_Bill,nBill]);
+      FDM.ExecuteSQL(nStr);
+    end;
   end;
 end;
 

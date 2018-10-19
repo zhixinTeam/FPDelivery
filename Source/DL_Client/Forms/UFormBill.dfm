@@ -1,5 +1,5 @@
 inherited fFormBill: TfFormBill
-  Left = 583
+  Left = 439
   Top = 57
   ClientHeight = 583
   ClientWidth = 419

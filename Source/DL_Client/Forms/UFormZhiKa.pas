@@ -223,6 +223,7 @@ begin
     LoadFormConfig(Self, nIni);
     LoadcxListViewConfig(Name, ListDetail, nIni);
     Check1.Checked := nIni.ReadBool(Name, 'XianTi', False);
+    EditDays.Text := FormatDateTime('yyyy'+'-12-31',Now)
   finally
     nIni.Free;
   end;

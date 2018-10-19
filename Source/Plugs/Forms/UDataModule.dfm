@@ -1,6 +1,6 @@
 object FDM: TFDM
   OldCreateOrder = False
-  Left = 594
+  Left = 447
   Top = 197
   Height = 254
   Width = 449

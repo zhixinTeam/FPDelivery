@@ -383,7 +383,13 @@ begin
   nStr := 'select b.S_Value from %s a,%s b where a.T_LoadStand=b.S_No and T_Truck=''%s''';
   nStr := Format(nStr,[sTable_Truck,sTable_LoadStandard,nDS.FieldByName('L_Truck').AsString]);
   with FDM.SQLQuery(nStr,FDM.SQLTemp) do
-    nLoadLimit := fieldbyname('S_Value').AsFloat;
+  begin
+    if recordcount = 0 then
+      nLoadLimit := 49
+    else
+      nLoadLimit := fieldbyname('S_Value').AsFloat;
+  end;
+
 
   nStr := 'select D_Value from %s where D_Memo=''%s''';
   nStr := Format(nStr,[sTable_SysDict,'LoadLimitWC']);
@@ -672,7 +678,7 @@ end;
 
 procedure TfFormMain.Timer2Timer(Sender: TObject);
 var nPos: Integer;
-    nBill,nHint,nPrinter,nHYPrinter,nMoney, nType: string;
+    nBill,nHint,nPrinter,nHYPrinter,nMoney, nType, nStr: string;
 begin
   if not FIsBusy then
   begin
@@ -736,7 +742,12 @@ begin
       begin
         {$IFDEF PrintHYEach}
           {$IFNDEF HeGeZhengOnly}
-          PrintHuaYanReport(nBill, nHint, nHYPrinter);
+          if PrintHuaYanReport(nBill, nHint, nHYPrinter) then
+          begin
+            nStr := 'update %s set L_HYPrintNum=L_HYPrintNum + 1 where L_ID=''%s''';
+            nStr := Format(nStr,[sTable_Bill,nBill]);
+            FDM.ExecuteSQL(nStr);
+          end;
           if nHint <> '' then WriteLog(nHint);
           {$ENDIF}
 

@@ -419,7 +419,8 @@ begin
       Exit;
     end;
 
-    nStr := FieldByName('Z_TJStatus').AsString;
+    //富平要求去掉调价提醒
+    {nStr := FieldByName('Z_TJStatus').AsString;
     if nStr  <> '' then
     begin
       if nStr = sFlag_TJOver then
@@ -428,7 +429,7 @@ begin
 
       nData := Format(nData, [Values['ZhiKa']]);
       Exit;
-    end;
+    end; }
 
     if FieldByName('Z_ValidDays').AsDateTime <= Date() then
     begin
@@ -469,6 +470,16 @@ begin
     writelog('验证开单信息失败,原因:'+nData);
     Exit;
   end;
+
+  nSQL := 'select * from %s where T_Truck=''%s''';
+  nSQL := Format(nSQL,[sTable_Truck,FListA.Values['Truck']]);
+  with gDBConnManager.WorkerQuery(FDBConn, nSQL) do
+    if FieldByName('T_Valid').AsString = sFlag_No then
+    begin
+      nData :=  '车辆[ '+FListA.Values['Truck']+' ]不允许开单.';
+      writelog(nData);
+      Exit;
+    end;
 
   if not TWorkerBusinessCommander.CallMe(cBC_GetZhiKaMoney,
             FListA.Values['ZhiKa'], '', @nOut) then
@@ -545,8 +556,8 @@ begin
   end;
 
   //按客户日限额
-  nSQL := 'select D_Value from %s where D_Name=''%s''';
-  nSQL := Format(nSQL,[sTable_SysDict, sFlag_CusLoadLimit]);
+  nSQL := 'select D_Value from %s where D_Name=''%s'' and D_ParamB=''%s''';
+  nSQL := Format(nSQL,[sTable_SysDict, sFlag_CusLoadLimit, FListC.Values['StockNO']]);
   with gDBConnManager.WorkerQuery(FDBConn, nSQL) do
   begin
     if recordcount > 0 then
@@ -560,9 +571,10 @@ begin
           begin
             nLimitValue := FieldByName('L_Value').AsFloat;
             nSQL := 'Select sum(L_Value) as L_Value from %s where L_StockNo=''%s'''+
-                    ' and L_Date >= ''%s'' and L_Date < ''%s''';
+                    ' and L_Date >= ''%s'' and L_Date < ''%s'' and L_CusId=''%s''';
             nSQL := Format(nSQL,[sTable_Bill,FListC.Values['StockNO'],
-                  Date2Str(Date,True)+' 00:00:00',Date2Str(Date+1,True)+' 00:00:00']);
+                  Date2Str(Date,True)+' 00:00:00',Date2Str(Date+1,True)+' 00:00:00',
+                  FListA.Values['CusID']]);
             with gDBConnManager.WorkerQuery(FDBConn, nSQL) do
             begin
               nLeaveValue := nLimitValue - FieldByName('L_Value').AsFloat;
@@ -657,11 +669,11 @@ begin
       //auto batcode
       {$ENDIF}
       
-      if PBWDataBase(@nTmp).FErrCode = sFlag_ForceHint then
+      {if PBWDataBase(@nTmp).FErrCode = sFlag_ForceHint then
       begin
         FOut.FBase.FErrCode := sFlag_ForceHint;
         FOut.FBase.FErrDesc := PBWDataBase(@nTmp).FErrDesc;
-      end;
+      end; }
       //获取批次号信息
 
       nStr := MakeSQLByStr([SF('L_ID', nOut.FData),

@@ -1,7 +1,7 @@
 inherited fFormCusLimit: TfFormCusLimit
   Left = 254
   Top = 127
-  Caption = 'fFormCusLimit'
+  Caption = #38480#21046#25552#36135#35774#32622
   ClientHeight = 539
   ClientWidth = 533
   OnClose = FormClose
@@ -33,17 +33,17 @@ inherited fFormCusLimit: TfFormCusLimit
       Style.ButtonStyle = btsHotFlat
       Style.PopupBorderStyle = epbsSingle
       TabOrder = 0
-      Width = 121
+      Width = 264
     end
     object cxCheckBox1: TcxCheckBox [3]
-      Left = 11
-      Top = 506
+      Left = 350
+      Top = 36
       Caption = #21551#29992#23458#25143#21457#36135#26085#38480#39069
       ParentFont = False
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
       Style.HotTrack = False
-      TabOrder = 5
+      TabOrder = 1
       Transparent = True
       OnClick = cxCheckBox1Click
       Width = 150
@@ -71,49 +71,61 @@ inherited fFormCusLimit: TfFormCusLimit
       ParentFont = False
       ReadOnly = True
       RowSelect = True
-      TabOrder = 4
+      TabOrder = 5
       ViewStyle = vsReport
       OnClick = ListDetailClick
     end
     object editCusNo: TcxTextEdit [5]
       Left = 81
-      Top = 93
-      ParentFont = False
-      Properties.ReadOnly = True
-      Style.BorderColor = clWindowFrame
-      Style.BorderStyle = ebsSingle
-      Style.HotTrack = False
-      TabOrder = 1
-      Width = 152
-    end
-    object editCusName: TcxTextEdit [6]
-      Left = 296
-      Top = 93
+      Top = 95
       ParentFont = False
       Properties.ReadOnly = True
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
       Style.HotTrack = False
       TabOrder = 2
-      Width = 214
+      Width = 152
     end
-    object editValue: TcxTextEdit [7]
-      Left = 81
-      Top = 118
+    object editCusName: TcxTextEdit [6]
+      Left = 296
+      Top = 95
       ParentFont = False
+      Properties.ReadOnly = True
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
       Style.HotTrack = False
       TabOrder = 3
+      Width = 214
+    end
+    object editValue: TcxTextEdit [7]
+      Left = 81
+      Top = 120
+      ParentFont = False
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
+      Style.HotTrack = False
+      TabOrder = 4
       OnExit = editValueExit
       Width = 121
     end
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
-        object dxLayout1Item3: TdxLayoutItem
-          CaptionOptions.Text = #29289#26009#21517#31216':'
-          Control = cbbStockNo
-          ControlOptions.ShowBorder = False
+        object dxLayout1Group3: TdxLayoutGroup
+          ButtonOptions.Buttons = <>
+          Hidden = True
+          LayoutDirection = ldHorizontal
+          ShowBorder = False
+          object dxLayout1Item3: TdxLayoutItem
+            CaptionOptions.Text = #29289#26009#21517#31216':'
+            Control = cbbStockNo
+            ControlOptions.ShowBorder = False
+          end
+          object dxLayout1Item4: TdxLayoutItem
+            CaptionOptions.Text = 'cxCheckBox1'
+            CaptionOptions.Visible = False
+            Control = cxCheckBox1
+            ControlOptions.ShowBorder = False
+          end
         end
       end
       object dxlytgrpLayout1Group2: TdxLayoutGroup [1]
@@ -144,14 +156,6 @@ inherited fFormCusLimit: TfFormCusLimit
         object dxLayout1Item5: TdxLayoutItem
           AlignVert = avBottom
           Control = ListDetail
-          ControlOptions.ShowBorder = False
-        end
-      end
-      inherited dxLayout1Group1: TdxLayoutGroup
-        object dxLayout1Item4: TdxLayoutItem [0]
-          CaptionOptions.Text = 'cxCheckBox1'
-          CaptionOptions.Visible = False
-          Control = cxCheckBox1
           ControlOptions.ShowBorder = False
         end
       end

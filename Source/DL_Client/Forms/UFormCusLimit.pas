@@ -32,6 +32,7 @@ type
     dxlytgrpLayout1Group3: TdxLayoutGroup;
     editValue: TcxTextEdit;
     dxLayout1Item8: TdxLayoutItem;
+    dxLayout1Group3: TdxLayoutGroup;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure cbbStockNoPropertiesChange(Sender: TObject);
@@ -117,14 +118,6 @@ begin
     end;
   end;
 
-  nSql := 'Select * From %s where D_Name=''%s''';
-  nSql := Format(nSql,[sTable_SysDict,sFlag_CusLoadLimit]);
-  with FDM.QueryTemp(nSql) do
-  begin
-    if RecordCount > 0 then
-      cxCheckBox1.Checked := FieldByName('D_Value').AsString = sFlag_Yes;
-  end;
-
   FEditValue :=  False;
 end;
 
@@ -168,6 +161,16 @@ begin
     end;
   end;
   LoadToListView;
+
+  nSql := 'Select * From %s where D_Name=''%s'' and D_ParamB=''%s''';
+  nSql := Format(nSql,[sTable_SysDict,sFlag_CusLoadLimit, nStockNo]);
+  with FDM.QueryTemp(nSql) do
+  begin
+    if RecordCount > 0 then
+      cxCheckBox1.Checked := FieldByName('D_Value').AsString = sFlag_Yes
+    else
+      cxCheckBox1.Checked := False;
+  end;
 end;
 
 procedure TfFormCusLimit.cbbStockNoPropertiesChange(Sender: TObject);
@@ -280,16 +283,34 @@ end;
 
 procedure TfFormCusLimit.cxCheckBox1Click(Sender: TObject);
 var
-  nSql, nValue:string;
+  nSql, nValue, nStockNo:string;
 begin
+  nStockNo := FStockList.strings[cbbStockNo.ItemIndex];
+  
   if cxCheckBox1.Checked then
     nValue := sFlag_Yes
   else
     nValue := sFlag_No;
 
-  nSql := 'update %s set D_Value=''%s'' where D_Name=''%s''';
-  nSql := Format(nSql,[sTable_SysDict, nValue, sFlag_CusLoadLimit]);
-  FDM.ExecuteSQL(nSql);
+  nSql := 'select * from %s where D_Name=''%s'' and D_ParamB=''%s''';
+  nSql := Format(nSql,[sTable_SysDict,sFlag_CusLoadLimit,nStockNo]);
+  with FDM.QueryTemp(nSql) do
+  begin
+    if RecordCount = 0 then
+    begin
+      nSql := MakeSQLByStr([
+              SF('D_Name',    sFlag_CusLoadLimit),
+              SF('D_ParamB',  nStockNo),
+              SF('D_Value',   nValue)], sTable_SysDict,'',True);
+      FDM.ExecuteSQL(nSql);
+    end
+    else
+    begin
+      nSql := 'update %s set D_Value=''%s'' where D_Name=''%s'' and D_ParamB=''%s''';
+      nSql := Format(nSql,[sTable_SysDict, nValue, sFlag_CusLoadLimit, nStockNo]);
+      FDM.ExecuteSQL(nSql);
+    end;
+  end;
 end;
 
 initialization

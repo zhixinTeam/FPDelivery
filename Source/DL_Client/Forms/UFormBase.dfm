@@ -1,5 +1,5 @@
 object BaseForm: TBaseForm
-  Left = 296
+  Left = 224
   Top = 250
   Width = 345
   Height = 334

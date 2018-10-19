@@ -188,8 +188,7 @@ const
   cFI_FormQryCard       = $1111;                     //查询磁卡信息
   cFI_FormAdjustCredit  = $1112;                     //信用金额调拨
   cFI_FormCusLimit      = $1113;                     //客户提货限制
-
-
+  cFI_FrameZKRechargeLog= $1114;                     //纸卡充值记录
 
   {*Command*}
   cCmd_RefreshData      = $0002;                     //刷新数据
@@ -363,6 +362,8 @@ begin
   AddMenuModuleItem('MAIN_K10', cFI_FrameTestResult);
   AddMenuModuleItem('MAIN_D11', cFI_FormQryCard, mtForm);
   AddMenuModuleItem('MAIN_D12', cFI_FormCusLimit, mtForm);
+  AddMenuModuleItem('MAIN_D13', cFI_FrameZKRechargeLog);
+
   {$ELSE}
   AddMenuModuleItem('MAIN_B02', cFI_FrameCustomer);
   {$ENDIF}

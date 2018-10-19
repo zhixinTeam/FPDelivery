@@ -1,5 +1,5 @@
 inherited fFormNormal: TfFormNormal
-  Left = 489
+  Left = 369
   Top = 305
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle

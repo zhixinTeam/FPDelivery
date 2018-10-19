@@ -348,6 +348,7 @@ const
   sTable_BackRecord      = 'S_BackRecord';           //返现记录表
   sTable_WorkTimes       = 'S_WorkTimes';            //班次
   sTable_CusLimit        = 'S_CusLimit';             //客户限提
+  sTable_ZKReChargeLog   = 'S_ZKRechargeLog';        //纸卡充值记录
 
 
   {*新建表*}
@@ -754,7 +755,7 @@ const
        'L_DaiTotal Integer , L_DaiNormal Integer, L_DaiBuCha Integer,' +
        'L_OutFact DateTime, L_OutMan varChar(32), L_PrintGLF Char(1),' +
        'L_Lading Char(1), L_IsVIP varChar(1), L_Seal varChar(100),' +
-       'L_HYDan varChar(15), L_PrintHY Char(1),' +
+       'L_HYDan varChar(15), L_PrintHY Char(1), L_HYPrintNum Integer,' +
        'L_Man varChar(32), L_Date DateTime,' +
        'L_DelMan varChar(32), L_DelDate DateTime, L_KZValue $Float,'+
        'L_KZMan varchar(50), L_KZDate DateTime, L_FPType Integer,'+
@@ -790,6 +791,7 @@ const
    *.L_Seal: 封签号
    *.L_HYDan: 化验单
    *.L_PrintHY:自动打印化验单
+   *.L_HYPrintNum:化验单打印次数
    *.L_Man:操作人
    *.L_Date:创建时间
    *.L_DelMan: 交货单删除人员
@@ -1127,7 +1129,7 @@ const
   
   sSQL_NewInvoiceWeek = 'Create Table $Table(W_ID $Inc, W_NO varChar(15),' +
        'W_Name varChar(50), W_Begin DateTime, W_End DateTime,' +
-       'W_Man varChar(32), W_Date DateTime, W_Memo varChar(50))';
+       'W_Man varChar(32), W_Date DateTime, W_Memo varChar(50),W_ZZInfo char(1))';
   {-----------------------------------------------------------------------------
    发票结算周期:InvoiceWeek
    *.W_ID:记录编号
@@ -1566,6 +1568,19 @@ const
    *.L_Date:时间
    *.L_User:操作员
   -----------------------------------------------------------------------------}
+  sSQL_NewRechargeLog =  'Create Table $Table(R_ID $Inc,R_ZhiKa varchar(20), '
+      +'R_ZKName varchar(200),R_Value $Float,R_Memo varchar(200),R_Man varchar(20),'
+      +'R_Date DateTime)';
+  {-----------------------------------------------------------------------------
+   限购表: CusLimit
+   *.R_ID: 记录编号
+   *.R_ZhiKa 纸卡编号
+   *.R_ZKName 纸卡名称
+   *.R_Value 储值金额
+   *.R_Memo 备注
+   *.R_Man  操作员
+   *.R_Date  日期
+  -----------------------------------------------------------------------------}
 
 
 function CardStatusToStr(const nStatus: string): string;
@@ -1709,7 +1724,7 @@ begin
   AddSysTableItem(sTable_BackRecord, sSQL_NewBackRecord);
   AddSysTableItem(sTable_WorkTimes, sSQL_NewWorkTimes);
   AddSysTableItem(sTable_CusLimit, sSQL_NewCusLimit);
-
+  AddSysTableItem(sTable_ZKReChargeLog, sSQL_NewRechargeLog);
 end;
 
 //Desc: 清理系统表

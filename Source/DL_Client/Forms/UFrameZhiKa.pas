@@ -70,6 +70,7 @@ type
     {*基类函数*}
     function InitFormDataSQL(const nWhere: string): string; override;
     {*查询SQL*}
+    procedure RechargeLog(const nZhiKa,nZKName,nMemo: string;const nValue:string);
   public
     { Public declarations }
     class function FrameID: integer; override;
@@ -191,7 +192,7 @@ begin
     FDM.WriteSysLog(sFlag_ZhiKaItem, nID, '删除订单:[ '+ nID +' ], 原因:' + nReson);
 
     FDM.ADOConn.CommitTrans;
-    
+
     InitFormData(FWhere);
     ShowMsg('已成功删除记录', sHint);
   except
@@ -326,7 +327,7 @@ end;
 
 procedure TfFrameZhiKa.N11Click(Sender: TObject);
 var
-  nStr, nID, nStrMoney: string;
+  nStr, nID, nStrMoney, nZKName, nMemo: string;
   nMOney: Double;
 begin
   if SQLQuery.FieldByName('Z_OnlyMoney').AsString <> sFlag_Yes then
@@ -343,18 +344,41 @@ begin
     ShowDlg('充值失败,请输入合法的金额.',sHint);
     Exit;
   end;
+  FDM.ADOConn.BeginTrans;
   try
     nID := SQLQuery.FieldByName('Z_ID').AsString;
+    nZKName := SQLQuery.FieldByName('Z_Name').AsString;
+    nMemo := '为纸卡[ '+ nID +' ]充值, 金额:' + nStrMoney;
+
     nStr := 'Update %s set Z_FixedMoney = Z_FixedMoney+%s where Z_ID=''%s''';
     nStr := Format(nStr,[sTable_ZhiKa, nStrMoney, nID]);
     FDM.ExecuteSQL(nStr);
 
-    FDM.WriteSysLog(sFlag_ZhiKaItem, nID, '为纸卡[ '+ nID +' ]充值, 金额:' + nStrMoney);
+    //写入充值记录
+    RechargeLog(nID,nZKName,nMemo,nStrMoney);
+
+    FDM.WriteSysLog(sFlag_ZhiKaItem, nID, nMemo);
+    FDM.ADOConn.CommitTrans;
     InitFormData(FWhere);
     ShowMsg('充值成功.',sHint);
   except
+    FDM.ADOConn.RollbackTrans;
     ShowMsg('充值失败.',sHint);
   end;
+end;
+
+procedure TfFrameZhiKa.RechargeLog(const nZhiKa, nZKName, nMemo: string;
+  const nValue: string);
+var nStr,nSQL: string;
+begin
+  nSQL := 'Insert Into $T(R_Date,R_Man,R_ZhiKa,R_ZKName,R_memo,R_Value) ' +
+          'Values(''$D'',''$M'',''$ZK'',''$ZName'',''$Memo'',''$V'')';
+  nSQL := MacroValue(nSQL, [MI('$T', sTable_ZKReChargeLog), MI('$D', DateTime2Str(Now)),
+                            MI('$ZK', nZhiKa), MI('$ZName', nZKName),
+                            MI('$Memo', nMemo), MI('$V', nValue)]);
+
+  nSQL := MacroValue(nSQL, [MI('$M', gSysParam.FUserName)]);
+  FDM.ExecuteSQL(nSQL);
 end;
 
 initialization
