@@ -7,6 +7,7 @@
 *******************************************************************************}
 unit UBusinessConst;
 
+{$I LibFun.Inc}
 interface
 
 uses
@@ -286,7 +287,8 @@ begin
       nListB.Text := PackerDecodeStr(nListA[nIdx]);
       //bill item
 
-      with nListB,nItems[nInt] do
+      with nListB,nItems[nInt]
+      {$IFDEF XE.LibFun},TDateTimeHelper,TStringHelper{$ENDIF} do
       begin
         FID         := Values['ID'];
         FZhiKa      := Values['ZhiKa'];
@@ -382,7 +384,8 @@ begin
       if not FSelected then Continue;
       //ignored
 
-      with nListB do
+      with nListB
+      {$IFDEF XE.LibFun},TDateTimeHelper,TStringHelper{$ENDIF} do
       begin
         Values['ID']         := FID;
         Values['ZhiKa']      := FZhiKa;
