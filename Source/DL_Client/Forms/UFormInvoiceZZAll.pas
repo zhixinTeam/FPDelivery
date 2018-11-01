@@ -11,7 +11,8 @@ uses
   Dialogs, UFormNormal, dxLayoutControl, StdCtrls, cxControls, cxMemo,
   cxButtonEdit, cxLabel, cxTextEdit, cxContainer, cxEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, cxGraphics, cxLookAndFeels,
-  cxLookAndFeelPainters, cxRadioGroup, dxLayoutcxEditAdapters;
+  cxLookAndFeelPainters, cxRadioGroup, dxLayoutcxEditAdapters, dxSkinsCore,
+  dxSkinsDefaultPainters;
 
 type
   TfFormInvoiceZZAll = class(TfFormNormal)
@@ -254,12 +255,14 @@ begin
   nStr := 'Delete From ' + sTable_InvReqtemp;
   FDM.ExecuteSQL(nStr);
   //清空临时表
+    nStr := '(Select L_ID,L_SaleID,L_CusID,L_Type,L_StockName,Sum(L_Value) as L_Value,sum(L_Price) as L_Price,L_SaleMan,L_CusName '+
+          ' From S_Bill Where L_OutFact Is Not Null '+
+          ' Group By L_ID,L_SaleID,L_SaleMan,L_CusID,L_CusName,L_Type,L_StockName) as z ';
 
   nSQL := 'Select L_SaleID,L_CusID,L_Type,L_StockName,L_Price,' +
-          'Sum(L_Value) as L_Value,L_SaleMan,L_CusName From $Bill ' +
-          'Where L_OutFact Is Not Null ' +
+          'Sum(L_Value) as L_Value,L_SaleMan,L_CusName From $Bill ' +  //'Where L_OutFact Is Not Null ' +
           'Group By L_SaleID,L_SaleMan,L_CusID,L_CusName,L_Type,L_StockName,L_Price';
-  nSQL := MacroValue(nSQL, [MI('$Bill', sTable_Bill)]);
+  nSQL := MacroValue(nSQL, [MI('$Bill', nStr)]);
   //同客户同品种同单价合并
 
   nStr := 'Select ''$W'' As R_Week,''$Man'' As R_Man,$Now As R_Date,' +

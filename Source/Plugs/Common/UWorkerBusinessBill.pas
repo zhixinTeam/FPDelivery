@@ -536,7 +536,7 @@ begin
         nLeaveValue := nLimitValue - FieldByName('L_Value').AsFloat;
         if nLeaveValue <= 0 then
         begin
-          nData := '物料[ %s ]已超出日发货限量，无法开单';
+          nData := '品种限额:物料[ %s ]已超出日发货限量，无法开单';
           nData := Format(nData,[FListC.Values['StockNO']+'-'+FListC.Values['StockName']]);
           exit;
         end
@@ -544,7 +544,7 @@ begin
         begin
           if nLeaveValue < StrToFloat(FListC.Values['Value']) then
           begin
-            nData := '物料[ %s ]'+#13#10+'单日发货量限额：[ %s ]吨'+#13#10 +
+            nData := '品种限额:物料[ %s ]'+#13#10+'单日发货量限额：[ %s ]吨'+#13#10 +
                      '当前剩余配额：[ %s ]吨';
             nData := Format(nData,[FListC.Values['StockNO']+'-'+FListC.Values['StockName'],
                       FloatToStr(nLimitValue),FloatToStr(nLeaveValue)]);
@@ -563,8 +563,8 @@ begin
     if recordcount > 0 then
       if FieldByName('D_Value').AsString = sFlag_Yes then  //启用发货限制
       begin
-        nSQL := 'select * from %s where L_CusNo=''%s''';
-        nSQL := Format(nSQL,[sTable_CusLimit,FListA.Values['CusID']]);
+        nSQL := 'select * from %s where L_CusNo=''%s'' and L_StockNo=''%s''';
+        nSQL := Format(nSQL,[sTable_CusLimit,FListA.Values['CusID'],FListC.Values['StockNO']]);
         with gDBConnManager.WorkerQuery(FDBConn, nSQL) do
         begin
           if recordcount > 0 then
@@ -580,7 +580,7 @@ begin
               nLeaveValue := nLimitValue - FieldByName('L_Value').AsFloat;
               if nLeaveValue <= 0 then
               begin
-                nData := '物料[ %s ]已超出日发货限量，无法开单';
+                nData := '客户限额:物料[ %s ]已超出日发货限量，无法开单';
                 nData := Format(nData,[FListC.Values['StockNO']+'-'+FListC.Values['StockName']]);
                 exit;
               end
@@ -588,7 +588,7 @@ begin
               begin
                 if nLeaveValue < StrToFloat(FListC.Values['Value']) then
                 begin
-                  nData := '当前客户物料[ %s ]'+#13#10+'单日发货量限额：[ %s ]吨'+#13#10 +
+                  nData := '客户限额:当前客户物料[ %s ]'+#13#10+'单日发货量限额：[ %s ]吨'+#13#10 +
                            '当前剩余配额：[ %s ]吨';
                   nData := Format(nData,[FListC.Values['StockNO']+'-'+FListC.Values['StockName'],
                             FloatToStr(nLimitValue),FloatToStr(nLeaveValue)]);

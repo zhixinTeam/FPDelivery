@@ -14,7 +14,8 @@ uses
   cxMaskEdit, cxButtonEdit, cxTextEdit, ADODB, cxLabel, UBitmapPanel,
   cxSplitter, cxGridLevel, cxClasses, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid,
-  ComCtrls, ToolWin;
+  ComCtrls, ToolWin, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxLayoutcxEditAdapters;
 
 type
   TfFrameSaleDetailQuery = class(TfFrameNormal)
@@ -116,18 +117,18 @@ function TfFrameSaleDetailQuery.InitFormDataSQL(const nWhere: string): string;
 begin
   FEnableBackDB := True;
   EditDate.Text := Format('%s жа %s', [Date2Str(FStart), Date2Str(FEnd)]);
-  Result := 'Select *,(L_Value*L_Price) as L_Money From $Bill b ';
+  Result := 'Select *,(L_Value*L_Price) as L_Money From $Bill b where (l_billtype<>''Y'' or l_billtype is null)';
 
   if FJBWhere = '' then
   begin
-    Result := Result + 'Where (L_OutFact>=''$S'' and L_OutFact <''$End'')';
+    Result := Result + ' and (L_OutFact>=''$S'' and L_OutFact <''$End'')';
 
     if nWhere <> '' then
       Result := Result + ' And (' + nWhere + ')';
     //xxxxx
   end else
   begin
-    Result := Result + ' Where (' + FJBWhere + ')';
+    Result := Result + ' and (' + FJBWhere + ')';
   end;
 
   Result := MacroValue(Result, [MI('$Bill', sTable_Bill),

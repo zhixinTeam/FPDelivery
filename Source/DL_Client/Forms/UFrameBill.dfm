@@ -66,7 +66,7 @@ inherited fFrameBill: TfFrameBill
       ParentFont = False
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
-      TabOrder = 5
+      TabOrder = 6
       Width = 100
     end
     object cxTextEdit2: TcxTextEdit [3]
@@ -76,7 +76,7 @@ inherited fFrameBill: TfFrameBill
       ParentFont = False
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
-      TabOrder = 6
+      TabOrder = 7
       Width = 125
     end
     object cxTextEdit4: TcxTextEdit [4]
@@ -86,7 +86,7 @@ inherited fFrameBill: TfFrameBill
       ParentFont = False
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
-      TabOrder = 8
+      TabOrder = 9
       Width = 100
     end
     object cxTextEdit3: TcxTextEdit [5]
@@ -96,7 +96,7 @@ inherited fFrameBill: TfFrameBill
       ParentFont = False
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
-      TabOrder = 9
+      TabOrder = 10
       Width = 100
     end
     object EditDate: TcxButtonEdit [6]
@@ -139,7 +139,7 @@ inherited fFrameBill: TfFrameBill
       ParentFont = False
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
-      TabOrder = 7
+      TabOrder = 8
       Width = 125
     end
     object CheckDelete: TcxCheckBox [9]
@@ -153,6 +153,18 @@ inherited fFrameBill: TfFrameBill
       Transparent = True
       OnClick = CheckDeleteClick
       Width = 105
+    end
+    object cxCheckBox1: TcxCheckBox [10]
+      Left = 911
+      Top = 36
+      Caption = #26597#35810#36820#29616
+      ParentFont = False
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
+      Style.HotTrack = False
+      TabOrder = 5
+      OnClick = cxCheckBox1Click
+      Width = 84
     end
     inherited dxGroup1: TdxLayoutGroup
       inherited GroupSearch1: TdxLayoutGroup
@@ -179,6 +191,12 @@ inherited fFrameBill: TfFrameBill
         object dxLayout1Item10: TdxLayoutItem
           CaptionOptions.Visible = False
           Control = CheckDelete
+          ControlOptions.ShowBorder = False
+        end
+        object dxLayout1Item11: TdxLayoutItem
+          CaptionOptions.Text = 'cxCheckBox1'
+          CaptionOptions.Visible = False
+          Control = cxCheckBox1
           ControlOptions.ShowBorder = False
         end
       end

@@ -780,7 +780,7 @@ const
        'L_Man varChar(32), L_Date DateTime,' +
        'L_DelMan varChar(32), L_DelDate DateTime, L_KZValue $Float,'+
        'L_KZMan varchar(50), L_KZDate DateTime, L_FPType Integer,'+
-       'L_Freight $Float, L_MustSeal bit)';
+       'L_Freight $Float, L_MustSeal bit, l_BillType Char(1))';
   {-----------------------------------------------------------------------------
    交货单表: Bill
    *.R_ID: 编号
@@ -821,6 +821,7 @@ const
    *.L_KZValue, L_KZMan, L_KZDate: 扣重
    *.L_FPType: 发票类型
    *.L_Freight: 每吨运费
+   *.l_BillType:是否是返现单据
   -----------------------------------------------------------------------------}
 
   sSQL_NewBillHK = 'Create Table $Table(R_ID $Inc, H_Bill varChar(20),' +
@@ -1150,7 +1151,8 @@ const
   
   sSQL_NewInvoiceWeek = 'Create Table $Table(W_ID $Inc, W_NO varChar(15),' +
        'W_Name varChar(50), W_Begin DateTime, W_End DateTime,' +
-       'W_Man varChar(32), W_Date DateTime, W_Memo varChar(50),W_ZZInfo char(1))';
+       'W_Man varChar(32), W_Date DateTime, W_Memo varChar(50),W_ZZInfo char(1),'+
+       'W_Chk Char(1))';
   {-----------------------------------------------------------------------------
    发票结算周期:InvoiceWeek
    *.W_ID:记录编号
@@ -1161,6 +1163,7 @@ const
    *.W_Man:创建人
    *.W_Date:创建时间
    *.W_Memo:备注信息
+   *.W_Chk:是否结算
   -----------------------------------------------------------------------------}
   
   sSQL_NewInvoice = 'Create Table $Table(I_ID varChar(25) PRIMARY KEY,' +

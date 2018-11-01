@@ -53,6 +53,8 @@ type
     N10: TMenuItem;
     N11: TMenuItem;
     N12: TMenuItem;
+    cxCheckBox1: TcxCheckBox;
+    dxLayout1Item11: TdxLayoutItem;
     procedure EditIDPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
     procedure BtnDelClick(Sender: TObject);
@@ -69,6 +71,7 @@ type
     procedure N10Click(Sender: TObject);
     procedure N11Click(Sender: TObject);
     procedure N12Click(Sender: TObject);
+    procedure cxCheckBox1Click(Sender: TObject);
   protected
     FStart,FEnd: TDate;
     //时间区间
@@ -477,6 +480,16 @@ begin
       FDM.ExecuteSQL(nStr);
     end;
   end;
+end;
+
+procedure TfFrameBill.cxCheckBox1Click(Sender: TObject);
+begin
+  if cxCheckBox1.Checked = False then
+    FWhere := ' L_BillType <> ''Y'' or L_BillType is Null'
+  else
+    FWhere := '';
+
+  InitFormData(FWhere);
 end;
 
 initialization
