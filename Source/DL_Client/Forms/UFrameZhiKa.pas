@@ -12,10 +12,10 @@ uses
   cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter, cxData,
   cxDataStorage, cxEdit, DB, cxDBData, cxContainer, Menus, dxLayoutControl,
   cxTextEdit, cxMaskEdit, cxButtonEdit, ADODB, cxLabel, UBitmapPanel,
-  cxSplitter, cxGridLevel, cxClasses, cxGridCustomView,
-  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid,
-  ComCtrls, ToolWin, dxLayoutcxEditAdapters, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter;
+  cxSplitter, cxGridLevel, cxClasses, cxGridCustomView, Dialogs,
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
+  dxLayoutcxEditAdapters, cxGridCustomTableView, cxGridTableView,
+  cxGridDBTableView, cxGrid, ComCtrls, ToolWin;
 
 type
   TfFrameZhiKa = class(TfFrameNormal)
@@ -327,8 +327,8 @@ end;
 
 procedure TfFrameZhiKa.N11Click(Sender: TObject);
 var
-  nStr, nID, nStrMoney, nZKName, nMemo: string;
-  nMOney: Double;
+  nStr, nID, nStrMoney, nZKName, nMemo, nCusId: string;
+  nMOney, nVal, nZKFrozen: Double;
 begin
   if SQLQuery.FieldByName('Z_OnlyMoney').AsString <> sFlag_Yes then
   begin
@@ -337,13 +337,46 @@ begin
   end;
 
   nStrMoney := '';
-  if not ShowInputBox('请输入提货磁卡号:', sHint, nStrMoney) then Exit;
+  if not ShowInputBox('请输入本次充值金额:', sHint, nStrMoney) then Exit;
+
   try
     nMOney := StrToFloat(nStrMoney);
   except
     ShowDlg('充值失败,请输入合法的金额.',sHint);
     Exit;
   end;
+
+  nCusId := SQLQuery.FieldByName('Z_Customer').AsString;
+  nStr := 'Select * From %s Where A_CID=''%s''';
+  nStr := Format(nStr, [sTable_CusAccount, nCusId]);
+  with FDM.QueryTemp(nStr) do
+  begin
+    if recordcount < 0 then
+    begin
+      ShowMsg('客户['+nCusId+']不存在.',sHint);
+      Exit;
+    end;
+
+    nVal := FieldByName('A_InitMoney').AsFloat + FieldByName('A_InMoney').AsFloat -
+            FieldByName('A_OutMoney').AsFloat -
+            FieldByName('A_Compensation').AsFloat -
+            FieldByName('A_FreezeMoney').AsFloat;
+  end;
+
+  nStr := 'select SUM(Z_FixedMoney)as frozen from %s where Z_InValid<>''%s'' or '+
+          ' Z_InValid is null and Z_OnlyMoney=''%s'' and Z_Customer=''%s''' ;
+  nStr := Format(nStr,[sTable_ZhiKa,sFlag_Yes,sFlag_Yes,nCusId]);
+  with FDM.QueryTemp(nStr) do
+  begin
+    nZKFrozen := fieldbyname('frozen').AsFloat;
+  end;
+
+  if nMOney > nVal - nZKFrozen then
+  begin
+    showmessage('充值金额超过客户可用金额.');
+    exit;
+  end;
+  
   FDM.ADOConn.BeginTrans;
   try
     nID := SQLQuery.FieldByName('Z_ID').AsString;

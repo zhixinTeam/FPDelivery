@@ -218,8 +218,8 @@ begin
   nData := get_shoporderbyno(nXmlStr);
   if nData='' then
   begin
-    ShowMsg('未查询到网上商城订单详细信息，请检查订单号是否正确',sHint);
-    Writelog('未查询到网上商城订单详细信息，请检查订单号是否正确');
+    ShowMsg('订单已撤销或已使用.',sHint);
+    Writelog('订单已撤销或已使用.');
     Exit;
   end;
   Writelog('TfFormNewCard.DownloadOrder(nCard='''+nCard+''') 查询商城订单-耗时：'+InttoStr(MilliSecondsBetween(Now, FBegin))+'ms');

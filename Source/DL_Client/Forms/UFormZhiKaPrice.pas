@@ -254,9 +254,9 @@ begin
         nStatus := Fields[1].AsString;
 
         nStr := 'Update %s Set L_Price=%.2f Where (' +
-          '(Case When L_OutFact Is Null Then L_Date Else L_OutFact End)>=''%s'' And ' +
-          '(Case When L_OutFact Is Null Then L_Date Else L_OutFact End)<=''%s''' +
-          ') And L_ZhiKa=''%s'' And L_StockNo=''%s''';
+          '(L_OutFact>=''%s'' And ' +
+          'L_OutFact<=''%s''' +
+          ')or L_OutFact Is Null ) And L_ZhiKa=''%s'' And L_StockNo=''%s''';
         nStr := Format(nStr, [sTable_Bill, nVal, DateTime2Str(EditStart.Date),
                 DateTime2Str(EditEnd.Date), FMainZK, FMainStock]);
         //xxxxx

@@ -120,4 +120,14 @@ object fFormLogin: TfFormLogin
     Font.Name = #23435#20307
     TabOrder = 3
   end
+  object UniButton1: TUniButton
+    Left = 8
+    Top = 229
+    Width = 75
+    Height = 25
+    Hint = ''
+    Caption = #27880#20876
+    TabOrder = 4
+    OnClick = UniButton1Click
+  end
 end

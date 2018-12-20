@@ -45,6 +45,9 @@ type
     checkNoLimit: TcxCheckBox;
     dxLayout1Item14: TdxLayoutItem;
     dxLayout1Group5: TdxLayoutGroup;
+    dxLayout1Group6: TdxLayoutGroup;
+    editMemo: TcxTextEdit;
+    dxLayout1Item15: TdxLayoutItem;
     procedure BtnOKClick(Sender: TObject);
     procedure EditCarModelPropertiesChange(Sender: TObject);
   protected
@@ -155,6 +158,7 @@ begin
     CheckGPS.Checked   := FieldByName('T_HasGPS').AsString = sFlag_Yes;
 
     checkNoLimit.Checked   := FieldByName('T_NoLimit').AsString = sFlag_Yes;
+    editMemo.Text := FieldByName('T_Memo').AsString;
   end;
   if FLoadId.IndexOf(nLoadId) >=0 then
   begin
@@ -240,6 +244,7 @@ begin
           SF('T_VIPTruck', nVip),
           SF('T_HasGPS', nGps),
           SF('T_NoLimit', nNOLimit),
+          SF('T_Memo', editMemo.Text),
           SF('T_LoadStand', FLoadId.Strings[EditCarModel.ItemIndex]),
           SF('T_SBTare', StrToFloat(EditSBTare.Text),sfVal),
           SF('T_LastTime', sField_SQLServer_Now, sfVal)

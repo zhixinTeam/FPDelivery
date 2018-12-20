@@ -5,17 +5,12 @@
         <FrameworkType>VCL</FrameworkType>
         <MainSource>DLWeb.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Application</AppType>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
-        <Base>true</Base>
-    </PropertyGroup>
-    <PropertyGroup Condition="('$(Platform)'=='Linux64' and '$(Base)'=='true') or '$(Base_Linux64)'!=''">
-        <Base_Linux64>true</Base_Linux64>
-        <CfgParent>Base</CfgParent>
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
@@ -66,9 +61,6 @@
         <VerInfo_Keys>CompanyName=Runsoft(润)工作室;FileDescription=Delivery Web;FileVersion=2.0.1.0;InternalName=DLWeb;LegalCopyright=GPL公共许可;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=ZXDelivery B/S版本,提供系统远程入口.</VerInfo_Keys>
         <DCC_UnitSearchPath>Common;..\Common;Forms;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <SanitizedProjectName>DLWeb</SanitizedProjectName>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Base_Linux64)'!=''">
-        <DCC_UsePackage>DataSnapServerMidas;FireDACADSDriver;DatasnapConnectorsFreePascal;FireDACMSSQLDriver;inetdb;emsedge;dbexpress;IndyCore;dsnap;DataSnapCommon;DataSnapConnectors;bindengine;FireDACOracleDriver;FireDACMySQLDriver;FireDACCommonODBC;DataSnapClient;IndySystem;FireDACDb2Driver;FireDACInfxDriver;emshosting;FireDACPgDriver;FireDACASADriver;FireDACTDataDriver;DbxCommonDriver;DataSnapServer;xmlrtl;DataSnapNativeClient;rtl;DbxClientDriver;CustomIPTransport;bindcomp;dbxcds;FireDACODBCDriver;DataSnapIndy10ServerTransport;dsnapxml;dbrtl;FireDACMongoDBDriver;IndyProtocols;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_UsePackage>DBXSqliteDriver;DataSnapServerMidas;DBXDb2Driver;DBXInterBaseDriver;vclactnband;vclFireDAC;tethering;svnui;uniGUI25Chart;FireDACADSDriver;DBXMSSQLDriver;DatasnapConnectorsFreePascal;FireDACMSSQLDriver;vcltouch;vcldb;bindcompfmx;Intraweb;svn;DBXOracleDriver;inetdb;FmxTeeUI;emsedge;fmx;fmxdae;vclib;FireDACDBXDriver;dbexpress;IndyCore;vclx;dsnap;DataSnapCommon;DataSnapConnectors;uniGUI25m;VCLRESTComponents;vclie;bindengine;DBXMySQLDriver;FireDACOracleDriver;FireDACMySQLDriver;DBXFirebirdDriver;FireDACCommonODBC;DataSnapClient;bindcompdbx;IndyIPCommon;vcl;DBXSybaseASEDriver;IndyIPServer;IndySystem;FireDACDb2Driver;dsnapcon;FireDACMSAccDriver;FireDACInfxDriver;fmxFireDAC;vclimg;TeeDB;emshosting;FireDACPgDriver;ibmonitor;FireDACASADriver;DBXOdbcDriver;FireDACTDataDriver;FMXTee;DbxCommonDriver;ibxpress;Tee;DataSnapServer;xmlrtl;DataSnapNativeClient;ibxbindings;fmxobj;FireDACDSDriver;rtl;vclwinx;DbxClientDriver;DBXSybaseASADriver;CustomIPTransport;vcldsnap;bindcomp;appanalytics;DBXInformixDriver;IndyIPClient;bindcompvcl;TeeUI;dbxcds;VclSmp;adortl;FireDACODBCDriver;DataSnapIndy10ServerTransport;uniGUI25VCL;DataSnapProviderClient;dsnapxml;dbrtl;FireDACMongoDBDriver;IndyProtocols;inetdbxpress;uSynEdit_R2021;fmxase;$(DCC_UsePackage)</DCC_UsePackage>
@@ -189,17 +181,8 @@
                     <Source Name="MainSource">DLWeb.dpr</Source>
                 </Source>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="D:\Program Files\MyVCL\RemObjects_7\Everwood\Bin\RemObjects_Everwood_D25.bpl">RemObjects Everwood for Delphi</Excluded_Packages>
-                    <Excluded_Packages Name="D:\Program Files\MyVCL\RemObjects_7\RemObjects SDK for Delphi\Dcu\D25\win32\RemObjects_Core_D25.bpl">RemObjects SDK - Core Library</Excluded_Packages>
-                    <Excluded_Packages Name="D:\Program Files\MyVCL\RemObjects_7\RemObjects SDK for Delphi\Dcu\D25\win32\RemObjects_VCL_D25.bpl">RemObjects SDK - VCL Library</Excluded_Packages>
-                    <Excluded_Packages Name="D:\Program Files\MyVCL\RemObjects_7\RemObjects SDK for Delphi\Dcu\D25\win32\RemObjects_FMX_D25.bpl">RemObjects SDK - Core Library (FMX)</Excluded_Packages>
-                    <Excluded_Packages Name="D:\Program Files\MyVCL\RemObjects_7\RemObjects SDK for Delphi\Dcu\D25\win32\RemObjects_DataSnap_D25.bpl">RemObjects SDK - DataSnap Integration Pack</Excluded_Packages>
-                    <Excluded_Packages Name="D:\Program Files\MyVCL\RemObjects_7\RemObjects SDK for Delphi\Dcu\D25\win32\RemObjects_Synapse_D25.bpl">RemObjects SDK - Synapse based Channels</Excluded_Packages>
-                    <Excluded_Packages Name="D:\Program Files\MyVCL\RemObjects_7\RemObjects SDK for Delphi\Dcu\D25\win32\RemObjects_IDE_D25.bpl">RemObjects SDK - IDE Integration for Win32</Excluded_Packages>
-                    <Excluded_Packages Name="D:\Program Files\MyVCL\RemObjects_7\RemObjects SDK for Delphi\Dcu\D25\win32\RemObjects_Indy_D25.bpl">RemObjects SDK - Indy Library</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k250.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp250.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="D:\Program Files\MyVCL\RemObjects_7\RemObjects SDK for Delphi\Dcu\D25\win32\RemObjects_WebBroker_D25.bpl">RemObjects SDK - WebBroker Library</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
@@ -626,7 +609,6 @@
                 <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
             </Deployment>
             <Platforms>
-                <Platform value="Linux64">False</Platform>
                 <Platform value="Win32">True</Platform>
                 <Platform value="Win64">False</Platform>
             </Platforms>

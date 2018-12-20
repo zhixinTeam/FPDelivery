@@ -405,7 +405,7 @@ begin
         begin
           nStr := FieldByName('P_Name').AsString;
           Title.Caption := Format('%s[%s]', [nStr, FieldByName('P_ID').AsString]);
-          Width := 92;
+          Width := 102;
         end;
 
         Next;

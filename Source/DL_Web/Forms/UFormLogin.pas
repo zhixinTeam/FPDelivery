@@ -22,8 +22,10 @@ type
     BtnOK: TUniButton;
     BtnExit: TUniButton;
     ImageKey: TUniImage;
+    UniButton1: TUniButton;
     procedure UniLoginFormCreate(Sender: TObject);
     procedure BtnOKClick(Sender: TObject);
+    procedure UniButton1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -38,11 +40,21 @@ implementation
 
 uses
   uniGUIVars, MainModule, ULibFun, Data.Win.ADODB,
-  USysBusiness, USysConst, USysDB;
+  USysBusiness, USysConst, USysDB, UFormRegister;
 
 function fFormLogin: TfFormLogin;
 begin
   Result := TfFormLogin(UniMainModule.GetFormInstance(TfFormLogin));
+end;
+
+procedure TfFormLogin.UniButton1Click(Sender: TObject);
+begin
+  ShowRegisterForm('',
+    procedure(const nResult: Integer; const nParam: PFormCommandParam)
+    begin
+
+    end);
+  //show form
 end;
 
 procedure TfFormLogin.UniLoginFormCreate(Sender: TObject);
@@ -66,8 +78,8 @@ begin
   nQuery := nil;
   with ULibFun.TStringHelper do
   try
-    nStr := 'Select U_NAME,U_PASSWORD,U_GROUP,U_Identity from $a ' +
-            'Where U_NAME=''$b'' and U_State=1';
+    nStr := 'Select U_NAME,U_PASSWORD,U_GROUP,U_Identity,U_State from $a ' +
+            'Where U_NAME=''$b'''; //and U_State=1
 
     nStr := MacroValue(nStr, [MI('$a',sTable_User),
                               MI('$b',EditUser.Text)]);
@@ -80,6 +92,12 @@ begin
        (nQuery.FieldByName('U_PASSWORD').AsString <> EditPwd.Text) then
     begin
       ShowMessage('错误的用户名或密码,请重新输入');
+      Exit;
+    end;
+
+    if nQuery.FieldByName('U_State').AsInteger <> 1 then
+    begin
+      ShowMessage('尚未审核,无法登录.');
       Exit;
     end;
 

@@ -1,23 +1,23 @@
 inherited fFormTruck: TfFormTruck
   Left = 469
   Top = 211
-  ClientHeight = 340
+  ClientHeight = 395
   ClientWidth = 316
   Position = poMainFormCenter
   PixelsPerInch = 96
   TextHeight = 12
   inherited dxLayout1: TdxLayoutControl
     Width = 316
-    Height = 340
+    Height = 395
     inherited BtnOK: TButton
       Left = 170
-      Top = 307
-      TabOrder = 12
+      Top = 362
+      TabOrder = 13
     end
     inherited BtnExit: TButton
       Left = 240
-      Top = 307
-      TabOrder = 13
+      Top = 362
+      TabOrder = 14
     end
     object EditTruck: TcxTextEdit [2]
       Left = 81
@@ -50,7 +50,7 @@ inherited fFormTruck: TfFormTruck
     end
     object CheckValid: TcxCheckBox [5]
       Left = 23
-      Top = 222
+      Top = 220
       Caption = #36710#36742#20801#35768#24320#21333'.'
       ParentFont = False
       Style.BorderColor = clWindowFrame
@@ -61,7 +61,7 @@ inherited fFormTruck: TfFormTruck
     end
     object CheckVerify: TcxCheckBox [6]
       Left = 23
-      Top = 274
+      Top = 272
       Caption = #39564#35777#36710#36742#24050#21040#20572#36710#22330'.'
       ParentFont = False
       Style.BorderColor = clWindowFrame
@@ -72,7 +72,7 @@ inherited fFormTruck: TfFormTruck
     end
     object CheckUserP: TcxCheckBox [7]
       Left = 23
-      Top = 248
+      Top = 246
       Caption = #36710#36742#20351#29992#39044#32622#30382#37325'.'
       ParentFont = False
       Style.BorderColor = clWindowFrame
@@ -83,7 +83,7 @@ inherited fFormTruck: TfFormTruck
     end
     object CheckVip: TcxCheckBox [8]
       Left = 193
-      Top = 248
+      Top = 246
       Caption = 'VIP'#36710#36742
       ParentFont = False
       Style.BorderColor = clWindowFrame
@@ -94,7 +94,7 @@ inherited fFormTruck: TfFormTruck
     end
     object CheckGPS: TcxCheckBox [9]
       Left = 193
-      Top = 274
+      Top = 272
       Caption = #24050#23433#35013'GPS'
       ParentFont = False
       Style.BorderColor = clWindowFrame
@@ -139,7 +139,7 @@ inherited fFormTruck: TfFormTruck
     end
     object checkNoLimit: TcxCheckBox [13]
       Left = 193
-      Top = 222
+      Top = 220
       Caption = 'VIP'#23458#25143
       ParentFont = False
       Style.BorderColor = clWindowFrame
@@ -148,6 +148,16 @@ inherited fFormTruck: TfFormTruck
       TabOrder = 7
       Transparent = True
       Width = 98
+    end
+    object editMemo: TcxTextEdit [14]
+      Left = 23
+      Top = 330
+      ParentFont = False
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
+      Style.HotTrack = False
+      TabOrder = 12
+      Width = 121
     end
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
@@ -248,6 +258,14 @@ inherited fFormTruck: TfFormTruck
             Control = CheckGPS
             ControlOptions.ShowBorder = False
           end
+        end
+      end
+      object dxLayout1Group6: TdxLayoutGroup [2]
+        CaptionOptions.Text = #36710#36742#25551#36848
+        ButtonOptions.Buttons = <>
+        object dxLayout1Item15: TdxLayoutItem
+          Control = editMemo
+          ControlOptions.ShowBorder = False
         end
       end
     end

@@ -120,9 +120,23 @@ begin
   //清空数据集
 end;
 
-procedure TfFrameBase.OnCreateFrame(const nIni: TIniFile);
-begin
 
+procedure TfFrameBase.OnCreateFrame(const nIni: TIniFile);
+//var
+//  nStr: string;
+//  nQuery: TADOQuery;
+begin
+//  nStr := 'select C_ID from S_Customer where C_Admin=''%s''';
+//  nStr := Format(nStr,[UniMainModule.FUserConfig.FUserID]);
+//  nQuery := nil;
+//  try
+//    nQuery := LockDBQuery(FDBType);
+//    with DBQuery(nStr, nQuery) do
+//      if RecordCount <1 then
+//        ShowMessage('尚未授权.');
+//  finally
+//    ReleaseDBQuery(nQuery);
+//  end;
 end;
 
 procedure TfFrameBase.OnDestroyFrame(const nIni: TIniFile);

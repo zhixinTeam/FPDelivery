@@ -117,7 +117,7 @@ function TfFrameSaleDetailQuery.InitFormDataSQL(const nWhere: string): string;
 begin
   FEnableBackDB := True;
   EditDate.Text := Format('%s жа %s', [Date2Str(FStart), Date2Str(FEnd)]);
-  Result := 'Select *,(L_Value*L_Price) as L_Money From $Bill b where (l_billtype<>''Y'' or l_billtype is null)';
+  Result := 'Select *,CAST((L_Value * L_Price) as decimal(38, 2)) as L_Money From $Bill b where (l_billtype<>''Y'' or l_billtype is null)';
 
   if FJBWhere = '' then
   begin

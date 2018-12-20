@@ -1132,7 +1132,7 @@ end;
 function TWorkerBusinessOrders.GetOrderTestNo(var nData: string): Boolean;
 var
   nStr, nPcNum, nPcNow, nProID, nStockNo: string;
-  nTestRule: Integer;
+  nTestRule, nIdx: Integer;
   nPrint: string;
 begin
   Result := False;
@@ -1168,7 +1168,12 @@ begin
         else
         begin
           nPcNow := Fields[0].AsString;
-          nPcNum := IntToStr((strtoint(nPcNow)+1));
+          nIdx := StrToInt(Copy(nPcNow,9,Length(nPcNow)-8))+1;
+          nPcNum := IntToStr(nIdx);
+
+          while (Length(nPcNum) < 3) do
+            nPcNum := '0'+nPcNum;
+          nPcNum := Date2Str(Now,False) + nPcNum;
         end;
       end;
     end
@@ -1179,7 +1184,7 @@ begin
       //查询 当天，该品种，该供货商 最大批次已经使用的次数，和规则对比
       nStr := 'select count(D_TestNo) from %s where D_ProID=''%s'' and '+
               'D_StockNo =''%s'' and D_TestNo= ''%s'' and convert(varchar,D_InTime,120) like ''%s''';
-      nStr := Format(nStr, [sTable_OrderDtl,nProID,nStockNo,nPcNow,Date2Str(Now,False)+'%']);
+      nStr := Format(nStr, [sTable_OrderDtl,nProID,nStockNo,nPcNow,Date2Str(Now,true)+'%']);
       with gDBConnManager.WorkerQuery(FDBConn, nStr) do
       begin
         if Fields[0].AsInteger >= nTestRule then
@@ -1193,7 +1198,12 @@ begin
             else
             begin
               nPcNow := Fields[0].AsString;
-              nPcNum := IntToStr((strtoint(nPcNow)+1));
+              nIdx := StrToInt(Copy(nPcNow,9,Length(nPcNow)-8))+1;
+              nPcNum := IntToStr(nIdx);
+
+              while Length(nPcNum) < 3 do
+                nPcNum := '0'+nPcNum;
+              nPcNum := Date2Str(Now,False) + nPcNum;
             end;
           end;
         end

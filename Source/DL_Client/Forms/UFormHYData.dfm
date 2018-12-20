@@ -28,6 +28,8 @@ inherited fFormHYData: TfFormHYData
       Top = 156
       ParentFont = False
       Properties.MaxLength = 100
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 6
       OnKeyPress = EditTruckKeyPress
       Width = 147
@@ -37,6 +39,8 @@ inherited fFormHYData: TfFormHYData
       Top = 156
       ParentFont = False
       Properties.MaxLength = 100
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 7
       Width = 403
     end
@@ -49,6 +53,10 @@ inherited fFormHYData: TfFormHYData
       Properties.ItemHeight = 18
       Properties.MaxLength = 35
       Properties.OnEditValueChanged = EditSManPropertiesEditValueChanged
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
+      Style.ButtonStyle = btsHotFlat
+      Style.PopupBorderStyle = epbsSingle
       TabOrder = 0
       Width = 121
     end
@@ -59,6 +67,10 @@ inherited fFormHYData: TfFormHYData
       Properties.DropDownRows = 20
       Properties.IncrementalSearch = False
       Properties.ItemHeight = 18
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
+      Style.ButtonStyle = btsHotFlat
+      Style.PopupBorderStyle = epbsSingle
       TabOrder = 1
       OnKeyPress = EditCustomKeyPress
       Width = 121
@@ -73,6 +85,9 @@ inherited fFormHYData: TfFormHYData
           Kind = bkEllipsis
         end>
       Properties.OnButtonClick = EditNoPropertiesButtonClick
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
+      Style.ButtonStyle = btsHotFlat
       TabOrder = 5
       OnKeyPress = OnCtrlKeyPress
       Width = 121
@@ -82,6 +97,10 @@ inherited fFormHYData: TfFormHYData
       Top = 131
       ParentFont = False
       Properties.Kind = ckDateTime
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
+      Style.ButtonStyle = btsHotFlat
+      Style.PopupBorderStyle = epbsSingle
       TabOrder = 4
       Width = 147
     end
@@ -90,6 +109,8 @@ inherited fFormHYData: TfFormHYData
       Top = 86
       ParentFont = False
       Properties.MaxLength = 80
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
       TabOrder = 2
       Width = 121
     end
@@ -109,59 +130,59 @@ inherited fFormHYData: TfFormHYData
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
         object dxLayout1Item13: TdxLayoutItem
-          AutoAligns = [aaVertical]
           AlignHorz = ahClient
-          Caption = #19994' '#21153' '#21592':'
+          CaptionOptions.Text = #19994' '#21153' '#21592':'
           Control = EditSMan
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item3: TdxLayoutItem
-          Caption = #23458#25143#21517#31216':'
+          CaptionOptions.Text = #23458#25143#21517#31216':'
           Control = EditCustom
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item9: TdxLayoutItem
-          Caption = #24320#21333#23458#25143':'
+          CaptionOptions.Text = #24320#21333#23458#25143':'
           Control = EditName
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item6: TdxLayoutItem
-          ShowCaption = False
+          CaptionOptions.Visible = False
           Control = cxLabel2
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Group4: TdxLayoutGroup
-          ShowCaption = False
+          CaptionOptions.Visible = False
+          ButtonOptions.Buttons = <>
           Hidden = True
           LayoutDirection = ldHorizontal
           ShowBorder = False
           object dxLayout1Item5: TdxLayoutItem
-            Caption = #25552#36135#26085#26399':'
+            CaptionOptions.Text = #25552#36135#26085#26399':'
             Control = EditDate
             ControlOptions.ShowBorder = False
           end
           object dxLayout1Item4: TdxLayoutItem
-            AutoAligns = [aaVertical]
             AlignHorz = ahClient
-            Caption = #27700#27877#32534#21495':'
+            CaptionOptions.Text = #27700#27877#32534#21495':'
             Control = EditNo
             ControlOptions.ShowBorder = False
           end
         end
         object dxLayout1Group2: TdxLayoutGroup
-          ShowCaption = False
+          CaptionOptions.Visible = False
+          ButtonOptions.Buttons = <>
           Hidden = True
           LayoutDirection = ldHorizontal
           ShowBorder = False
           object dxLayout1Item7: TdxLayoutItem
-            Caption = #25552#36135#36710#36742':'
+            CaptionOptions.Text = #25552#36135#36710#36742':'
+            Visible = False
             Control = EditTruck
             ControlOptions.ShowBorder = False
           end
           object dxLayout1Item8: TdxLayoutItem
-            AutoAligns = [aaVertical]
             AlignHorz = ahClient
-            Caption = #25552#36135#37327'('#21544'):'
+            CaptionOptions.Text = #25552#36135#37327'('#21544'):'
             Control = EditValue
             ControlOptions.ShowBorder = False
           end

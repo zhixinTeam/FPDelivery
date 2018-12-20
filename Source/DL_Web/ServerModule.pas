@@ -56,6 +56,10 @@ begin
     //配置文件被改动
   end;
 
+  if not DirectoryExists(UniServerModule.StartPath+'UploadFolder\') then
+    CreateDir(UniServerModule.StartPath+'UploadFolder\');
+  //创建上传文件目录
+
   Title := gSysParam.FAppTitle;
   //程序标题
   Port := gServerParam.FPort;

@@ -11,7 +11,7 @@ uses
   UFormNormal, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, cxLabel, cxDropDownEdit,
   cxCalendar, cxButtonEdit, cxMaskEdit, cxTextEdit, dxLayoutControl,
-  StdCtrls;
+  StdCtrls, dxSkinsCore, dxSkinsDefaultPainters, dxLayoutcxEditAdapters;
 
 type
   TfFormHYData = class(TfFormNormal)
@@ -50,6 +50,8 @@ type
     //验证数据
     procedure InitFormData(const nID: string);
     //载入数据
+    procedure GetBillValue;
+    //获取客户某批次提货量
   public
     { Public declarations }
     class function CreateForm(const nPopedom: string = '';
@@ -150,6 +152,7 @@ begin
       nStr := Format('%s=%s.%s', [nP.FParamB, nP.FParamB, nP.FParamC]);
       EditCustom.ItemIndex := InsertStringsItem(EditCustom.Properties.Items, nStr);
     end;
+    GetBillValue;
   end;
 end;
 
@@ -198,6 +201,7 @@ begin
   if (nP.FCommand = cCmd_ModalResult) and (nP.FParamA = mrOK) then
   begin
     EditNo.Text := nP.FParamB;
+    GetBillValue;
   end;
 end;
 
@@ -218,15 +222,15 @@ begin
     nHint := '请填写有效的客户名称';
   end else
 
-  if Sender = EditTruck then
-  begin
-    Result := Trim(EditTruck.Text) <> '';
-    nHint := '请填写有效的车牌号码';
-  end else
+//  if Sender = EditTruck then
+//  begin
+//    Result := Trim(EditTruck.Text) <> '';
+//    nHint := '请填写有效的车牌号码';
+//  end else
 
   if Sender = EditValue then
   begin
-    Result := IsNumber(EditValue.Text, True) and (StrToFloat(EditValue.Text) > 0);
+    Result := IsNumber(EditValue.Text, True) and (StrToFloat(EditValue.Text) < FSelectVal);
     nHint := '请填写有效的提货量';
   end else
 
@@ -280,6 +284,21 @@ begin
   nStr := IntToStr(FDM.GetFieldMax(sTable_StockHuaYan, 'H_ID'));
   PrintHeGeReport(nStr, True);
   PrintHuaYanReport(nStr, True);
+end;
+
+procedure TfFormHYData.GetBillValue;
+var
+  nStr: string;
+begin
+  if EditCustom.ItemIndex < 0 then Exit;
+  if Trim(EditNo.Text) = '' then exit;
+  nStr := 'select SUM(L_Value) as thl from %s where L_CusID=''%s'' and L_HYDan=''%s''';
+  nStr := Format(nStr,[sTable_Bill, GetCtrlData(EditCustom),EditNo.Text]);
+  with FDM.QueryTemp(nStr) do
+  begin
+    FSelectVal := fieldbyname('thl').AsFloat;
+    EditValue.Text := FloatToStr(FSelectVal);
+  end;
 end;
 
 initialization

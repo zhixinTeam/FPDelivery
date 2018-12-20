@@ -13,7 +13,8 @@ uses
   dxLayoutControl, cxGridLevel, cxClasses, cxControls, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid,
   ComCtrls, ToolWin, cxTextEdit, cxMaskEdit, cxButtonEdit, UBitmapPanel,
-  cxSplitter, Menus, cxLookAndFeels, cxLookAndFeelPainters;
+  cxSplitter, Menus, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxLayoutcxEditAdapters;
 
 type
   TfFrameHYData = class(TfFrameNormal)

@@ -442,7 +442,7 @@ begin
             FloatToStrF(WeightList[i].FValue,ffFixed,5,2)+' as l_Value,'+
             'L_ID,L_ZhiKa,L_Order,L_Project,L_Area,L_CusID,L_CusName,L_SaleID,L_SaleMan,L_Type,'+
             'L_StockNo,L_StockName,L_Price,L_Truck,L_InTime,L_InMan,L_PValue,L_PDate,L_PMan,L_MDate,L_MMan,'+
-            'L_OutFact,L_OutMan,L_Seal,L_HYDan,L_PrintHY,L_Man,L_Date,'+
+            'L_OutFact,L_OutMan,L_Seal,L_HYDan,L_PrintHY,L_Man,L_Date,L_Lading,'+
             '%s As L_ValidMoney From %s b Where L_ID=''%s''';
     nStr := Format(nStr, [nMoney, sTable_Bill, nBill]);
     nDS := FDM.SQLQuery(nStr, FDM.SQLQuery1);

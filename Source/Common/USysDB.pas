@@ -264,6 +264,11 @@ const
   sFlag_LoadLimitWC   = 'LoadLimitWC';               //限载允许误差
   sFlag_CusLoadLimit  = 'CusLoadLimit';              //客户发货日限额
 
+  sFlag_WebCusGroup   = '20';                        //Web用户组ID
+  sFlag_TSS            = 'S';                        //投诉已审核
+  sFlag_TSN            = 'N';                        //新投诉
+
+
   {*数据表*}
   sTable_Group        = 'Sys_Group';                 //用户组
   sTable_User         = 'Sys_User';                  //用户表
@@ -350,6 +355,8 @@ const
   sTable_WorkTimes       = 'S_WorkTimes';            //班次
   sTable_CusLimit        = 'S_CusLimit';             //客户限提
   sTable_ZKReChargeLog   = 'S_ZKRechargeLog';        //纸卡充值记录
+  sTable_TouSu           = 'S_TouSu';                //投诉
+  stable_SQKP            = 'S_SQKPRec';              //申请开票记录
 
 
   {*新建表*}
@@ -975,7 +982,8 @@ const
        'T_PlateColor varChar(12),T_Type varChar(12), T_LastTime DateTime, ' +
        'T_Card varChar(32), T_CardUse Char(1), T_NoVerify Char(1),' +
        'T_Valid Char(1), T_VIPTruck Char(1), T_HasGPS Char(1), '+
-       'T_LoadStand varchar(5),T_SBTare $Float, T_WebID varchar(50),T_NoLimit char(1))';
+       'T_LoadStand varchar(5),T_SBTare $Float, T_WebID varchar(50),T_NoLimit char(1),'+
+       'T_Memo varchar(200))';
   {-----------------------------------------------------------------------------
    车辆信息:Truck
    *.R_ID: 记录号
@@ -1004,6 +1012,7 @@ const
    *.T_LoadStand:限载标准，存ID
    *.T_SBTare:申报皮重
    *.T_NoLimit :不限载
+   *.T_Memo :备注
    有效平均皮重算法:
    T_PValue = (T_PValue * T_PTime + 新皮重) / (T_PTime + 1)
   -----------------------------------------------------------------------------}
@@ -1606,6 +1615,39 @@ const
    *.R_Date  日期
   -----------------------------------------------------------------------------}
 
+  sSQL_NewTouSu = 'Create Table $Table(R_ID $Inc,T_TSMan varchar(20),'
+      +'T_Title varchar(200),T_TSMemo varchar(200),T_TSTime DateTime,'
+      +'T_Status char(1),T_DealMan varchar(20),T_DealTime DateTime,'
+      +'T_DealResult varchar(200))';
+  {-----------------------------------------------------------------------------
+  *.R_ID: 记录编号
+  *.T_TSMan       投诉人
+  *.T_Title       标题
+  *.T_TSMemo      投诉内容
+  *.T_TSTime      提交时间
+  *.T_Status      状态
+  *.T_DealMan     处理人
+  *.T_DealTime    处理时间
+  *.T_DealResult  处理结果
+  -----------------------------------------------------------------------------}
+
+  sSQL_NewSQKP = 'Create Table $Table(R_ID $Inc,S_ZQ varchar(20),'
+        +'S_CusId varchar(20),S_CusName varchar(100),S_StockNo varchar(20),'
+        +'S_Price $Float,S_Value $Float,S_SQValue $Float,S_SQMoney $Float,'
+        +'S_SQDate DateTime,S_SQMan varchar(20),S_DealMan varchar(20),'
+        +'S_DealTime DateTime,S_DealResult varchar(200),S_Status char(1))';
+
+  {-----------------------------------------------------------------------------
+  *.
+  *.
+  *.
+  *.
+  *.
+  *.
+  *.
+  *.
+  *.
+  -----------------------------------------------------------------------------}
 
 function CardStatusToStr(const nStatus: string): string;
 //磁卡状态
@@ -1750,6 +1792,8 @@ begin
   AddSysTableItem(sTable_WorkTimes, sSQL_NewWorkTimes);
   AddSysTableItem(sTable_CusLimit, sSQL_NewCusLimit);
   AddSysTableItem(sTable_ZKReChargeLog, sSQL_NewRechargeLog);
+  AddSysTableItem(sTable_TouSu, sSQL_NewTouSu);
+  AddSysTableItem(stable_SQKP, sSQL_NewSQKP);
 end;
 
 //Desc: 清理系统表

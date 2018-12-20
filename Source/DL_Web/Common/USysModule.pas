@@ -10,7 +10,9 @@ interface
 
 uses
   UClientWorker, UClientPacker, UFormOptions, UFormChangePwd, UFormExit,
-  UFramePopedom, UFormPopedomUser, UFormPopedomGroup;
+  UFramePopedom, UFormPopedomUser, UFormPopedomGroup, UQryBills, UFrameQryMoney,
+  UFormRegister, UFrameQryHuaYan, UFrameTouSu, UFormTouSu, UFrameSHUser,
+  UFrameFP, UFormFP, UFrameSQRec, UFrameBindCus, UFormUsers, UFormSHUsers;
 
 implementation
 

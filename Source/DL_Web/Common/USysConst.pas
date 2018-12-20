@@ -25,6 +25,7 @@ const
   cCmd_EditData         = $1005;                     //修改数据
   cCmd_ViewData         = $1006;                     //查看数据
   cCmd_GetData          = $1007;                     //选择数据
+  cCmd_ShenHe           = $1008;                     //审核数据
 
 type
   TAdoConnectionType = (ctMain, ctWork);
@@ -295,10 +296,18 @@ begin
   gMenuModule := TList.Create;
 
   AddMenuModuleItem('MAIN_A01', '', mtForm);
-  AddMenuModuleItem('MAIN_A02', 'TfFormChangePwd', mtForm);
-  AddMenuModuleItem('MAIN_A03', 'TfFormOptions', mtForm);
-  AddMenuModuleItem('MAIN_A04', 'TfFramePopedom');
-  AddMenuModuleItem('MAIN_A05', 'TfFormExit', mtForm);
+  AddMenuModuleItem('MAIN_A05', 'TfFormChangePwd', mtForm);
+  AddMenuModuleItem('MAIN_A06', 'TfFormOptions', mtForm);
+  AddMenuModuleItem('MAIN_A07', 'TfFramePopedom');
+  AddMenuModuleItem('SYSCLOSE', 'TfFormExit', mtForm);
+  AddMenuModuleItem('MAIN_J09', 'TfFrameQryBills');
+  AddMenuModuleItem('MAIN_J02', 'TfFrameQryMoney');
+  AddMenuModuleItem('MAIN_J03', 'TfFrameTouSu');
+  AddMenuModuleItem('MAIN_J04', 'TfFrameQryHuaYan');
+  AddMenuModuleItem('MAIN_J05', 'TfFrameSHUser');
+  AddMenuModuleItem('MAIN_J06', 'TfFrameFP');
+  AddMenuModuleItem('MAIN_J07', 'TfFrameSQRec');
+  AddMenuModuleItem('MAIN_J08', 'TfFrameBindCus');
 end;
 
 //Desc: 清理模块列表
