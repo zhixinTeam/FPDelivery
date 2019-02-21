@@ -14,7 +14,8 @@ uses
   USysFun in 'Common\USysFun.pas',
   USysRemote in 'Common\USysRemote.pas',
   UFrameMain in 'UFrameMain.pas' {fFrameMain: TUniFrame},
-  UFormLogin in 'Forms\UFormLogin.pas' {fFormLogin: TUniLoginForm};
+  UFormLogin in 'Forms\UFormLogin.pas' {fFormLogin: TUniLoginForm},
+  UFrameInvoiceSQ in 'Forms\UFrameInvoiceSQ.pas' {fFrameInvoiceSQ: TUniFrame};
 
 {$R *.res}
 

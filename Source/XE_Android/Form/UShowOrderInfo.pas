@@ -75,16 +75,17 @@ begin
           nYSVaid := 'N'
     else  nYSVaid := 'Y';
     FYSValid := nYSVaid;
+    FTestNo := lblTestNo.Text;
 
     FKZValue := StrToFloatDef(EditKZValue.Text, 0);
 
     if gsysparam.FIsHYS then //如果是化验室
     begin
-      if SaveHysYS('X', gOrders)and (FPrintBarCode = 'Y') then
-      begin
+      if FPrintBarCode = 'Y' then
         BtnPrintCodeClick(Self);
+
+      if SaveHysYS('X', gOrders) then
         MainForm.Show;
-      end;
     end
     else
     begin

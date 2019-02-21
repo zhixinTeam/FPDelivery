@@ -1,21 +1,28 @@
-unit UFormTouSu;
+unit UFormInvoiceInfo;
 
 interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, UFormBase, uniGUIClasses, uniPanel,
-  uniGUIBaseClasses, uniButton, USysConst, uniGUIForm, uniMemo, uniEdit,
-  uniLabel;
+  uniGUIBaseClasses, uniButton, uniEdit, uniLabel, USysConst, uniGUIForm;
 
 type
-  TfFormTouSu = class(TfFormBase)
+  TfFormInvoiceInfo = class(TfFormBase)
+    UniLabel5: TUniLabel;
+    editcompName: TUniEdit;
+    editType: TUniEdit;
     UniLabel1: TUniLabel;
-    EditTitle: TUniEdit;
     UniLabel2: TUniLabel;
-    editText: TUniMemo;
-    lblSH: TUniLabel;
-    editSH: TUniEdit;
+    editTaxNo: TUniEdit;
+    UniLabel3: TUniLabel;
+    editBank: TUniEdit;
+    editBankNo: TUniEdit;
+    UniLabel4: TUniLabel;
+    UniLabel6: TUniLabel;
+    editAddr: TUniEdit;
+    editTel: TUniEdit;
+    UniLabel7: TUniLabel;
     procedure BtnOKClick(Sender: TObject);
   private
     { Private declarations }
@@ -26,12 +33,12 @@ type
     function SetParam(const nParam: TFormCommandParam): Boolean; override;
   end;
 
-procedure ShowTouSuForm(const nTouSu: string;
+procedure ShowTouSuForm(const nID: string;
   const nResult: TFormModalResult);
 //入口函数
 
 var
-  fFormTouSu: TfFormTouSu;
+  fFormInvoiceInfo: TfFormInvoiceInfo;
 
 implementation
 
@@ -40,22 +47,21 @@ implementation
 uses
   Data.Win.ADODB, USysDB, USysBusiness, ULibFun, MainModule;
 
-procedure ShowTouSuForm(const nTouSu: string;
+{ TfFormInvoiceInfo }
+
+procedure ShowTouSuForm(const nID: string;
   const nResult: TFormModalResult);
 var nForm: TUniForm;
 begin
-  nForm := SystemGetForm('TfFormTouSu', True);
+  nForm := SystemGetForm('TfFormInvoiceInfo', True);
   if not Assigned(nForm) then Exit;
 
-  with nForm as TfFormTouSu do
+  with nForm as TfFormInvoiceInfo do
   begin
-    if nTouSu = '' then
+    if nID = '' then
          FParam.FCommand := cCmd_AddData
     else FParam.FCommand := cCmd_EditData;
-    FParam.FParamA := nTouSu;
-
-    //BtnOK.Enabled := nTouSu = '';
-    //InitFormData(nUser);
+    FParam.FParamA := nID;
 
     ShowModal(
       procedure(Sender: TComponent; Result:Integer)
@@ -67,25 +73,17 @@ begin
   end;
 end;
 
-procedure TfFormTouSu.BtnOKClick(Sender: TObject);
+procedure TfFormInvoiceInfo.BtnOKClick(Sender: TObject);
 var
   nStr, nID: string;
   nQuery: TADOQuery;
   nBool: Boolean;
 begin
-  nStr := Trim(EditTitle.Text);
+  nStr := Trim(editcompName.Text);
   if nStr = '' then
   begin
-    EditTitle.SetFocus;
-    ShowMessage('请输入投诉标题');
-    Exit;
-  end;
-
-  nStr := Trim(editText.Text);
-  if nStr = '' then
-  begin
-    EditTitle.SetFocus;
-    ShowMessage('请输入内容');
+    editcompName.SetFocus;
+    ShowMessage('请输入开票单位名称.');
     Exit;
   end;
 
@@ -98,12 +96,16 @@ begin
     begin
       with TSQLBuilder do
         nStr := MakeSQLByStr([
-          SF('T_Title', EditTitle.Text),
-          SF('T_Status', sFlag_TSN),
-          SF('T_TSMan', UniMainModule.FUserConfig.FUserID),
-          SF('T_TSTime', sField_SQLServer_Now, sfVal),
-          SF('T_TSMemo', edittext.Text)
-          ], sTable_TouSu, '', nBool);
+          SF('I_CompName', editcompName.Text),
+          SF('I_TaxNo', editTaxNo.Text),
+          SF('I_Addr', editAddr.Text),
+          SF('I_Tel', editTel.Text),
+          SF('I_TaxType', editType.Text),
+          SF('I_Bank', editBank.Text),
+          SF('I_BankNo', editBankNo.Text),
+          SF('I_User', UniMainModule.FUserConfig.FUserID),
+          SF('I_Date', sField_SQLServer_Now, sfVal)
+          ], sTable_InvoiceInfo, '', nBool);
         //xxxxx
     end
     else if FParam.FCommand = cCmd_EditData then
@@ -111,21 +113,16 @@ begin
       nID := FParam.FParamA;
       with TSQLBuilder do
         nStr := MakeSQLByStr([
-          SF('T_Title', EditTitle.Text),
-          SF('T_TSMemo', edittext.Text)
-          ], sTable_TouSu, SF('R_id', nID), nBool);
-        //xxxxx
-    end
-    else if FParam.FCommand = cCmd_ShenHe then
-    begin
-      nID := FParam.FParamA;
-      with TSQLBuilder do
-        nStr := MakeSQLByStr([
-          SF('T_Status', sFlag_TSS),
-          SF('T_DealMan', UniMainModule.FUserConfig.FUserID),
-          SF('T_DealTime', sField_SQLServer_Now, sfVal),
-          SF('T_DealResult', editSH.Text)
-          ], sTable_TouSu, SF('R_id', nID), nBool);
+          SF('I_CompName', editcompName.Text),
+          SF('I_TaxNo', editTaxNo.Text),
+          SF('I_Addr', editAddr.Text),
+          SF('I_Tel', editTel.Text),
+          SF('I_TaxType', editType.Text),
+          SF('I_Bank', editBank.Text),
+          SF('I_BankNo', editBankNo.Text),
+          SF('I_User', UniMainModule.FUserConfig.FUserID),
+          SF('I_Date', sField_SQLServer_Now, sfVal)
+          ], sTable_InvoiceInfo, SF('R_id', nID), nBool);
         //xxxxx
     end;
 
@@ -136,7 +133,7 @@ begin
   end;
 end;
 
-procedure TfFormTouSu.InitFormData(const nID: string);
+procedure TfFormInvoiceInfo.InitFormData(const nID: string);
 var
   nQuery:TADOQuery;
   nStr: string;
@@ -145,7 +142,7 @@ begin
   if nID <> '' then
   try
     nStr := 'select * from %s where R_Id=''%s''';
-    nStr := Format(nStr,[stable_tousu,nid]);
+    nStr := Format(nStr,[stable_InvoiceInfo,nid]);
     nQuery := LockDBQuery(FDBType);
 
     with DBQuery(nStr, nQuery) do
@@ -155,16 +152,20 @@ begin
         ShowMessage('记录不存在或经删除.');
         Exit;
       end;
-      EditTitle.Text := FieldByName('T_Title').AsString;
-      editText.Text := FieldByName('T_TSMemo').AsString;
-      editSH.Text := FieldByName('T_DealResult').AsString;
+      editcompName.Text := FieldByName('I_CompName').AsString;
+      editType.Text := FieldByName('I_TaxType').AsString;
+      editTaxNo.Text := FieldByName('I_TaxNo').AsString;
+      editBank.Text := FieldByName('I_Bank').AsString;
+      editBankNo.Text := FieldByName('I_BankNo').AsString;
+      editAddr.Text := FieldByName('I_addr').AsString;
+      editTel.Text := FieldByName('I_tel').AsString;
     end;
   finally
     ReleaseDBQuery(nQuery);
   end;
 end;
 
-function TfFormTouSu.SetParam(const nParam: TFormCommandParam): Boolean;
+function TfFormInvoiceInfo.SetParam(const nParam: TFormCommandParam): Boolean;
 begin
   Result := inherited SetParam(nParam);
   case nParam.FCommand of
@@ -178,22 +179,15 @@ begin
       //BtnOK.Enabled := False;
       InitFormData(FParam.FParamA);
     end;
-    cCmd_ShenHe:
-    begin
-      InitFormData(FParam.FParamA);
-      editSH.Visible := true;
-      lblSH.Visible := True;
-    end;
     cCmd_ViewData:
     begin
       InitFormData(FParam.FParamA);
       BtnOK.Enabled := False;
-      editSH.Visible := true;
-      lblSH.Visible := True;
     end;
   end;
 end;
 
 initialization
-  RegisterClass(TfFormTouSu);
+  RegisterClass(TfFormInvoiceInfo);
+
 end.

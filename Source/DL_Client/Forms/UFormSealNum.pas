@@ -6,7 +6,8 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, UFormNormal, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, dxLayoutControl, StdCtrls, CPort, CPortTypes,
-  dxLayoutcxEditAdapters, cxContainer, cxEdit, cxTextEdit;
+  dxLayoutcxEditAdapters, cxContainer, cxEdit, cxTextEdit, dxSkinsCore,
+  dxSkinsDefaultPainters;
 
 type
   TfFormSealNum = class(TfFormNormal)
@@ -116,20 +117,15 @@ begin
     nStr := Format(nStr,[sTable_Bill,nSealNum,nCard]);
 
     FDM.ExecuteSQL(nStr);
-    
-    //nRet := SaveLadingBills(sFlag_TruckOut, gBills);
+
+    EditCard.Text := '';
+    EditSealNum.Text := '';
+    ShowMsg('封签号录入成功.',sHint);
   except
     nRet := False;
     ShowMessage('录入封签号失败.');
     Exit;
   end;
-//  if nRet then
-//  begin
-//    ShowMsg('录入封签号成功，且成功出厂.',sHint);
-//    EditCard.Text := '';
-//    EditSealNum.Text := '';
-//    ActiveControl := EditCard;
-//  end;
 end;
 
 procedure TfFormSealNum.ComPort1RxChar(Sender: TObject; Count: Integer);

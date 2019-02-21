@@ -12,7 +12,8 @@ uses
   UClientWorker, UClientPacker, UFormOptions, UFormChangePwd, UFormExit,
   UFramePopedom, UFormPopedomUser, UFormPopedomGroup, UQryBills, UFrameQryMoney,
   UFormRegister, UFrameQryHuaYan, UFrameTouSu, UFormTouSu, UFrameSHUser,
-  UFrameFP, UFormFP, UFrameSQRec, UFrameBindCus, UFormUsers, UFormSHUsers;
+  UFrameFP, UFormFP, UFrameSQRec, UFrameBindCus, UFormUsers, UFormSHUsers,
+  UFormInvoiceInfo, UFrameInvoiceInfo;
 
 implementation
 

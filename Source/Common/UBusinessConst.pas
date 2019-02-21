@@ -310,6 +310,7 @@ begin
         FPType      := Values['PType'];
         FPoundID    := Values['PoundID'];
         FSelected   := Values['Selected'] = sFlag_Yes;
+        FTestNo     := Values['TestNo'];
 
         with FPData do
         begin
@@ -354,6 +355,8 @@ begin
         FPrintHY := Values['PrintHY'] = sFlag_Yes;
         FHYDan   := Values['HYDan'];
         FMemo    := Values['Memo'];
+        FMustSeal:= Values['MustSeal'] = sFlag_Yes;
+        FSeal:= Values['Seal'];
       end;
 
       Inc(nInt);
@@ -434,10 +437,15 @@ begin
         Values['Memo']       := FMemo;
         Values['TestNo']     := FTestNo;
 
+        if FMustSeal then
+             Values['MustSeal']     := sFlag_Yes
+        else Values['MustSeal']     := sFlag_No;
+
         if FPrintHY then
              Values['PrintHY'] := sFlag_Yes
         else Values['PrintHY'] := sFlag_No;
         Values['HYDan']    := FHYDan;
+        Values['Seal']    := FSeal;
       end;
 
       nListA.Add(PackerEncodeStr(nListB.Text));

@@ -47,6 +47,8 @@ type
     N9: TMenuItem;
     N10: TMenuItem;
     N11: TMenuItem;
+    N12: TMenuItem;
+    N13: TMenuItem;
     procedure EditIDPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
     procedure BtnAddClick(Sender: TObject);
@@ -60,6 +62,8 @@ type
     procedure N8Click(Sender: TObject);
     procedure N10Click(Sender: TObject);
     procedure N11Click(Sender: TObject);
+    procedure PMenu1Popup(Sender: TObject);
+    procedure N13Click(Sender: TObject);
   private
     { Private declarations }
   protected
@@ -412,6 +416,32 @@ begin
 
   nSQL := MacroValue(nSQL, [MI('$M', gSysParam.FUserName)]);
   FDM.ExecuteSQL(nSQL);
+end;
+
+procedure TfFrameZhiKa.PMenu1Popup(Sender: TObject);
+begin
+  N13.Enabled := gSysParam.FIsAdmin;
+end;
+
+procedure TfFrameZhiKa.N13Click(Sender: TObject);
+var
+  nStr, nID:string;
+begin
+  if cxView1.DataController.GetSelectedCount < 1 then
+  begin
+    ShowMsg('请选择要置为无效的订单', sHint); Exit;
+  end;
+
+  nID := SQLQuery.FieldByName('Z_ID').AsString;
+
+  nStr := '确定将订单['+nID+']设为无效订单吗，一旦设为无效将不能再次启用.';
+  if not QueryDlg(nStr, sAsk) then Exit;
+
+  nStr := 'update %s set Z_InValid=''%s'' where Z_Id=''%s''';
+  nStr := Format(nStr,[sTable_ZhiKa,sFlag_Yes,nID]);
+  FDM.ExecuteSQL(nStr);
+  InitFormData(FWhere);
+  ShowMsg('操作成功.', sHint);
 end;
 
 initialization

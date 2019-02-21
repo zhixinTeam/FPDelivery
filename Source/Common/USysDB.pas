@@ -356,7 +356,10 @@ const
   sTable_CusLimit        = 'S_CusLimit';             //客户限提
   sTable_ZKReChargeLog   = 'S_ZKRechargeLog';        //纸卡充值记录
   sTable_TouSu           = 'S_TouSu';                //投诉
-  stable_SQKP            = 'S_SQKPRec';              //申请开票记录
+  stable_InvoiceRec      = 'S_InvoiceRec';           //申请开票记录
+  stable_InvRecDtl       = 'S_InvRecDtl';            //申请开票记录明细
+  stable_InvoiceInfo     = 'S_InvoiceInfo';          //开票信息
+  sTable_InvSettle       = 'Sys_InvoiceSettle';      //销售结算
 
 
   {*新建表*}
@@ -921,7 +924,7 @@ const
        'D_OutFact DateTime, D_OutMan varChar(32),D_TestNo varchar(20),'+
        'D_YTime1 DateTime,D_YMan1 varChar(32),D_YS1 Char(1) Default ''N'','+
        'D_TestJG1 $Float,D_TestJG2 $Float,D_HysKZ $Float,D_HysMemo varchar(200),'+
-       'D_HysUser varchar(30), D_Memo varChar(500))';
+       'D_HysUser varchar(30), D_Memo varChar(500),D_SFKZ $Float)';
   {-----------------------------------------------------------------------------
    采购订单明细表: OrderDetail
    *.R_ID: 编号
@@ -951,6 +954,8 @@ const
    *.D_TestJG2:化验结果2 水分
    *.D_YTime1:第一次验收时间
    *.D_YMan1:第一次验收人
+   *.D_HysKZ:热值扣重
+   *.D_SFKZ：水分扣重
   -----------------------------------------------------------------------------}
 
   sSQL_NewCard = 'Create Table $Table(R_ID $Inc, C_Card varChar(16),' +
@@ -1631,22 +1636,75 @@ const
   *.T_DealResult  处理结果
   -----------------------------------------------------------------------------}
 
-  sSQL_NewSQKP = 'Create Table $Table(R_ID $Inc,S_ZQ varchar(20),'
-        +'S_CusId varchar(20),S_CusName varchar(100),S_StockNo varchar(20),'
-        +'S_Price $Float,S_Value $Float,S_SQValue $Float,S_SQMoney $Float,'
+  sSQL_NewInvoiceRec = 'Create Table $Table(R_ID $Inc, S_NO varchar(20),'
+        +'S_KPInfo varchar(20),S_CusId varchar(20),S_CusName varchar(100),'
+        +'S_InvType varchar(20),'
         +'S_SQDate DateTime,S_SQMan varchar(20),S_DealMan varchar(20),'
         +'S_DealTime DateTime,S_DealResult varchar(200),S_Status char(1))';
 
   {-----------------------------------------------------------------------------
-  *.
-  *.
-  *.
-  *.
-  *.
-  *.
-  *.
-  *.
-  *.
+  *.S_NO         单号
+  *.S_CusId      客户编号
+  *.S_CusName    客户名称
+  *.S_KPInfo     开票公司信息
+  *.S_SQDate     申请日期
+  *.S_SQMan      申请人
+  *.S_DealMan    审核人
+  *.S_DealTime   审核时间
+  *.S_DealResult 结果
+  *.S_Status     状态
+  -----------------------------------------------------------------------------}
+
+  sSQL_NewInvRecDtl = 'Create Table $Table(R_ID $Inc,D_RId varchar(20),'
+        +'D_ZQ varchar(20),D_CusID varchar(20),D_CusName varchar(100),D_StockNo varchar(40), '
+        +'D_Price $Float,D_Value $Float,D_SQMoney $Float,D_Date DateTime)';
+
+  {-----------------------------------------------------------------------------
+  *.D_RId        主表ID
+  *.D_ZQ         周期
+  *.D_StockNo    物料编号
+  *.D_Price      价格
+  *.D_Value      数量
+  *.D_SQMoney    金额
+  -----------------------------------------------------------------------------}
+
+  sSQL_NewInvoiceInfo = 'Create Table $Table(R_ID $Inc,I_User varchar(20),'
+        +'I_CompName varchar(200),I_TaxNo varchar(30),I_Addr varchar(200),'
+        +'I_Tel varchar(20),I_TaxType varchar(20),I_Bank varchar(50),'
+        +'I_BankNo varchar(30),I_Date DateTime)';
+  {-----------------------------------------------------------------------------
+  *.I_User       用户
+  *.I_CompName   开票单位
+  *.I_TaxNo      税号
+  *.I_Addr       地址
+  *.I_Tel        电话
+  *.I_TaxType    发票种类
+  *.I_Bank       银行
+  *.I_BankNo     账号
+  *.I_Date       日期
+  -----------------------------------------------------------------------------}
+  sSQL_NewInvoiceSettle = 'Create Table $Table(R_ID $Inc, S_Week varChar(15),' +
+       'S_Bill varChar(15), S_CusID varChar(15), S_ZhiKa varChar(15),' +
+       'S_Stock varChar(20), S_Value $Float, S_Price $Float, S_YunFei $Float,' +
+       'S_OutFact DateTime, S_Man varChar(32), S_Date DateTime,'+
+       'S_SalePrice $Float Default 0, S_SaleYunFei $Float Default 0, '+
+       'S_Type Char(1) Default '''' )';
+  {-----------------------------------------------------------------------------
+   结算结算:InvoiceSettle
+   *.R_ID:记录编号
+   *.S_Week: 结算周期
+   *.S_Bill: 交货单号
+   *.S_CusID: 客户编号
+   *.S_ZhiKa: 纸卡编号
+   *.S_Stock: 品种编号
+   *.S_Value: 发货量
+   *.S_Price: 返利单价
+   *.S_SalePrice: 销售单价
+   *.S_YunFei: 运费单价
+   *.S_OutFact: 出厂时间
+   *.S_Man: 结算人
+   *.S_Date: 结算时间
+   *.S_SalePrice, S_SaleYunFei  原 销售价格  运费价格
   -----------------------------------------------------------------------------}
 
 function CardStatusToStr(const nStatus: string): string;
@@ -1793,7 +1851,10 @@ begin
   AddSysTableItem(sTable_CusLimit, sSQL_NewCusLimit);
   AddSysTableItem(sTable_ZKReChargeLog, sSQL_NewRechargeLog);
   AddSysTableItem(sTable_TouSu, sSQL_NewTouSu);
-  AddSysTableItem(stable_SQKP, sSQL_NewSQKP);
+  AddSysTableItem(sTable_InvoiceRec, sSQL_NewInvoiceRec);
+  AddSysTableItem(stable_InvRecDtl, sSQL_NewInvRecDtl);
+  AddSysTableItem(sTable_InvoiceInfo, sSQL_NewInvoiceInfo);
+  AddSysTableItem(sTable_InvSettle, sSQL_NewInvoiceSettle);
 end;
 
 //Desc: 清理系统表

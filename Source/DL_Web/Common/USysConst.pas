@@ -308,6 +308,7 @@ begin
   AddMenuModuleItem('MAIN_J06', 'TfFrameFP');
   AddMenuModuleItem('MAIN_J07', 'TfFrameSQRec');
   AddMenuModuleItem('MAIN_J08', 'TfFrameBindCus');
+  AddMenuModuleItem('MAIN_J10', 'TfFrameInvoiceInfo');
 end;
 
 //Desc: 清理模块列表

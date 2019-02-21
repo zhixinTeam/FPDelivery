@@ -84,6 +84,7 @@ begin
 
     EditServIP.Text:= FServIP;
     EditPort.Text := IntToStr(FServPort);
+    CheckBox1.IsChecked := FIsHYS;
   end;
 end;
 

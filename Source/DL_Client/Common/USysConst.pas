@@ -189,6 +189,7 @@ const
   cFI_FormAdjustCredit  = $1112;                     //信用金额调拨
   cFI_FormCusLimit      = $1113;                     //客户提货限制
   cFI_FrameZKRechargeLog= $1114;                     //纸卡充值记录
+  cFI_FrameCusTotalMoney= $1115;                     //资金账户流水汇总
 
   {*Command*}
   cCmd_RefreshData      = $0002;                     //刷新数据
@@ -420,6 +421,7 @@ begin
   AddMenuModuleItem('MAIN_L08', cFI_FrameZhiKaDetail);
   AddMenuModuleItem('MAIN_L09', cFI_FrameSaleJS);
   AddMenuModuleItem('MAIN_L10', cFI_FrameOrderDetailQuery);
+  AddMenuModuleItem('MAIN_L12', cFI_FrameCusTotalMoney);
 
   AddMenuModuleItem('MAIN_H01', cFI_FormTruckIn, mtForm);
   AddMenuModuleItem('MAIN_H02', cFI_FormTruckOut, mtForm);

@@ -687,7 +687,7 @@ begin
         '  Z_CID ' +                            //合同编号
         'from %s a join %s b on a.Z_ID = b.D_ZID ' +
         'where Z_Verified=''%s'' and (Z_InValid<>''%s'' or Z_InValid is null) '+
-        ' and (Z_Freeze<>''%s'' or Z_Freeze is null) and Z_Customer=''%s''';
+        ' and (Z_Freeze<>''%s'' or Z_Freeze is null) and Z_Customer=''%s'' and Z_ValidDays >getdate()';
         //订单已审核 有效
   nStr := Format(nStr,[sTable_ZhiKa,sTable_ZhiKaDtl,sFlag_Yes,sFlag_Yes,
                        sFlag_Yes,FIn.FData]);

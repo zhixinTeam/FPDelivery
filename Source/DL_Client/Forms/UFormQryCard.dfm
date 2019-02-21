@@ -25,6 +25,7 @@ inherited fFormQryCard: TfFormQryCard
       Style.BorderStyle = ebsSingle
       Style.HotTrack = False
       TabOrder = 0
+      OnKeyPress = EditCardKeyPress
       Width = 121
     end
     object editCardType: TcxTextEdit [3]

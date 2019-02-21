@@ -10,7 +10,8 @@ uses
   cxMaskEdit, StdCtrls, ComCtrls, cxTreeView, cxStyles, cxCustomData,
   cxFilter, cxData, cxDataStorage, DB, cxDBData, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, USysDataFun,
-  cxGridDBTableView, cxGrid, ADODB, cxPC, ExtCtrls, cxCurrencyEdit;
+  cxGridDBTableView, cxGrid, ADODB, cxPC, ExtCtrls, cxCurrencyEdit,
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter;
 
 type
   TfFormStockItem = class(TBaseForm)
@@ -263,7 +264,7 @@ begin
         try
           FDM.ADOConn.BeginTrans;
           fdm.ExecuteSQL(nStr);
-          nStr := '添加原材料['+cbCtrlStand.Text+']内控标准,标准1:'+EditCtrlStandValue.Text+',标准2:'+EditCtrlStandValue2.Text;
+          nStr := '添加原材料['+cbCtrlStand.Text+']内控标准,质量:'+EditCtrlStandValue.Text+',水份:'+EditCtrlStandValue2.Text;
           FDM.WriteSysLog(sFlag_CtrlStandard,cbCtrlStand.Text,nStr);
           FDM.ADOConn.CommitTrans;
           ShowMsg(nStr+'成功.',sHint);

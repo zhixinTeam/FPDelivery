@@ -264,13 +264,13 @@ inherited fFormStockItem: TfFormStockItem
               Width = 140
             end
             object cxGridDBColumn6: TcxGridDBColumn
-              Caption = #26631#20934'1'
+              Caption = #36136#37327
               DataBinding.FieldName = 'd_ParamA'
               HeaderAlignmentHorz = taCenter
               Width = 127
             end
             object cxGridDBTableView2Column1: TcxGridDBColumn
-              Caption = #26631#20934'2'
+              Caption = #27700#20221
               DataBinding.FieldName = 'd_ParamB'
               HeaderAlignmentHorz = taCenter
               Width = 118
@@ -305,7 +305,7 @@ inherited fFormStockItem: TfFormStockItem
           object cxLabel7: TcxLabel
             Left = 265
             Top = 17
-            Caption = #26631#20934'1'#65306
+            Caption = #36136#37327#65306
             ParentFont = False
           end
           object EditCtrlStandValue: TcxCurrencyEdit
@@ -333,7 +333,7 @@ inherited fFormStockItem: TfFormStockItem
           object cxLabel10: TcxLabel
             Left = 393
             Top = 17
-            Caption = #26631#20934'2:'
+            Caption = #27700#20221':'
             ParentFont = False
           end
         end

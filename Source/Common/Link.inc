@@ -90,6 +90,8 @@
   //自动生成供应商编号
   {$DEFINE PrintHY}
   //出厂打印化验单
+  {$DEFINE NoCheckOnPayment}
+  //退款时不校验资金余额
 {$ENDIF}
 
 

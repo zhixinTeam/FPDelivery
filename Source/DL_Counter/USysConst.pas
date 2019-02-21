@@ -27,6 +27,7 @@ type
     FHardMonURL : string;                            //硬件守护
 
     FIsEncode   : Boolean;                           //是否需要密码启动
+    FWechatURL  : string; 
   end;
   //系统参数
 

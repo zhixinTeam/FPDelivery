@@ -204,10 +204,11 @@ inherited fFrameZhiKa: TfFrameZhiKa
   end
   object PMenu1: TPopupMenu
     AutoHotkeys = maManual
+    OnPopup = PMenu1Popup
     Left = 4
     Top = 292
     object N1: TMenuItem
-      Caption = #25171#21360#32440#21345
+      Caption = #25171#21360#35746#21333
       OnClick = N1Click
     end
     object N2: TMenuItem
@@ -217,12 +218,12 @@ inherited fFrameZhiKa: TfFrameZhiKa
       Caption = #26597#35810#36873#39033
       object N5: TMenuItem
         Tag = 10
-        Caption = #20923#32467#32440#21345
+        Caption = #20923#32467#35746#21333
         OnClick = N4Click
       end
       object N9: TMenuItem
         Tag = 20
-        Caption = #26080#25928#32440#21345
+        Caption = #26080#25928#35746#21333
         OnClick = N4Click
       end
       object N4: TMenuItem
@@ -235,7 +236,7 @@ inherited fFrameZhiKa: TfFrameZhiKa
       Caption = #20854#23427#25805#20316
       object N7: TMenuItem
         Tag = 10
-        Caption = #20923#32467#32440#21345
+        Caption = #20923#32467#35746#21333
         OnClick = N8Click
       end
       object N8: TMenuItem
@@ -246,6 +247,13 @@ inherited fFrameZhiKa: TfFrameZhiKa
       object N10: TMenuItem
         Caption = #38480#21046#25552#36135
         OnClick = N10Click
+      end
+      object N12: TMenuItem
+        Caption = '-'
+      end
+      object N13: TMenuItem
+        Caption = #35774#20026#26080#25928
+        OnClick = N13Click
       end
     end
     object N11: TMenuItem

@@ -2952,7 +2952,7 @@ end;
 function GetBillByTruck(const nData: string):string;
 var nOut: TWorkerBusinessCommand;
 begin
-  if CallBusinessWechat(cBC_WX_get_shoporderbyTruck, nData, '', '', @nOut,False) then
+  if CallBusinessWechat(cBC_WX_get_shoporderbyTruckClt, nData, '', '', @nOut,False) then
     Result := nOut.FData
   else Result := '';
 end;

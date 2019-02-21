@@ -1152,14 +1152,14 @@ begin
 
   //查询 当天，该品种，该供货商 最大批次
   nStr := 'select MAX(D_TestNo) from %s where D_ProID=''%s'' and '+
-          ' D_StockNo =''%s'' and convert(varchar,D_InTime,120) like ''%s''';
+          ' D_StockNo =''%s'' and convert(varchar,D_YTime1,120) like ''%s''';
   nStr := Format(nStr, [sTable_OrderDtl,nProID,nStockNo,Date2Str(Now,True)+'%']);
   with gDBConnManager.WorkerQuery(FDBConn, nStr) do
   begin
     if Fields[0].AsString ='' then
     begin
       //如果为空，则检索当天最大的批次号，然后加1，否则直接从001开始
-      nStr := 'select max(D_TestNo) from %s where convert(varchar,D_InTime,120) like ''%s''';
+      nStr := 'select max(D_TestNo) from %s where convert(varchar,D_YTime1,120) like ''%s''';
       nStr := Format(nStr, [sTable_OrderDtl,Date2Str(Now,True)+'%']);
       with gDBConnManager.WorkerQuery(FDBConn, nStr) do
       begin
@@ -1183,13 +1183,13 @@ begin
 
       //查询 当天，该品种，该供货商 最大批次已经使用的次数，和规则对比
       nStr := 'select count(D_TestNo) from %s where D_ProID=''%s'' and '+
-              'D_StockNo =''%s'' and D_TestNo= ''%s'' and convert(varchar,D_InTime,120) like ''%s''';
+              'D_StockNo =''%s'' and D_TestNo= ''%s'' and convert(varchar,D_YTime1,120) like ''%s''';
       nStr := Format(nStr, [sTable_OrderDtl,nProID,nStockNo,nPcNow,Date2Str(Now,true)+'%']);
       with gDBConnManager.WorkerQuery(FDBConn, nStr) do
       begin
         if Fields[0].AsInteger >= nTestRule then
         begin  //如果大于批次规则，则检索当天最大批次号
-          nStr := 'select max(D_TestNo) from %s where convert(varchar,D_InTime,120) like ''%s''';
+          nStr := 'select max(D_TestNo) from %s where convert(varchar,D_YTime1,120) like ''%s''';
           nStr := Format(nStr, [sTable_OrderDtl,Date2Str(Now,True)+'%']);
           with gDBConnManager.WorkerQuery(FDBConn, nStr) do
           begin

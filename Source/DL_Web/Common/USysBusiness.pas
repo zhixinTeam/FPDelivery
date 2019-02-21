@@ -1358,6 +1358,13 @@ begin
       Options := Options + [dgColumnResize, dgColumnMove];
     //选项控制
 
+    if Pos('beforeinit', ClientEvents.UniEvents.Text.ToLower) < 1 then
+    begin
+      ClientEvents.UniEvents.Add('beforeInit=function beforeInit(sender,' +
+        'config){config.viewConfig.enableTextSelection = true;}');
+      //单元格可选
+    end;
+
     ReadOnly := True;
     WebOptions.Paged := True;
     WebOptions.PageSize := 1000;

@@ -243,6 +243,7 @@ begin
         FPType      := Values['PType'];
         FPoundID    := Values['PoundID'];
         FSelected   := Values['Selected'] = 'Y';
+        FTestNo     := Values['TestNo'];
 
         with FPData do
         begin
@@ -338,6 +339,7 @@ begin
         Values['PModel']     := FPModel;
         Values['PType']      := FPType;
         Values['PoundID']    := FPoundID;
+        Values['TestNo']    := FTestNo;
 
         with FPData do
         begin

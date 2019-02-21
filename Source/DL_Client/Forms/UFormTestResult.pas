@@ -82,14 +82,14 @@ end;
 procedure TfFormTestResult.BtnOKClick(Sender: TObject);
 var
   nStr, nStockNo, nSQL, nID: string;
-  NetValue, nNKStandard1, nNKStandard2, nTestJG1, nTestJG2, KZ1, KZ2, KZLast: Double;
+  NetValue, nNKStandard1, nNKStandard2, nTestRZ, nTestSF, RZKZ, SFKZ: Double;
   FListA: TStringList;
   i: Integer;
 begin
   inherited;
   EditTestNo.Text := Trim(EditTestNo.Text);
-  nTestJG1 := EditResult1.Value;
-  nTestJG2 := EditResult2.Value;
+  nTestRZ := EditResult1.Value;
+  nTestSF := EditResult2.Value;
   FListA := TStringList.Create;
 
   if EditTestNo.Text = '' then
@@ -133,34 +133,34 @@ begin
           nNKStandard2 := FieldByName('D_ParamB').AsFloat;
       end;
 
-      if nTestJG1 <= nNKStandard1 then
-        KZ1 := 0
+      if nTestRZ >= nNKStandard1 then
+        RZKZ := 0
       else
-        KZ1 := ((nTestJG1 - nNKStandard1) / nNKStandard1)* FieldByName('D_Value').AsFloat;
+        RZKZ := ((nNKStandard1 - nTestRZ) / nNKStandard1)* FieldByName('D_Value').AsFloat;
 
-      if nTestJG2 <= nNKStandard2 then
-        KZ2 := 0
+      if nTestSF <= nNKStandard2 then
+        SFKZ := 0
       else
-        KZ2 := ((nTestJG2 - nNKStandard2) / 50)* FieldByName('D_Value').AsFloat;
+        SFKZ := ((nTestSF - nNKStandard2) / 100)* FieldByName('D_Value').AsFloat;
 
-      if KZ1 < KZ2 then
-        KZLast := KZ2
-      else
-        KZLast := KZ1;
-      KZLast :=  Float2Float(KZLast,100,True);
+      RZKZ :=  Float2Float(RZKZ,100,True);
+      SFKZ :=  Float2Float(SFKZ,100,True);
 
       //大于净重直接扣光
-      if KZLast > NetValue then
-        KZLast := NetValue;
+      if RZKZ > NetValue then
+        RZKZ := NetValue;
+      if SFKZ > NetValue then
+        SFKZ := NetValue;
 
       nSQL := MakeSQLByStr([
                 //SF('D_TestNo', EditTestNo.Text),
-                SF('D_TestJG1', nTestJG1, sfVal),
-                SF('D_TestJG2', nTestJG2, sfVal),
-                SF('D_Value', NetValue-KZLast, sfVal),
+                SF('D_TestJG1', nTestRZ, sfVal),
+                SF('D_TestJG2', nTestSF, sfVal),
+                SF('D_Value', NetValue, sfVal),
                 SF('D_HysMemo', Memo1.Text),
                 SF('D_HysUser', gSysParam.FUserID),
-                SF('D_HysKZ',KZLast , sfVal)
+                SF('D_SFKZ', SFKZ, sfVal),
+                SF('D_HysKZ',RZKZ , sfVal)
                 ], sTable_OrderDtl, SF('D_ID', nID), False);
        FListA.Add(nSQL);
        Next;

@@ -27,6 +27,7 @@ type
     editCusName: TcxTextEdit;
     dxLayout1Item9: TdxLayoutItem;
     procedure ComPort1RxChar(Sender: TObject; Count: Integer);
+    procedure EditCardKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     procedure ActionComPort(const nStop: Boolean);
@@ -129,7 +130,10 @@ begin
   with TfFormQryCard.Create(Application) do
   begin
     ActiveControl := EditCard;
-    ActionComPort(False);
+    try
+      ActionComPort(False);
+    except
+    end;
     ShowModal;
     Free;
   end;
@@ -215,9 +219,9 @@ end;
 
 procedure TfFormQryCard.QuerySaleInfo(const nCard: string);
 var
-  nStr: string;
+  nStr, nData: string;
   nHasBill: Boolean;
-  nList: TStrings;
+  nList, FListA: TStrings;
 begin
   nHasBill := False;
   nStr := 'select * from %s where L_Card=''%s''';
@@ -254,7 +258,8 @@ begin
       //如果是长期卡，并且没有订单，去微信商城查订单
       if not nHasBill then
       begin
-        nStr := GetBillByTruck(PackerEncodeStr(editTruck.Text));
+        nData := PackerEncodeStr(editTruck.Text);
+        nStr := GetBillByTruck(nData);
         if nStr = '' then
         begin
           editBill.Text := '无商城订单';
@@ -305,6 +310,15 @@ begin
         editCardType.Text := '空卡';
     end;
   end; 
+end;
+
+procedure TfFormQryCard.EditCardKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = Char(VK_RETURN) then
+  begin
+    Key := #0;
+    QryCard(EditCard.Text);
+  end;
 end;
 
 initialization
