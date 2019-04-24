@@ -230,8 +230,14 @@ begin
 
   if Sender = EditValue then
   begin
-    Result := IsNumber(EditValue.Text, True) and (StrToFloat(EditValue.Text) <= FSelectVal);
+    Result := IsNumber(EditValue.Text, True);
     nHint := '请填写有效的提货量';
+  end else
+
+  if Sender = EditValue then
+  begin
+    Result := Float2Float(StrToFloat(EditValue.Text),cPrecision,True) <= Float2Float(FSelectVal,cPrecision,True);
+    nHint := '开单量不能超过总提货量.';
   end else
 
   if Sender = EditNo then

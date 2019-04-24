@@ -113,7 +113,7 @@ begin
   EditNo.Text := nNo;
   ListStock.Items.Clear;
 
-  nHY := 'Select H_SerialNo,Sum(H_Value) as R_Value From %s ' +
+  {nHY := 'Select H_SerialNo,Sum(H_Value) as R_Value From %s ' +
          'Group By H_SerialNo';
   nHY := Format(nHY, [sTable_StockHuaYan]);
 
@@ -157,6 +157,27 @@ begin
 
     ListStock.ItemIndex := 0;
     Result := True;
+  end
+  else}
+  begin
+    nStr := 'select R_SerialNo,P_Stock from S_StockRecord,S_StockParam '+
+            'where R_PID=P_ID and R_SerialNo like ''%s''';
+    nStr := Format(nStr,['%'+nNo+'%']);
+    with FDM.QueryTemp(nStr) do
+    if RecordCount > 0 then
+    begin
+      First;
+      while not Eof do
+      with ListStock.Items.Add do
+      begin
+         Caption := FieldByName('R_SerialNo').AsString;
+         SubItems.Add(FieldByName('P_Stock').AsString);
+         ImageIndex := cItemIconIndex;
+         Next;
+      end;
+      ListStock.ItemIndex := 0;
+      Result := True;
+    end;
   end;
 end;
 
