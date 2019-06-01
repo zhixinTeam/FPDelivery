@@ -4,6 +4,7 @@
 *******************************************************************************}
 unit UFormMain;
 
+{$I Link.Inc}
 interface
 
 uses
@@ -699,7 +700,7 @@ procedure TfFormMain.QueryWXService(const nCard: string);
 var
   nBeginTotal:TDateTime;
   nStr, nTruck, nData, nSQL:string;
-  nList, nTmp, nListBill:TStrings;
+  nList, nListB, nListC, nTmp, nListBill:TStrings;
 begin
   if (nCard = FLastCard) and (GetTickCount - FLastQuery < 8 * 1000) then
   begin
@@ -728,63 +729,137 @@ begin
     end;
 
     nStr := GetBillByTruck(PackerEncodeStr(nTruck));
-    if nStr = '' then
-    begin
-      FTimeCounter := 1;
-      LabelDec.Caption := '磁卡号无效';
-      Exit;
-    end;
 
-    nData := PackerDecodeStr(nStr);
-    nList := TStringList.Create;
-    nList.Text := nData;
+    {$IFDEF UseWXServiceEx}
+      try
+        if nStr = '' then
+        begin
+          FTimeCounter := 1;
+          LabelDec.Caption := '磁卡号无效';
+          Exit;
+        end;
 
-    if Trim(nList.Values['order_type']) = 'NULL' then
-    begin
-      FTimeCounter := 1;
-      LabelDec.Caption := '磁卡号无效';
-      Exit;
-    end;
+        nData      := PackerDecodeStr(nStr);
+        nList      := TStringList.Create;
+        nList.Text := nData;
+        nListB     := TStringList.Create;
+        nListC     := TStringList.Create;
 
-    LabelTruck.Caption := '车牌号码:' + nList.Values['tracknumber'];
-    LabelStock.Caption := '品种名称:' + nList.Values['goodsname'];
 
-    if Trim(nList.Values['order_type']) = 'S' then
-    begin
-      LabelTon.Caption := '提货数量:' + nList.Values['data'];
-      LabelOrder.Caption := '销售订单:'+nList.Values['fac_order_no'];
+        nListB.Text := PackerDecodeStr(nList.Values['details']);
+        if nListB.Count > 0 then
+        begin
+          nListC.Text := PackerDecodeStr(nListB[0]);
+          if Trim(nList.Values['type']) = 'NULL' then
+          begin
+            FTimeCounter := 1;
+            LabelDec.Caption := '磁卡号无效';
+            Exit;
+          end;
 
-      nStr := 'select C_Name from %s a,%s b where a.Z_Customer=b.C_ID and a.Z_ID=''%s''';
-      nStr := Format(nStr,[sTable_ZhiKa,sTable_Customer,nList.Values['fac_order_no']]);
-      with FDM.QuerySQL(nStr) do
+          LabelTruck.Caption := '车牌号码:' + nList.Values['licensePlate'];
+          LabelStock.Caption := '品种名称:' + nListC.Values['materielName'];
+
+          if Pos('销售',Trim(nList.Values['type'])) > 0  then
+          begin
+            LabelTon.Caption := '提货数量:'  + nListC.Values['quantity'];
+            LabelOrder.Caption := '销售订单:'+ nListC.Values['contractNo'];
+
+            nStr := 'select C_Name from %s a,%s b where a.Z_Customer=b.C_ID and a.Z_ID=''%s''';
+            nStr := Format(nStr,[sTable_ZhiKa,sTable_Customer,nListC.Values['contractNo']]);
+            with FDM.QuerySQL(nStr) do
+            begin
+              lblCusName.Caption := '客户名称:'+ FieldByName('C_Name').AsString;
+            end;
+
+            nStr := 'Select Count(*) From %s ' +
+                    'Where Z_StockNo=''%s'' And Z_Valid=''%s'' And Z_VipLine=''%s''';
+            nStr := Format(nStr, [sTable_ZTLines, nListC.Values['materielNo'], sFlag_Yes,'C']);
+            with FDM.QuerySQL(nStr) do
+            begin
+              LabelNum.Caption := '开放道数: ' + Fields[0].AsString + '个';
+            end;
+            FLastCard := nCard;
+          end
+          else
+          begin
+            LabelOrder.Caption := '采购订单:'  + nListC.Values['contractNo'];
+            LabelTon.Caption   := '供货数量:'  + nListC.Values['quantity'];
+
+            nStr := 'select b_proid as provider_code,b_proname as provider_name,'+
+                    'b_stockno as con_materiel_Code,b_restvalue as '+
+                    'con_remain_quantity from %s where b_id=''%s''';
+            nStr := Format(nStr,[sTable_OrderBase,nListC.Values['contractNo']]);
+            with FDM.QuerySQL(nStr) do
+            begin
+              lblCusName.Caption := '供应商名:'+ FieldByName('provider_name').AsString;
+            end;
+            FLastCard := nCard;
+          end;
+        end;
+      finally
+        nListC.Free;
+        nListB.Free;
+      end;
+    {$ELSE}
+      if nStr = '' then
       begin
-        lblCusName.Caption := '客户名称:'+ FieldByName('C_Name').AsString;
+        FTimeCounter := 1;
+        LabelDec.Caption := '磁卡号无效';
+        Exit;
       end;
 
-      nStr := 'Select Count(*) From %s ' +
-              'Where Z_StockNo=''%s'' And Z_Valid=''%s'' And Z_VipLine=''%s''';
-      nStr := Format(nStr, [sTable_ZTLines, nList.Values['goodsID'], sFlag_Yes,'C']);
-      with FDM.QuerySQL(nStr) do
-      begin
-        LabelNum.Caption := '开放道数: ' + Fields[0].AsString + '个';
-      end;
-      FLastCard := nCard;
-    end
-    else
-    begin
-      LabelOrder.Caption := '采购订单:'+nList.Values['fac_order_no'];
-      LabelTon.Caption := '供货数量:' + nList.Values['data'];
+      nData := PackerDecodeStr(nStr);
+      nList := TStringList.Create;
+      nList.Text := nData;
 
-      nStr := 'select b_proid as provider_code,b_proname as provider_name,'+
-              'b_stockno as con_materiel_Code,b_restvalue as '+
-              'con_remain_quantity from %s where b_id=''%s''';
-      nStr := Format(nStr,[sTable_OrderBase,nList.Values['fac_order_no']]);
-      with FDM.QuerySQL(nStr) do
+      if Trim(nList.Values['order_type']) = 'NULL' then
       begin
-        lblCusName.Caption := '供应商名:'+ FieldByName('provider_name').AsString;
+        FTimeCounter := 1;
+        LabelDec.Caption := '磁卡号无效';
+        Exit;
       end;
-      FLastCard := nCard;
-    end;
+
+      LabelTruck.Caption := '车牌号码:' + nList.Values['tracknumber'];
+      LabelStock.Caption := '品种名称:' + nList.Values['goodsname'];
+
+      if Trim(nList.Values['order_type']) = 'S' then
+      begin
+        LabelTon.Caption := '提货数量:' + nList.Values['data'];
+        LabelOrder.Caption := '销售订单:'+nList.Values['fac_order_no'];
+
+        nStr := 'select C_Name from %s a,%s b where a.Z_Customer=b.C_ID and a.Z_ID=''%s''';
+        nStr := Format(nStr,[sTable_ZhiKa,sTable_Customer,nList.Values['fac_order_no']]);
+        with FDM.QuerySQL(nStr) do
+        begin
+          lblCusName.Caption := '客户名称:'+ FieldByName('C_Name').AsString;
+        end;
+
+        nStr := 'Select Count(*) From %s ' +
+                'Where Z_StockNo=''%s'' And Z_Valid=''%s'' And Z_VipLine=''%s''';
+        nStr := Format(nStr, [sTable_ZTLines, nList.Values['goodsID'], sFlag_Yes,'C']);
+        with FDM.QuerySQL(nStr) do
+        begin
+          LabelNum.Caption := '开放道数: ' + Fields[0].AsString + '个';
+        end;
+        FLastCard := nCard;
+      end
+      else
+      begin
+        LabelOrder.Caption := '采购订单:'+nList.Values['fac_order_no'];
+        LabelTon.Caption := '供货数量:' + nList.Values['data'];
+
+        nStr := 'select b_proid as provider_code,b_proname as provider_name,'+
+                'b_stockno as con_materiel_Code,b_restvalue as '+
+                'con_remain_quantity from %s where b_id=''%s''';
+        nStr := Format(nStr,[sTable_OrderBase,nList.Values['fac_order_no']]);
+        with FDM.QuerySQL(nStr) do
+        begin
+          lblCusName.Caption := '供应商名:'+ FieldByName('provider_name').AsString;
+        end;
+        FLastCard := nCard;
+      end;
+    {$ENDIF}
   except
     LabelDec.Caption := '磁卡无效';
     Exit;
