@@ -4,6 +4,7 @@
 *******************************************************************************}
 unit uZXNewPurchaseCard;
 
+{$I Link.Inc}
 interface
 
 uses
@@ -251,7 +252,7 @@ end;
 function TfFormNewPurchaseCard.DownloadOrder(const nCard: string): Boolean;
 var
   nXmlStr,nData:string;
-  nListA,nListB:TStringList;
+  nListA,nListB,nListC:TStringList;
   i:Integer;
   nWebOrderCount:Integer;
 begin
@@ -271,28 +272,70 @@ begin
   Writelog('TfFormNewPurchaseCard.DownloadOrder(nCard='''+nCard+''') 查询商城订单-耗时：'+InttoStr(MilliSecondsBetween(Now, FBegin))+'ms');
   //解析网城订单信息
   Writelog('get_shopPurchaseByno res:'+nData);
-  nListA := TStringList.Create;
-  nListB := TStringList.Create;
-  try
-    nListA.Text := nData;
 
-    nWebOrderCount := nListA.Count;
-    SetLength(FWebOrderItems,nWebOrderCount);
-    for i := 0 to nWebOrderCount-1 do
-    begin
-      nListB.Text := PackerDecodeStr(nListA.Strings[i]);
-      FWebOrderItems[i].FOrder_id := nListB.Values['ordernumber'];
-      FWebOrderItems[i].Fpurchasecontract_no := nListB.Values['fac_order_no'];
-      FWebOrderItems[i].FgoodsID := nListB.Values['goodsID'];
-      FWebOrderItems[i].FGoodsname := nListB.Values['goodsname'];
-      FWebOrderItems[i].FData := nListB.Values['data'];
-      FWebOrderItems[i].Ftracknumber := nListB.Values['tracknumber'];
-      AddListViewItem(FWebOrderItems[i]);
+  {$IFDEF UseWXServiceEx}
+    nListA := TStringList.Create;
+    nListB := TStringList.Create;
+    nListC := TStringList.Create;
+    try
+      nListA.Text := PackerDecodeStr(nData);
+
+      nListB.Text := PackerDecodeStr(nListA.Values['details']);
+      nWebOrderCount := nListB.Count;
+      SetLength(FWebOrderItems,nWebOrderCount);
+
+      for i := 0 to nWebOrderCount-1 do
+      begin
+        nListC.Text := PackerDecodeStr(nListB[i]);
+      
+        FWebOrderItems[i].FOrder_id     := nListA.Values['orderId'];
+        FWebOrderItems[i].Ftracknumber  := nListA.Values['licensePlate'];
+        FWebOrderItems[i].FfactoryName  := nListA.Values['factoryName'];
+        FWebOrderItems[i].FdriverId     := nListA.Values['driverId'];
+        FWebOrderItems[i].FdrvName      := nListA.Values['drvName'];
+        FWebOrderItems[i].FdrvPhone     := nListA.Values['FdrvPhone'];
+        FWebOrderItems[i].FType         := nListA.Values['type'];
+        with nListC do
+        begin
+          FWebOrderItems[i].FCusID          := Values['clientNo'];
+          FWebOrderItems[i].FCusName        := Values['clientName'];
+          FWebOrderItems[i].FGoodsID        := Values['materielNo'];
+          FWebOrderItems[i].FGoodsname      := Values['materielName'];
+          FWebOrderItems[i].FData           := Values['quantity'];
+          FWebOrderItems[i].Fpurchasecontract_no := Values['contractNo'];
+          FWebOrderItems[i].FOrder_ls       := '';
+          AddListViewItem(FWebOrderItems[i]);
+        end;
+      end;
+    finally
+      nListC.Free;
+      nListB.Free;
+      nListA.Free;
     end;
-  finally
-    nListB.Free;
-    nListA.Free;
-  end;
+  {$ELSE}
+    nListA := TStringList.Create;
+    nListB := TStringList.Create;
+    try
+      nListA.Text := nData;
+
+      nWebOrderCount := nListA.Count;
+      SetLength(FWebOrderItems,nWebOrderCount);
+      for i := 0 to nWebOrderCount-1 do
+      begin
+        nListB.Text := PackerDecodeStr(nListA.Strings[i]);
+        FWebOrderItems[i].FOrder_id := nListB.Values['ordernumber'];
+        FWebOrderItems[i].Fpurchasecontract_no := nListB.Values['fac_order_no'];
+        FWebOrderItems[i].FgoodsID := nListB.Values['goodsID'];
+        FWebOrderItems[i].FGoodsname := nListB.Values['goodsname'];
+        FWebOrderItems[i].FData := nListB.Values['data'];
+        FWebOrderItems[i].Ftracknumber := nListB.Values['tracknumber'];
+        AddListViewItem(FWebOrderItems[i]);
+      end;
+    finally
+      nListB.Free;
+      nListA.Free;
+    end;
+  {$ENDIF}
   LoadSingleOrder;
 end;
 
@@ -316,9 +359,24 @@ var
   nRepeat:Boolean;
   nWebOrderID:string;
   nMsg:string;
+  nIsSale: Boolean;
 begin
   nOrderItem := FWebOrderItems[FWebOrderIndex];
   nWebOrderID := nOrderItem.FOrder_id;
+  {$IFDEF UseWXServiceEx}
+    if Pos('销售',nOrderItem.FType) > 0 then
+      nIsSale := True
+    else
+      nIsSale := False;
+
+    if  nIsSale then
+    begin
+      nMsg := '此订单不是采购订单！';
+      ShowMsg(nMsg,sHint);
+      Writelog(nMsg);
+      Exit;
+    end;
+  {$ENDIF}
   FBegin := now;
   nRepeat := IsRepeatCard(nWebOrderID);
 

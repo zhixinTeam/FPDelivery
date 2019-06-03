@@ -205,7 +205,7 @@ end;
 function TfFormNewCard.DownloadOrder(const nCard: string): Boolean;
 var
   nXmlStr,nData:string;
-  nListA,nListB:TStringList;
+  nListA,nListB,nListC:TStringList;
   i:Integer;
   nWebOrderCount:Integer;
 begin
@@ -225,30 +225,74 @@ begin
   Writelog('TfFormNewCard.DownloadOrder(nCard='''+nCard+''') 查询商城订单-耗时：'+InttoStr(MilliSecondsBetween(Now, FBegin))+'ms');
   //解析网城订单信息
   Writelog('get_shoporderbyno res:'+nData);
-  nListA := TStringList.Create;
-  nListB := TStringList.Create;
-  try
-    nListA.Text := nData;
 
-    nWebOrderCount := nListA.Count;
-    SetLength(FWebOrderItems,nWebOrderCount);
-    for i := 0 to nWebOrderCount-1 do
-    begin
-      nListB.Text := PackerDecodeStr(nListA.Strings[i]);
-      FWebOrderItems[i].FOrder_id := nListB.Values['order_id'];
-      FWebOrderItems[i].FOrdernumber := nListB.Values['ordernumber'];
-      FWebOrderItems[i].FGoodsID := nListB.Values['goodsID'];
-      FWebOrderItems[i].FGoodstype := nListB.Values['goodstype'];
-      FWebOrderItems[i].FGoodsname := nListB.Values['goodsname'];
-      FWebOrderItems[i].FData := nListB.Values['data'];
-      FWebOrderItems[i].Ftracknumber := nListB.Values['tracknumber'];
-      FWebOrderItems[i].FYunTianOrderId := nListB.Values['fac_order_no'];
-      AddListViewItem(FWebOrderItems[i]);
+  {$IFDEF UseWXServiceEx}
+    nListA := TStringList.Create;
+    nListB := TStringList.Create;
+    nListC := TStringList.Create;
+    try
+      nListA.Text := PackerDecodeStr(nData);
+
+      nListB.Text := PackerDecodeStr(nListA.Values['details']);
+      nWebOrderCount := nListB.Count;
+      SetLength(FWebOrderItems,nWebOrderCount);
+      for i := 0 to nWebOrderCount-1 do
+      begin
+        nListC.Text := PackerDecodeStr(nListB[i]);
+
+        FWebOrderItems[i].FOrder_id     := nListA.Values['orderId'];
+        FWebOrderItems[i].FOrdernumber  := nListA.Values['orderNo'];
+        FWebOrderItems[i].Ftracknumber  := nListA.Values['licensePlate'];
+        FWebOrderItems[i].FfactoryName  := nListA.Values['factoryName'];
+        FWebOrderItems[i].FdriverId     := nListA.Values['driverId'];
+        FWebOrderItems[i].FdrvName      := nListA.Values['drvName'];
+        FWebOrderItems[i].FdrvPhone     := nListA.Values['FdrvPhone'];
+        FWebOrderItems[i].FType         := nListA.Values['type'];
+        FWebOrderItems[i].FXHSpot       := nListA.Values['orderRemark'];
+        with nListC do
+        begin
+          FWebOrderItems[i].FCusID          := Values['clientNo'];
+          FWebOrderItems[i].FCusName        := Values['clientName'];
+          FWebOrderItems[i].FGoodsID        := Values['materielNo'];
+          FWebOrderItems[i].FGoodstype      := Values['orderDetailType'];
+          FWebOrderItems[i].FGoodsname      := Values['materielName'];
+          FWebOrderItems[i].FData           := Values['quantity'];
+          FWebOrderItems[i].ForderDetailType:= Values['orderDetailType'];
+          FWebOrderItems[i].FYunTianOrderId := Values['contractNo'];  ;
+          AddListViewItem(FWebOrderItems[i]);
+        end;
+      end;
+    finally
+      nListC.Free;
+      nListB.Free;
+      nListA.Free;
     end;
-  finally
-    nListB.Free;
-    nListA.Free;
-  end;
+  {$ELSE}
+    nListA := TStringList.Create;
+    nListB := TStringList.Create;
+    try
+      nListA.Text := nData;
+
+      nWebOrderCount := nListA.Count;
+      SetLength(FWebOrderItems,nWebOrderCount);
+      for i := 0 to nWebOrderCount-1 do
+      begin
+        nListB.Text := PackerDecodeStr(nListA.Strings[i]);
+        FWebOrderItems[i].FOrder_id := nListB.Values['order_id'];
+        FWebOrderItems[i].FOrdernumber := nListB.Values['ordernumber'];
+        FWebOrderItems[i].FGoodsID := nListB.Values['goodsID'];
+        FWebOrderItems[i].FGoodstype := nListB.Values['goodstype'];
+        FWebOrderItems[i].FGoodsname := nListB.Values['goodsname'];
+        FWebOrderItems[i].FData := nListB.Values['data'];
+        FWebOrderItems[i].Ftracknumber := nListB.Values['tracknumber'];
+        FWebOrderItems[i].FYunTianOrderId := nListB.Values['fac_order_no'];
+        AddListViewItem(FWebOrderItems[i]);
+      end;
+    finally
+      nListB.Free;
+      nListA.Free;
+    end;
+  {$ENDIF}
   LoadSingleOrder;
 end;
 
@@ -319,6 +363,7 @@ var
   nRepeat:Boolean;
   nWebOrderID:string;
   nMsg,nStr:string;
+  nIsSale : Boolean;
 begin
   nOrderItem := FWebOrderItems[FWebOrderIndex];
   nWebOrderID := nOrderItem.FOrdernumber;
@@ -336,40 +381,80 @@ begin
   writelog('TfFormNewCard.LoadSingleOrder 检查商城订单是否重复使用-耗时：'+InttoStr(MilliSecondsBetween(Now, FBegin))+'ms');
 
   //填充界面信息
+  {$IFDEF UseWXServiceEx}
+    if Pos('销售',nOrderItem.FType) > 0 then
+      nIsSale := True
+    else
+      nIsSale := False;
 
-  //基本信息
-  EditCus.Text    := '';
-  EditCName.Text  := '';
-
-  nStr := 'select Z_Customer,D_Price from %s a join %s b on a.Z_ID = b.D_ZID ' +
-          'where Z_ID=''%s'' and D_StockNo=''%s'' ';
-
-  nStr := Format(nStr,[sTable_ZhiKa,sTable_ZhiKaDtl,nOrderItem.FYunTianOrderId,nOrderItem.FGoodsID]);
-  with fdm.QueryTemp(nStr) do
-  begin
-    if RecordCount = 1 then
+    if not nIsSale then
     begin
-      EditCus.Text    := Fields[0].AsString;
-      EditPrice.Text  := Fields[1].AsString;
+      nMsg := '此订单不是销售订单！';
+      ShowMsg(nMsg,sHint);
+      Writelog(nMsg);
+      Exit;
     end;
-  end;
 
-  nStr := 'Select C_Name From %s Where C_ID=''%s'' ';
-  nStr := Format(nStr, [sTable_Customer, EditCus.Text]);
-  with fdm.QueryTemp(nStr) do
-  begin
-    if RecordCount>0 then
+    //填充界面信息
+    //基本信息
+    EditCus.Text    := '';
+    EditCName.Text  := '';
+
+    nStr := 'select Z_Customer,D_Price from %s a join %s b on a.Z_ID = b.D_ZID ' +
+            'where Z_ID=''%s'' and D_StockNo=''%s'' ';
+
+    nStr := Format(nStr,[sTable_ZhiKa,sTable_ZhiKaDtl,nOrderItem.FYunTianOrderId,nOrderItem.FGoodsID]);
+    with fdm.QueryTemp(nStr) do
     begin
-      EditCName.Text  := Fields[0].AsString;
+      if RecordCount = 1 then
+      begin
+        EditPrice.Text  := Fields[1].AsString;
+      end;
     end;
-  end;
 
-  //提单信息
-  EditType.ItemIndex := 0;
-  EditStock.Text  := nOrderItem.FGoodsID;
-  EditSName.Text  := nOrderItem.FGoodsname; //copy(nOrderItem.FGoodsname,1,Length(nOrderItem.FGoodsname)-4);
-  EditValue.Text := nOrderItem.FData;
-  EditTruck.Text := nOrderItem.Ftracknumber;
+    //提单信息
+    EditType.ItemIndex := 0;
+    EditStock.Text  := nOrderItem.FGoodsID;
+    EditSName.Text  := nOrderItem.FGoodsname;
+    EditValue.Text  := nOrderItem.FData;
+    EditTruck.Text  := nOrderItem.Ftracknumber;
+    EditCus.Text    := nOrderItem.FCusID;
+    EditCName.Text  := nOrderItem.FCusName;
+  {$ELSE}
+    //基本信息
+    EditCus.Text    := '';
+    EditCName.Text  := '';
+
+    nStr := 'select Z_Customer,D_Price from %s a join %s b on a.Z_ID = b.D_ZID ' +
+            'where Z_ID=''%s'' and D_StockNo=''%s'' ';
+
+    nStr := Format(nStr,[sTable_ZhiKa,sTable_ZhiKaDtl,nOrderItem.FYunTianOrderId,nOrderItem.FGoodsID]);
+    with fdm.QueryTemp(nStr) do
+    begin
+      if RecordCount = 1 then
+      begin
+        EditCus.Text    := Fields[0].AsString;
+        EditPrice.Text  := Fields[1].AsString;
+      end;
+    end;
+
+    nStr := 'Select C_Name From %s Where C_ID=''%s'' ';
+    nStr := Format(nStr, [sTable_Customer, EditCus.Text]);
+    with fdm.QueryTemp(nStr) do
+    begin
+      if RecordCount>0 then
+      begin
+        EditCName.Text  := Fields[0].AsString;
+      end;
+    end;
+
+    //提单信息
+    EditType.ItemIndex := 0;
+    EditStock.Text  := nOrderItem.FGoodsID;
+    EditSName.Text  := nOrderItem.FGoodsname; //copy(nOrderItem.FGoodsname,1,Length(nOrderItem.FGoodsname)-4);
+    EditValue.Text := nOrderItem.FData;
+    EditTruck.Text := nOrderItem.Ftracknumber;
+  {$ENDIF}
 
   BtnOK.Enabled := not nRepeat;
 end;
