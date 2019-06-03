@@ -92,6 +92,8 @@
   //出厂打印化验单
   {$DEFINE NoCheckOnPayment}
   //退款时不校验资金余额
+ {$DEFINE UseWXServiceEx}
+  //使用二期微信中间件
 {$ENDIF}
 
 
