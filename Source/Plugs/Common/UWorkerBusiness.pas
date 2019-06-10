@@ -1445,14 +1445,13 @@ function TWorkerBusinessCommander.GetWebOrderByCard(
   var nData: string): Boolean;
 var
   nStr, nTruck, nSQL, nBillData, nBillID: string;
-  nList, nTmp, nListBill: TStrings;
+  nList, nTmp, nListBill,nListB ,nListC : TStrings;
   FBegin: TDateTime;
   nMsg: string;
   nWebOrderValue, MaxQuantity:Double;
   nCardNo:string;
 begin
   Result := True;
-
   nCardNo := FIn.FData;
   nStr := 'Select * From %s Where T_Card=''%s''';
   nStr := Format(nStr, [sTable_Truck, nCardNo]);
@@ -1469,8 +1468,9 @@ begin
     //拿车牌号去网上商城查询订单
 
     nTruck := FieldByName('T_Truck').AsString;
+    //nData := GetBillByTruck(PackerEncodeStr(nTruck));
     nData := GetshoporderbyTruck(PackerEncodeStr(nTruck));
-
+    WriteLog('ndata=:'+ndata);
     if nData = '' then
     begin
       Writelog('未查询到网上商城订单详细信息，请检查订单号是否正确');
@@ -1478,6 +1478,225 @@ begin
       Exit;
     end;
 
+    {$IFDEF UseWXServiceEx}
+    try
+
+      nData      := PackerDecodeStr(nData);
+      nList      := TStringList.Create;
+      nList.Text := nData;
+      nListB     := TStringList.Create;
+      nListC     := TStringList.Create;
+
+      WriteLog('订单详情::'+nList.Text);
+
+      nListB.Text := PackerDecodeStr(nList.Values['details']);
+
+      if nListB.Count > 0 then
+      begin
+        nListC.Text := PackerDecodeStr(nListB[0]);
+        if Trim(nList.Values['type']) = 'NULL' then
+        begin
+          writelog('磁卡 ['+nCardNo+'] 未查到微信商城订单信息.');
+          Result := False;
+          Exit;
+        end;
+        nStr := '取微信商城订单,磁卡 [%s] 车牌 [%s] 订单信息: [%s]';
+        nStr := Format(nStr, [nCardNo,nTruck,nList.Text]);
+        WriteLog(nStr);
+
+        //验证是否重复
+        nStr := 'select * from %s where WOM_WebOrderID=''%s'' ';
+        nStr := Format(nStr,[sTable_WebOrderMatch,nList.Values['orderNo']]);
+        with gDBConnManager.WorkerQuery(FDBConn, nStr) do
+        begin
+          if RecordCount > 0 then
+          begin
+            nMsg := '商城订单[ %s ]已成功办卡,退出操作.';
+            nMsg := Format(nMsg,[nList.Values['orderNo']]);
+            Result := False;
+            Exit;
+          end;
+        end;
+
+        if Pos('销售',Trim(nList.Values['type'])) > 0  then
+        begin
+          //销售单
+          try
+            nTmp := TStringList.Create;
+            nListBill := TStringList.Create;
+
+            nSQL := 'select Z_Customer,D_Price,D_StockName,D_Type,Z_PrintHy,Z_Seal '+
+                    'from %s a join %s b on a.Z_ID = b.D_ZID ' +
+                    'where Z_ID=''%s'' and D_StockNo=''%s'' ';
+            nSQL := Format(nSQL,[sTable_ZhiKa,sTable_ZhiKaDtl,nListC.Values['contractNo'],nListC.Values['materielNo']]);
+            with gDBConnManager.WorkerQuery(FDBConn, nSQL) do
+            begin
+              if RecordCount = 0 then
+              begin
+                nMsg := '纸卡[%s]不存在或者已经被删除.';
+                nMsg := Format(nMsg,[nListC.Values['contractNo']]);
+                //nData := nMsg;
+                Result := False;
+                Exit;
+              end;
+              nTmp.Values['Type'] := FieldByName('D_Type').AsString;
+              nTmp.Values['StockNO'] := nListC.Values['materielNo'];
+              nTmp.Values['StockName'] := FieldByName('D_StockName').AsString;
+              nTmp.Values['Price'] := FieldByName('D_Price').AsString;
+              nTmp.Values['Value'] := nListC.Values['quantity'];
+
+              if FieldByName('Z_PrintHy').AsBoolean then
+                   nTmp.Values['PrintHY'] := sFlag_Yes
+              else nTmp.Values['PrintHY'] := sFlag_No;
+
+              nListBill.Add(PackerEncodeStr(nTmp.Text));
+
+              with nListBill do
+              begin
+                Values['Bills'] := PackerEncodeStr(nListBill.Text);
+                Values['ZhiKa'] := nListC.Values['contractNo'];
+                Values['Truck'] := nList.Values['licensePlate'];
+                Values['Lading'] := sFlag_TiHuo;
+                Values['Memo']  := EmptyStr;
+                Values['IsVIP'] := sFlag_TypeCommon;
+                Values['Seal'] := '';
+                Values['HYDan'] := '';
+                Values['WebOrderID'] := nList.Values['orderNo'];
+
+                if FieldByName('Z_Seal').AsBoolean then
+                     Values['MustSeal'] := '1'
+                else Values['MustSeal'] := '0';
+              end;
+            end;
+            nBillData := PackerEncodeStr(nListBill.Text);
+            FBegin := Now;
+            nBillID := SaveBill(nBillData);
+            if nBillID = '' then
+            begin
+              nMsg := '保存商城订单[ %s ]失败.';
+              nMsg := Format(nMsg,[nList.Values['orderNo']]);
+              Result := False;
+              Exit;
+            end;
+            if not SaveBillCard(nBillID,nCardNo) then
+            begin
+              nMsg := '保存订单[ %s ]的磁卡信息[ %s ]失败.';
+              nMsg := Format(nMsg,[nBillID, nCardNo]);
+              Result := False;
+              Exit;
+            end;
+            WriteLog('TfFormNewCard.SaveBillProxy 生成提货单['+nBillID+']-耗时：'+InttoStr(MilliSecondsBetween(Now, FBegin))+'ms');
+            FBegin := Now;
+            SaveWebOrderMatch(nBillID, nList.Values['orderNo'] ,sFlag_Sale);
+            writelog('TfFormNewCard.SaveBillProxy 保存商城订单号-耗时：'+InttoStr(MilliSecondsBetween(Now, FBegin))+'ms');
+            nTmp.Free;
+            nListBill.Free;
+            nlist.Free;
+          except
+            nlist.Free;
+            nTmp.Free;
+            nListBill.Free;
+            Result :=False;
+          end;
+        end
+        else
+        begin
+          //采购单
+          nTmp := TStringList.Create;
+          nListBill := TStringList.Create;
+      
+          //校验订单有效性
+          nStr := 'select b_proid as provider_code,b_proname as provider_name,b_stockno as con_materiel_Code,b_restvalue as con_remain_quantity from %s where b_id=''%s''';
+          nStr := Format(nStr,[sTable_OrderBase,nListC.Values['contractNo']]);
+          with gDBConnManager.WorkerQuery(FDBConn, nStr) do
+          begin
+            if RecordCount<=0 then
+            begin
+              nMsg := '采购合同编号有误或采购合同已被删除[%s]。';
+              nMsg := Format(nMsg,[nListC.Values['contractNo']]);
+              Result := False;
+              Exit;
+            end;
+
+            if nListC.Values['materielNo']<>FieldByName('con_materiel_Code').AsString then
+            begin
+              nMsg := '商城货单中原材料[ %s ]有误。';
+              nMsg := Format(nMsg,[nListC.Values['materielNo']]);
+              Result := False;
+              Exit;
+            end;
+
+            nwebOrderValue := StrToFloatDef(nListC.Values['quantity'],0);
+            MaxQuantity := FieldByName('con_remain_quantity').AsFloat;
+            if nwebOrderValue - MaxQuantity >0.00001 then
+            begin
+              nMsg := '商城货单中提货数量有误，最多可提货数量为[%f]。';
+              nMsg := Format(nMsg,[MaxQuantity]);
+              Result := False;
+              Exit;
+            end;
+
+            nListBill.Values['ProviderID'] := FieldByName('provider_code').AsString;
+            nListBill.Values['ProviderName'] := FieldByName('provider_name').AsString;
+          end;
+
+
+          try
+            nListBill.Values['SQID'] := nListC.Values['contractNo'];
+            nListBill.Values['Area'] := '';
+            nListBill.Values['Truck'] := nList.Values['licensePlate'];
+            nListBill.Values['Project'] := nListC.Values['contractNo'];
+            nListBill.Values['CardType'] := 'L';
+
+
+            nListBill.Values['StockNO']   := nListC.Values['materielNo'];
+            nListBill.Values['StockName'] := nListC.Values['materielName'];
+            nListBill.Values['Value'] := nListC.Values['quantity'];
+
+            nListBill.Values['WebOrderID'] := nList.Values['orderNo'];
+
+            FBegin := Now;
+            nBillID := SaveOrder(PackerEncodeStr(nListBill.Text));
+
+            if nBillID = '' then
+            begin
+              nMsg := '保存商城采购单[ %s ]失败';
+              nMsg := Format(nMsg,[nList.Values['orderNo']]);
+              Result := False;
+              Exit;
+            end;
+
+            if not SaveOrderCard(nBillID,nCardNo) then
+            begin
+              nMsg := '保存采购单[ %s ]的磁卡信息[ %s ]失败';
+              nMsg := Format(nMsg,[nBillID,nCardNo]);
+              Result := False;
+              Exit;
+            end;
+
+            writelog('TfFormNewPurchaseCard.SaveBillProxy 保存采购单-耗时：'+InttoStr(MilliSecondsBetween(Now, FBegin))+'ms');
+            FBegin := Now;
+            SaveWebOrderMatch(nBillID,nList.Values['orderNo'],sFlag_Provide);
+            writelog('TfFormNewPurchaseCard.SaveBillProxy 保存商城订单号-耗时：'+InttoStr(MilliSecondsBetween(Now, FBegin))+'ms');
+            nList.Free;
+            nTmp.Free;
+            nListBill.Free;
+          except
+            nTmp.Free;
+            nListBill.Free;
+            nList.Free;
+            Result := False;
+            exit;
+          end;
+        end;
+      end;
+    finally
+      nListC.Free;
+      nListB.Free;
+    end;
+
+  {$ELSE}
+    //老版微信下单
     nData := PackerDecodeStr(nData);
     nList := TStringList.Create;
     nList.Text := nData;
@@ -1680,6 +1899,7 @@ begin
         exit;
       end;
     end;
+    {$ENDIF}
   end;
 end;
 
@@ -1718,13 +1938,9 @@ end;  }
 function TWorkerBusinessCommander.GetshoporderbyTruck(const nData: string): string;
 var nOut: TWorkerBusinessCommand;
 begin
-//  if CallBusinessWechat(cBC_WX_get_shoporderbyTruck, nData, '', '', @nOut) then
-//       Result := nOut.FData
-//  else Result := '';
-
-    if CallRemoteWorker(sCLI_BusinessWebchat, nData, '', @nOut, cBC_WX_get_shoporderbyTruck) then
-       Result := nOut.FData
-    else Result := '';
+  if CallRemoteWorker(sCLI_BusinessWebchat, nData, '', @nOut, cBC_WX_get_shoporderbyTruck) then
+     Result := nOut.FData
+  else Result := '';
 end;
 
 function TWorkerBusinessCommander.SaveWebOrderMatch(const nBillID,

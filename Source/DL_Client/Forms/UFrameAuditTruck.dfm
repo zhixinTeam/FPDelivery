@@ -27,14 +27,15 @@ inherited fFrameAuditTruck: TfFrameAuditTruck
       OnDblClick = cxView1DblClick
     end
     inherited cxLevel1: TcxGridLevel
+      Tag = 4
       Caption = #24050#30003#35831
     end
     object cxLevel2: TcxGridLevel
-      Tag = 1
+      Tag = 6
       Caption = #24050#36890#36807
     end
     object cxLevel3: TcxGridLevel
-      Tag = 2
+      Tag = 7
       Caption = #24050#39539#22238
     end
   end

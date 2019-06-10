@@ -590,7 +590,7 @@ begin
     else
       nTmp.Values['Type'] := 'D';
     nTmp.Values['StockNO'] := EditStock.Text;
-    nTmp.Values['StockName'] := copy(EditSName.Text,1,Length(EditSName.Text)-4);//EditSName.Text;
+    nTmp.Values['StockName'] := EditSName.Text;//copy(EditSName.Text,1,Length(EditSName.Text)-2);//EditSName.Text;
     nTmp.Values['Price'] := EditPrice.Text;
     nTmp.Values['Value'] := EditValue.Text;
 

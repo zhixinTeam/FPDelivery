@@ -84,12 +84,12 @@ begin
     nP.FCommand := cCmd_ModalResult;
     FTruckID := nP.FParamA;
     case nP.FParamB of
-      1:
+      6:
       begin
         EditResult.ItemIndex := 1;
         EditResult.Enabled := False;
       end;
-      2:
+      7:
       begin
         EditResult.ItemIndex := 0;
         EditResult.Enabled := False;
@@ -203,8 +203,8 @@ begin
     with nList do
     begin
       Clear;
-      Values['ID']   := FTruckID;
-      Values['Status']  := IntToStr(EditResult.ItemIndex+1);
+      Values['Truck']   := EditTruck.Text;
+      Values['Status']  := IntToStr(EditResult.ItemIndex+6);
       Values['Memo']    := EditMemo.Text;
       Values['Man']  := gSysParam.FUserID;
       Values['Type']     := '-1';

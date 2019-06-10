@@ -9,18 +9,17 @@ inherited fFormStockNo: TfFormStockNo
   PixelsPerInch = 96
   TextHeight = 12
   inherited dxLayout1: TdxLayoutControl
-    Width = 458
-    Height = 266
-    AutoContentSizes = [acsWidth, acsHeight]
+    Width = 450
+    Height = 262
     inherited BtnOK: TButton
-      Left = 312
-      Top = 233
+      Left = 304
+      Top = 229
       Caption = #30830#23450
       TabOrder = 3
     end
     inherited BtnExit: TButton
-      Left = 382
-      Top = 233
+      Left = 374
+      Top = 229
       TabOrder = 4
     end
     object EditNo: TcxButtonEdit [2]
@@ -33,6 +32,9 @@ inherited fFormStockNo: TfFormStockNo
           Kind = bkEllipsis
         end>
       Properties.OnButtonClick = EditNoPropertiesButtonClick
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
+      Style.ButtonStyle = btsHotFlat
       TabOrder = 0
       OnKeyPress = OnCtrlKeyPress
       Width = 121
@@ -85,25 +87,22 @@ inherited fFormStockNo: TfFormStockNo
     end
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
-        AutoAligns = [aaHorizontal]
-        AlignVert = avClient
-        Caption = #26597#35810#26465#20214
+        CaptionOptions.Text = #26597#35810#26465#20214
         object dxLayout1Item5: TdxLayoutItem
-          Caption = #27700#27877#32534#21495':'
+          CaptionOptions.Text = #27700#27877#32534#21495':'
           Control = EditNo
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item7: TdxLayoutItem
-          Caption = 'cxLabel1'
-          ShowCaption = False
+          CaptionOptions.Text = 'cxLabel1'
+          CaptionOptions.Visible = False
           Control = cxLabel1
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item6: TdxLayoutItem
-          AutoAligns = [aaHorizontal]
           AlignVert = avClient
-          Caption = #26597#35810#32467#26524':'
-          ShowCaption = False
+          CaptionOptions.Text = #26597#35810#32467#26524':'
+          CaptionOptions.Visible = False
           Control = ListStock
           ControlOptions.ShowBorder = False
         end

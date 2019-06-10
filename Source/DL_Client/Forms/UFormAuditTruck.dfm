@@ -82,7 +82,6 @@ inherited fFormAuditTruck: TfFormAuditTruck
       Left = 81
       Top = 36
       Align = alTop
-      AutoSize = True
       Properties.ReadOnly = True
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle

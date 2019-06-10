@@ -105,7 +105,7 @@ begin
 
   gSysEntityManager.BuildViewColumn(cxView1, 'MAIN_D11');
   InitTableView(Name, cxView1, nIni);
-  FStatus := 0;
+  FStatus := 4;
 end;
 
 procedure TfFrameAuditTruck.OnSaveGridConfig(const nIni: TIniFile);

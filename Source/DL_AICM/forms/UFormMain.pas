@@ -663,7 +663,7 @@ begin
     Exit;
   end;
 
-  {try
+  try
     FTimeCounter := 10;
     TimerReadCard.Enabled := True;
 
@@ -693,7 +693,7 @@ begin
       ShowMsg('≤È—Ø ß∞‹', sHint);
       WriteLog(E.Message);
     end;
-  end;}
+  end;
 end;
 
 procedure TfFormMain.QueryWXService(const nCard: string);

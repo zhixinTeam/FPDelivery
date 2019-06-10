@@ -15,7 +15,7 @@ uses
   cxSplitter, cxGridLevel, cxClasses, cxControls, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid,
   ComCtrls, ToolWin, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore,
-  dxSkinsDefaultPainters, Menus, dxLayoutcxEditAdapters;
+  dxSkinsDefaultPainters, Menus, dxLayoutcxEditAdapters, dxSkinscxPCPainter;
 
 type
   TfFrameProvider = class(TfFrameNormal)
@@ -160,7 +160,7 @@ var
   nWechartAccount:string;
   nParam: TFormCommandParam;
   nPID,nPName:string;
-  nBindcustomerid:string;
+  nBindcustomerid, nPhone, nMsg:string;
   nStr:string;
 begin
   if cxView1.DataController.GetSelectedCount < 1 then
@@ -169,6 +169,56 @@ begin
     Exit;
   end;
   nWechartAccount := SQLQuery.FieldByName('P_WechartAccount').AsString;
+  if nWechartAccount<>'' then
+  begin
+    ShowMsg('商城账户['+nWechartAccount+']已存在', sHint);
+    Exit;
+  end;
+  nParam.FCommand := cCmd_AddData;
+  CreateBaseFormItem(cFI_FormGetWXAccount, PopedomItem, @nParam);
+
+  if (nParam.FCommand <> cCmd_ModalResult) or (nParam.FParamA <> mrOK) then Exit;
+
+  nBindcustomerid  := nParam.FParamB;
+  nWechartAccount  := nParam.FParamC;
+  nPhone           := nParam.FParamD;
+  nPID      := SQLQuery.FieldByName('P_ID').AsString;
+  nPName    := SQLQuery.FieldByName('P_Name').AsString;
+
+  with FListA do
+  begin
+    Clear;
+    Values['Action']   := 'add';
+    Values['BindID']   := nBindcustomerid;
+    Values['Account']  := nWechartAccount;
+    Values['CusID']    := nPID;
+    Values['CusName']  := nPName;
+    Values['Memo']     := sFlag_Provide;
+    Values['Phone']    := nPhone;
+    Values['btype']    := '2';
+  end;
+  nMsg := edit_shopclients(PackerEncodeStr(FListA.Text));
+  if nMsg <> sFlag_Yes then
+  begin
+     ShowMsg('关联商城账户失败：'+nMsg,sHint);
+     Exit;
+  end;
+
+  //call remote
+  nStr := 'update %s set P_WechartAccount=''%s'',P_Phone=''%s'',P_custSerialNo=''%s'' where P_ID=''%s''';
+  nStr := Format(nStr,[sTable_Provider,nWechartAccount, nPhone, nBindcustomerid, nPID]);
+
+  FDM.ADOConn.BeginTrans;
+  try
+    FDM.ExecuteSQL(nStr);
+    FDM.ADOConn.CommitTrans;
+    ShowMsg('供应商 [ '+nPName+' ] 关联商城账户成功！',sHint);
+    InitFormData(FWhere);
+  except
+    FDM.ADOConn.RollbackTrans;
+    ShowMsg('关联商城账户失败', '未知错误');
+  end;
+  {nWechartAccount := SQLQuery.FieldByName('P_WechartAccount').AsString;
   if nWechartAccount<>'' then
   begin
     ShowMsg('商城账户['+nWechartAccount+']已存在', sHint);
@@ -198,17 +248,8 @@ begin
   if edit_shopclients(PackerEncodeStr(FListA.Text)) <> sFlag_Yes then Exit;
   //call remote
   nStr := 'update %s set P_WechartAccount=''%s'' where P_ID=''%s''';
-  nStr := Format(nStr,[sTable_Provider,nWechartAccount,nPID]);
-  FDM.ADOConn.BeginTrans;
-  try
-    FDM.ExecuteSQL(nStr);
-    FDM.ADOConn.CommitTrans;
-    ShowMsg('供应商 [ '+nPName+' ] 关联商城账户成功！',sHint);
-    InitFormData(FWhere);
-  except
-    FDM.ADOConn.RollbackTrans;
-    ShowMsg('关联商城账户失败', '未知错误');
-  end;
+  nStr := Format(nStr,[sTable_Provider,nWechartAccount,nPID]);}
+
 end;
 
 procedure TfFrameProvider.OnCreateFrame;
@@ -228,7 +269,7 @@ var
   nWechartAccount:string;
   nPID:string;
   nStr:string;
-  nPName:string;
+  nPName, nPhone, nBindID, nMsg:string;
 begin
   if cxView1.DataController.GetSelectedCount < 1 then
   begin
@@ -242,7 +283,46 @@ begin
     Exit;
   end;
 
-  nPID := SQLQuery.FieldByName('P_ID').AsString;
+  nPID     := SQLQuery.FieldByName('P_ID').AsString;
+  nPName   := SQLQuery.FieldByName('P_Name').AsString;
+  nPhone   := SQLQuery.FieldByName('P_Phone').AsString;
+  nBindID  := SQLQuery.FieldByName('P_custSerialNo').AsString;
+
+  with FListA do
+  begin
+    Clear;
+    Values['Action']   := 'del';
+    Values['Account']  := nWechartAccount;
+    Values['CusID']    := nPID;
+    Values['CusName']  := nPName;
+    Values['Memo']     := sFlag_Provide;
+    Values['Phone']    := nPhone;
+    Values['BindID']   := nBindID;
+    Values['btype']    := '2';
+  end;
+  nMsg := edit_shopclients(PackerEncodeStr(FListA.Text));
+  if nMsg <> sFlag_Yes then
+  begin
+     ShowMsg('取消关联商城账户失败：'+nMsg,sHint);
+     Exit;
+  end;
+  //call remote
+
+  nStr := 'update %s set P_WechartAccount='''',P_Phone='''',P_custSerialNo='''' where P_ID=''%s''';
+  nStr := Format(nStr,[sTable_Provider,nPID]);
+
+  FDM.ADOConn.BeginTrans;
+  try
+    FDM.ExecuteSQL(nStr);
+    FDM.ADOConn.CommitTrans;
+    ShowMsg('供应商 [ '+nPName+' ] 取消商城账户关联 成功！',sHint);
+    InitFormData(FWhere);
+  except
+    FDM.ADOConn.RollbackTrans;
+    ShowMsg('取消商城账户关联 失败', '未知错误');
+  end;
+
+  {nPID := SQLQuery.FieldByName('P_ID').AsString;
   nPName := SQLQuery.FieldByName('P_Name').AsString;
 
   with FListA do
@@ -259,17 +339,7 @@ begin
   //call remote
 
   nStr := 'update %s set P_WechartAccount='''' where P_ID=''%s''';
-  nStr := Format(nStr,[sTable_Provider,nPID]);
-  FDM.ADOConn.BeginTrans;
-  try
-    FDM.ExecuteSQL(nStr);
-    FDM.ADOConn.CommitTrans;
-    ShowMsg('供应商 [ '+nPName+' ] 取消商城账户关联 成功！',sHint);
-    InitFormData(FWhere);
-  except
-    FDM.ADOConn.RollbackTrans;
-    ShowMsg('取消商城账户关联 失败', '未知错误');
-  end;
+  nStr := Format(nStr,[sTable_Provider,nPID]);}
 end;
 
 initialization

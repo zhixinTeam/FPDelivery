@@ -80,7 +80,7 @@ var nStr: string;
     nP: PFormCommandParam;
 begin
   Result := nil;
-  if GetSysValidDate < 1 then Exit;
+  //if GetSysValidDate < 1 then Exit;
 
   if not Assigned(nParam) then
   begin

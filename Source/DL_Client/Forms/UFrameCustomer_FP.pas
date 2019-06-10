@@ -47,9 +47,11 @@ type
     procedure m_bindWechartAccountClick(Sender: TObject);
     procedure N6Click(Sender: TObject);
   private
+    FListA: TStrings;
     { Private declarations }
   protected
     procedure OnCreateFrame; override;
+    procedure OnDestroyFrame; override;
     function InitFormDataSQL(const nWhere: string): string; override;
     procedure AfterInitFormData; override;
     function AddMallUser(const nBindcustomerid,nCus_num,nCus_name:string):Boolean;
@@ -178,7 +180,7 @@ procedure TfFrameCustomer_FP.OnCreateFrame;
 begin
   inherited;
   GetFieldAndTitle;
-  
+  FListA := TStringList.Create;
 end;
 
 procedure TfFrameCustomer_FP.BtnAddClick(Sender: TObject);
@@ -361,20 +363,64 @@ end;
 
 procedure TfFrameCustomer_FP.m_bindWechartAccountClick(Sender: TObject);
 var
-  nParam: TFormCommandParam;
+  nP: TFormCommandParam;
   nCus_ID,nCusName:string;
   nBindcustomerid:string;
   nWechartAccount:string;
-  nStr:string;
-  nID,nName,nBindID,nAccount:string;
-  nFListA: TStrings;
+  nStr, nMsg:string;
+  nID,nName,nBindID,nAccount,nPhone:string;
+  nFListA : TStrings;
 begin
   if cxView1.DataController.GetSelectedCount < 1 then
   begin
     ShowMsg('请选择要开通的记录', sHint);
     Exit;
   end;
-  nWechartAccount := SQLQuery.FieldByName('C_WechartAccount').AsString;
+
+  nAccount := Trim(SQLQuery.FieldByName('C_WeiXin').AsString);
+  if nAccount <> '' then
+  begin
+    ShowMsg('商城账户[' + nAccount + ']已存在',sHint);
+    Exit;
+  end;
+
+  nP.FCommand := cCmd_AddData;
+  CreateBaseFormItem(cFI_FormGetWXAccount, PopedomItem, @nP);
+  if (nP.FCommand <> cCmd_ModalResult) or (nP.FParamA <> mrOK) then Exit;
+
+  nBindID  := nP.FParamB;
+  nAccount := nP.FParamC;
+  nPhone   := nP.FParamD;
+  nID      := SQLQuery.FieldByName('C_ID').AsString;
+  nName    := SQLQuery.FieldByName('C_Name').AsString;
+
+  with FListA do
+  begin
+    Clear;
+    Values['Action']   := 'add';
+    Values['BindID']   := nBindID;
+    Values['Account']  := nAccount;
+    Values['CusID']    := nID;
+    Values['CusName']  := nName;
+    Values['Memo']     := sFlag_Sale;
+    Values['Phone']    := nPhone;
+    Values['btype']    := '1';
+  end;
+  nMsg := edit_shopclients(PackerEncodeStr(FListA.Text));
+  if nMsg <> sFlag_Yes then
+  begin
+     ShowMsg('关联商城账户失败：'+nMsg,sHint);
+     Exit;
+  end;
+  //call remote
+
+  nStr := 'update %s set C_WeiXin=''%s'',C_Phone=''%s'',C_custSerilaNo=''%s'' where C_ID=''%s''';
+  nStr := Format(nStr,[sTable_Customer, nAccount, nPhone, nBindID, nID]);
+  FDM.ExecuteSQL(nStr);
+
+  ShowMsg('关联商城账户成功',sHint);
+  InitFormData(FWhere);
+  {nWechartAccount := SQLQuery.FieldByName('C_WechartAccount').AsString;
   if nWechartAccount<>'' then
   begin
     ShowMsg('商城账户['+nWechartAccount+']已存在',sHint);
@@ -413,36 +459,15 @@ begin
 
   ShowMsg('关联商城账户成功',sHint);
   InitFormData(FWhere);
-  nFListA.Free;
-  {if (nParam.FCommand = cCmd_ModalResult) and (nParam.FParamA = mrOK) then
-  begin
-    nBindcustomerid := nParam.FParamB;//PackerDecodeStr(nParam.FParamB);
-    nWechartAccount := nParam.FParamC;//PackerDecodeStr(nParam.FParamC);
-    nCus_ID := SQLQuery.FieldByName('C_ID').AsString;
-    nCusName := SQLQuery.FieldByName('C_Name').AsString;
-    if not AddMallUser(nBindcustomerid,nCus_ID,nCusName) then Exit;
-
-    nStr := 'update %s set C_WechartAccount=''%s'' where C_ID=''%s''';
-    nStr := Format(nStr,[sTable_Customer,nWechartAccount,nCus_ID]);
-    FDM.ADOConn.BeginTrans;
-    try
-      FDM.ExecuteSQL(nStr);
-      FDM.ADOConn.CommitTrans;
-      ShowMsg('客户 [ '+nCusName+' ] 关联商城账户成功！',sHint);
-      InitFormData(FWhere);
-    except
-      FDM.ADOConn.RollbackTrans;
-      ShowMsg('关联商城账户失败', '未知错误');
-    end;
-  end; }
+  nFListA.Free;}
 end;
 
 procedure TfFrameCustomer_FP.N6Click(Sender: TObject);
 var
   nWechartAccount:string;
   nStr:string;
-  nCus_ID,nCusName:string;
-  nID,nName,nAccount:string;
+  nCus_ID, nCusName:string;
+  nID,nName, nAccount, nPhone, nBindID, nMsg:string;
   nFListA: TStrings;
 begin
   if cxView1.DataController.GetSelectedCount < 1 then
@@ -461,7 +486,33 @@ begin
   nID := SQLQuery.FieldByName('C_ID').AsString;
   nName := SQLQuery.FieldByName('C_Name').AsString;
 
-  nFListA := TStringList.Create;
+  nPhone   := SQLQuery.FieldByName('C_Phone').AsString;
+  nBindID  := SQLQuery.FieldByName('C_custSerilaNo').AsString;
+
+  with FListA do
+  begin
+    Clear;
+    Values['Action']   := 'del';
+    Values['Account']  := nAccount;
+    Values['CusID']    := nID;
+    Values['CusName']  := nName;
+    Values['Memo']     := sFlag_Sale;
+    Values['Phone']    := nPhone;
+    Values['BindID']   := nBindID;
+    Values['btype']    := '1';
+  end;
+  nMsg := edit_shopclients(PackerEncodeStr(FListA.Text));
+  if nMsg <> sFlag_Yes then
+  begin
+     ShowMsg('取消关联商城账户失败：'+nMsg,sHint);
+     Exit;
+  end;
+  //call remote
+
+  nStr := 'update %s set C_WeiXin=Null,C_Phone=Null, C_custSerilaNo= Null where C_ID=''%s''';
+  nStr := Format(nStr,[sTable_Customer, nID]);
+  FDM.ExecuteSQL(nStr);
+  {nFListA := TStringList.Create;
   with nFListA do
   begin
     Clear;
@@ -481,24 +532,7 @@ begin
   FDM.ExecuteSQL(nStr);
 
   InitFormData(FWhere);
-  ShowMsg('取消商城关联成功！', sHint);
-
-  {nCus_ID := SQLQuery.FieldByName('C_ID').AsString;
-  nCusName := SQLQuery.FieldByName('C_Name').AsString;
-
-  if not DelMallUser(nWechartAccount, nCus_ID) then Exit;
-  nStr := 'update %s set C_WechartAccount='''' where C_ID=''%s''';
-  nStr := Format(nStr,[sTable_Customer,nCus_ID]);
-  FDM.ADOConn.BeginTrans;
-  try
-    FDM.ExecuteSQL(nStr);
-    FDM.ADOConn.CommitTrans;
-    ShowMsg('客户 [ '+nCusName+' ] 取消商城账户关联 成功！',sHint);
-    InitFormData(FWhere);
-  except
-    FDM.ADOConn.RollbackTrans;
-    ShowMsg('取消商城账户关联 失败', '未知错误');
-  end; }
+  ShowMsg('取消商城关联成功！', sHint);}
 end;
 
 function TfFrameCustomer_FP.AddMallUser(const nBindcustomerid, nCus_num,
@@ -570,6 +604,12 @@ begin
     Exit;
   end;
   Result := True;
+end;
+
+procedure TfFrameCustomer_FP.OnDestroyFrame;
+begin
+  FListA.Free;
+  inherited;
 end;
 
 initialization
