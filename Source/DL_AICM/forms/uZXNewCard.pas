@@ -585,10 +585,10 @@ begin
   nTmp := TStringList.Create;
   try
     LoadSysDictItem(sFlag_PrintBill, nStocks);
-    if Pos('É¢',EditSName.Text) > 0 then
-      nTmp.Values['Type'] := 'S'
+    if Pos('´ü',EditSName.Text) > 0 then
+      nTmp.Values['Type'] := 'D'
     else
-      nTmp.Values['Type'] := 'D';
+      nTmp.Values['Type'] := 'S';
     nTmp.Values['StockNO'] := EditStock.Text;
     nTmp.Values['StockName'] := EditSName.Text;//copy(EditSName.Text,1,Length(EditSName.Text)-2);//EditSName.Text;
     nTmp.Values['Price'] := EditPrice.Text;
@@ -605,7 +605,7 @@ begin
     begin
       Values['Bills'] := PackerEncodeStr(nList.Text);
       Values['ZhiKa'] := nOrderItem.FYunTianOrderId;
-      Values['Truck'] := EditTruck.Text;
+      Values['Truck'] := Trim(EditTruck.Text);
       Values['Lading'] := sFlag_TiHuo;
       Values['Memo']  := EmptyStr;
       Values['IsVIP'] := Copy(GetCtrlData(EditType),1,1);

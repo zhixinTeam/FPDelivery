@@ -300,7 +300,7 @@ var nIdx: Integer;
     nOut: TWorkerBusinessCommand;
 begin
   Result := False;
-  nTruck := FListA.Values['Truck'];
+  nTruck := Trim(FListA.Values['Truck']);
   if not VerifyTruckNO(nTruck, nData) then Exit;
 
   //----------------------------------------------------------------------------

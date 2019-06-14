@@ -475,14 +475,14 @@ begin
     ShowMsg('请选择要取消的记录', sHint);
     Exit;
   end;
-  nWechartAccount := SQLQuery.FieldByName('C_WechartAccount').AsString;
+  nWechartAccount := SQLQuery.FieldByName('C_WeiXin').AsString;
   if nWechartAccount='' then
   begin
     ShowMsg('商城账户不已存在',sHint);
     Exit;
   end;
 
-  nAccount := SQLQuery.FieldByName('C_WechartAccount').AsString;
+  nAccount := SQLQuery.FieldByName('C_WeiXin').AsString;
   nID := SQLQuery.FieldByName('C_ID').AsString;
   nName := SQLQuery.FieldByName('C_Name').AsString;
 
@@ -512,6 +512,8 @@ begin
   nStr := 'update %s set C_WeiXin=Null,C_Phone=Null, C_custSerilaNo= Null where C_ID=''%s''';
   nStr := Format(nStr,[sTable_Customer, nID]);
   FDM.ExecuteSQL(nStr);
+
+  ShowMsg('取消商城关联成功！', sHint);
   {nFListA := TStringList.Create;
   with nFListA do
   begin
