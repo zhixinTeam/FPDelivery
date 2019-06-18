@@ -745,7 +745,8 @@ begin
 
   nRet := GetCardLength(nCard);
   //为true是短期卡，false 是长期卡
-  //BlueOpenDoor(nReader);
+  if nReader <> '' then
+    BlueOpenDoor(nReader);
   //抬杆
 
   Result := nRet;

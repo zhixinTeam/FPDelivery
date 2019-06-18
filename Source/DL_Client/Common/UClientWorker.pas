@@ -8,7 +8,7 @@ interface
 
 uses
   Windows, SysUtils, Classes, UMgrChannel, UChannelChooser, UBusinessWorker,
-  UBusinessConst, UBusinessPacker, ULibFun;
+  UBusinessConst, UBusinessPacker, ULibFun, UDataModule;
 
 type
   TClient2MITWorker = class(TBusinessWorkerBase)
@@ -196,8 +196,19 @@ end;
 
 //Desc: 强制指定服务地址
 function TClient2MITWorker.GetFixedServiceURL: string;
+var
+  nStr:string;
 begin
   Result := '';
+  nStr := 'select d_value from %s where d_name=''%s''';
+  nStr := Format(nStr,[sTable_SysDict,sFlag_MITSrvURL]);
+  with FDM.QuerySQL(nStr) do
+  begin
+    if RecordCount>0 then
+    begin
+      Result := FieldByName('d_value').AsString;
+    end;
+  end;
 end;
 
 //Date: 2012-3-9

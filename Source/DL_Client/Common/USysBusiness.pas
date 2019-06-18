@@ -522,7 +522,7 @@ begin
     if gSysParam.FAutoPound and (not gSysParam.FIsManual) then
       nIn.FBase.FParam := sParam_NoHintOnError;
     //close hint param
-    
+
     nWorker := gBusinessWorkerManager.LockWorker(sCLI_BusinessWebchat);
     //get worker
     Result := nWorker.WorkActive(@nIn, nOut);
@@ -2952,7 +2952,7 @@ end;
 function GetBillByTruck(const nData: string):string;
 var nOut: TWorkerBusinessCommand;
 begin
-  if CallBusinessWechat(cBC_WX_get_shoporderbyTruckClt, nData, '', '', @nOut,False) then
+  if CallBusinessWechat(cBC_WX_get_shoporderbyTruckClt, nData, '', '', @nOut, False) then
     Result := nOut.FData
   else Result := '';
 end;

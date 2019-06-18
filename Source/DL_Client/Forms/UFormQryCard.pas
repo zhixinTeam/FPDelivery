@@ -258,31 +258,32 @@ begin
       //如果是长期卡，并且没有订单，去微信商城查订单
       if not nHasBill then
       begin
-        nData := PackerEncodeStr(editTruck.Text);
-        nStr := GetBillByTruck(nData);
-        if nStr = '' then
+        nData := GetBillByTruck(PackerEncodeStr(editTruck.Text));
+
+        if nData = '' then
         begin
           editBill.Text := '无商城订单';
           exit;
         end;
-        nStr := PackerDecodeStr(nStr);
-        nList := TStringList.Create;
+        nStr := PackerDecodeStr(nData);
+        nList := TStringList.Create;  FListA:= TStringList.Create;
         nList.Text := nStr;
 
-        if Trim(nList.Values['order_type']) = 'NULL' then
+        if Trim(nList.Values['type']) = 'NULL' then
         begin
           editBill.Text := '无商城订单';
           Exit;
         end;
 
-        editStockName.Text :=  nList.Values['goodsname'];
-        editNum.Text := nList.Values['data'];
+        FListA.Text := PackerDecodeStr(PackerDecodeStr(nList.Values['details']));
+        editStockName.Text :=  FListA.Values['materielName'];
+        editNum.Text := StringReplace(FListA.Values['quantity'], '.', '', [rfReplaceAll]);
 
-        if Trim(nList.Values['order_type']) = 'S' then
+        if Trim(nList.Values['type']) = '销售' then
         begin
           editBill.Text := '微信销售单';
           nStr := 'select C_Name from %s a,%s b where a.Z_Customer=b.C_ID and a.Z_ID=''%s''';
-          nStr := Format(nStr,[sTable_ZhiKa,sTable_Customer,nList.Values['fac_order_no']]);
+          nStr := Format(nStr,[sTable_ZhiKa,sTable_Customer,FListA.Values['contractNo']]);
           with FDM.QuerySQL(nStr) do
           begin
             editcusname.Text := FieldByName('C_Name').AsString;
@@ -294,7 +295,7 @@ begin
           nStr := 'select b_proid as provider_code,b_proname as provider_name,'+
                   'b_stockno as con_materiel_Code,b_restvalue as '+
                   'con_remain_quantity from %s where b_id=''%s''';
-          nStr := Format(nStr,[sTable_OrderBase,nList.Values['fac_order_no']]);
+          nStr := Format(nStr,[sTable_OrderBase,nList.Values['contractNo']]);
           with FDM.QuerySQL(nStr) do
           begin
             editcusname.Text := FieldByName('provider_name').AsString;
