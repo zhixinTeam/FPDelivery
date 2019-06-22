@@ -191,6 +191,8 @@ function get_shopPurchaseByno(const nXmlStr:string):string;
 function GetBillByTruck(const nData: string):string;
 //根据车牌号获取订单信息
 
+function IsCardValid(const nCard: string): Boolean;
+
 function CallBusinessCommand(const nCmd: Integer; const nData,nExt: string;
   const nOut: PWorkerBusinessCommand; const nWarn: Boolean = True): Boolean;
 
@@ -1623,6 +1625,27 @@ begin
   if CallBusinessWechat(cBC_WX_get_shoporderbyTruckClt, nData, '', '', @nOut,False) then
     Result := nOut.FData
     else Result := '';
+end;
+
+function IsCardValid(const nCard: string): Boolean;
+var
+  nSql:string;
+begin
+  Result := False;
+
+  nSql := 'select C_Card2,C_Card3 from %s where C_Card = ''%s'' ';
+  nSql := Format(nSql,[sTable_Card,nCard]);
+
+  with FDM.QueryTemp(nSql) do
+  begin
+    if recordcount>0 then
+    begin
+      if (Trim(Fields[0].AsString) <> '') or (Trim(Fields[1].AsString) <> '')then
+      begin
+        Result := True;
+      end;
+    end;
+  end;
 end;
 
 end.

@@ -92,8 +92,8 @@ var
 implementation
 uses
   ULibFun,UBusinessPacker,USysLoger,UBusinessConst,UFormMain,USysBusiness,USysDB,
-  UAdjustForm,UFormBase,UDataReport,UDataModule,NativeXml,UMgrK720Reader,UFormWait,
-  DateUtils;
+  UAdjustForm,UFormBase,UDataReport,UDataModule,NativeXml,UFormWait,
+  DateUtils, UMgrTTCEDispenser;
 {$R *.dfm}
 
 { TfFormNewPurchaseCard }
@@ -524,27 +524,31 @@ begin
   nNewCardNo := '';
   FBegin := Now;
 
-  //连续三次读卡均失败，则回收卡片，重新发卡
-  for i := 0 to 3 do
+  for nIdx:=0 to 3 do
   begin
-    for nIdx:=0 to 3 do
-    if gMgrK720Reader.ReadCard(nNewCardNo) then Break
-    else Sleep(500);
-    //连续三次读卡,成功则退出。
-    if nNewCardNo<>'' then Break;
-    gMgrK720Reader.RecycleCard;
+    nNewCardNo := gDispenserManager.GetCardNo(gSysParam.FTTCEK720ID, nHint, False);
+    if nNewCardNo <> '' then
+      Break;
+    Sleep(500);
   end;
+  //连续三次读卡,成功则退出。
 
   if nNewCardNo = '' then
   begin
     ShowDlg('卡箱异常,请查看是否有卡.', sWarn, Self.Handle);
     Exit;
   end;
-
-  nNewCardNo := gMgrK720Reader.ParseCardNO(nNewCardNo);
-  WriteLog(nNewCardNo);
-  //解析卡片
+  WriteLog('读取到卡片: ' + nNewCardNo);
   writelog('TfFormNewPurchaseCard.SaveBillProxy 发卡机读卡-耗时：'+InttoStr(MilliSecondsBetween(Now, FBegin))+'ms');
+
+  if not IsCardValid(nNewCardNo) then
+  begin
+    gDispenserManager.RecoveryCard(gSysParam.FTTCEK720ID, nHint);
+    nHint := '卡号' + nNewCardNo + '非法,回收中,请稍后重新取卡';
+    WriteLog(nHint);
+    ShowMsg(nHint, sWarn);
+    Exit;
+  end;
 
   nList := TStringList.Create;
   try
@@ -582,37 +586,37 @@ begin
 
   ShowMsg('采购单保存成功', sHint);
 
-  FBegin := Now;
-  nRet := SaveOrderCard(nOrder,nNewCardNo);
-  if nRet then
-  begin
-    nRet := False;
-    for nIdx := 0 to 3 do
-    begin
-      nRet := gMgrK720Reader.SendReaderCmd('FC0');
-      if nRet then Break;
+  //发卡
+//  if not gDispenserManager.SendCardOut(gSysParam.FTTCEK720ID, nHint) then
+//  begin
+//    nHint := '卡号[ %s ]发卡失败,请到开票窗口重新关联.';
+//    nHint := Format(nHint, [nNewCardNo]);
+//
+//    WriteLog(nHint);
+//    ShowMsg(nHint,sWarn);
+//  end
+//  else begin
+//    ShowMsg('发卡成功,卡号['+nNewCardNo+'],请收好您的卡片',sHint);
+//    SaveOrderCard(nOrder,nNewCardNo);
+//  end;
 
-      Sleep(500);
-    end;
-    //发卡
-  end;
-
-  if nRet then
+  //发卡2019-05-20
+  if not SaveOrderCard(nOrder,nNewCardNo) then
   begin
-    nHint := '商城货单号['+editWebOrderNo.Text+']发卡成功,卡号['+nNewCardNo+'],请收好您的卡片';
+    nHint := '卡号[ %s ]关联订单失败,请到开票窗口重新关联磁卡.';
+    nHint := Format(nHint, [nNewCardNo]);
+
     WriteLog(nHint);
     ShowMsg(nHint,sWarn);
   end
   else begin
-    gMgrK720Reader.RecycleCard;
-
-    nHint := '商城货单号[%s]卡号 [%s] 关联采购订单 [%s] 失败，请到开票窗口重新关联。';
-    nHint := Format(nHint,[editWebOrderNo.Text,nNewCardNo,nOrder]);
-    Writelog(nHint);
-    ShowMsg(nHint,sHint);
+    if not gDispenserManager.SendCardOut(gSysParam.FTTCEK720ID, nHint) then
+      ShowMessage('出卡失败,请联系管理员将磁卡取出.')
+    else
+      ShowMsg('发卡成功,卡号['+nNewCardNo+'],请收好您的卡片',sHint);
   end;
-  writelog('TfFormNewPurchaseCard.SaveBillProxy 发卡机出卡并关联磁卡号-耗时：'+InttoStr(MilliSecondsBetween(Now, FBegin))+'ms');
-  if nRet then Close;
+
+  Result := True;
 end;
 
 function TfFormNewPurchaseCard.SaveWebOrderMatch(const nBillID,

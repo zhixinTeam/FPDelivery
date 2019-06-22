@@ -98,7 +98,8 @@ begin
       //手动称重
       FAutoPound := False;
       //自动称重
-      
+
+      FTTCEK720ID   := ReadString(FProgID,'TTCEK720ID','FK001');
       FPicBase := 0;
       FPicPath := gPath + sCameraDir;
     end;

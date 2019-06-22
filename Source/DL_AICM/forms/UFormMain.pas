@@ -10,7 +10,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters,
-  cxContainer, cxEdit, cxLabel, ExtCtrls, CPort, StdCtrls, Buttons,Uszttce_api,
+  cxContainer, cxEdit, cxLabel, ExtCtrls, CPort, StdCtrls, Buttons,
   UHotKeyManager,uReadCardThread, dxSkinsCore, dxSkinsDefaultPainters;
 
 type
@@ -61,7 +61,7 @@ type
 
     FHYDan,FStockName:string;
     FHyDanPrinterName,FDefaultPrinterName:string;
-    FReadCardThread:TReadCardThread;
+    //FReadCardThread:TReadCardThread;
     Fbegin:TDateTime;
     procedure ActionComPort(const nStop: Boolean);
     //´®¿Ú´¦Àí
@@ -515,10 +515,10 @@ end;
 
 procedure TfFormMain.TimerInsertCardTimer(Sender: TObject);
 begin
-  FReadCardThread := TReadCardThread.Create(True);
-  FReadCardThread.FreeOnTerminate := True;
-  FReadCardThread.Resume;
-  WaitForSingleObject(FReadCardThread.Handle,INFINITE);
+//  FReadCardThread := TReadCardThread.Create(True);
+//  FReadCardThread.FreeOnTerminate := True;
+//  FReadCardThread.Resume;
+//  WaitForSingleObject(FReadCardThread.Handle,INFINITE);
 end;
 
 procedure TfFormMain.DoHotKeyHotKeyPressed(HotKey: Cardinal; Index: Word);
