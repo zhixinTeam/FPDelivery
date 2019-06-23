@@ -1,10 +1,10 @@
 object fFormNewPurchaseCard: TfFormNewPurchaseCard
-  Left = 203
-  Top = 70
+  Left = 371
+  Top = 142
   BorderStyle = bsNone
   Caption = #29992#25143#33258#21161#21150#21345
-  ClientHeight = 451
-  ClientWidth = 938
+  ClientHeight = 503
+  ClientWidth = 956
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object fFormNewPurchaseCard: TfFormNewPurchaseCard
   object PanelTop: TPanel
     Left = 0
     Top = 0
-    Width = 938
+    Width = 956
     Height = 89
     Align = alTop
     BevelOuter = bvNone
@@ -35,24 +35,24 @@ object fFormNewPurchaseCard: TfFormNewPurchaseCard
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clRed
       Font.Height = -24
-      Font.Name = 'MS Sans Serif'
+      Font.Name = #24494#36719#38597#40657
       Font.Style = []
       ParentFont = False
     end
     object labelIdCard: TcxLabel
       Left = 0
-      Top = 8
+      Top = 3
       Caption = #21830#22478#36135#21333#21495#65306
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clWindowText
       Style.Font.Height = -32
-      Style.Font.Name = 'MS Sans Serif'
+      Style.Font.Name = #24494#36719#38597#40657
       Style.Font.Style = []
       Style.IsFontAssigned = True
     end
     object editWebOrderNo: TcxTextEdit
-      Left = 176
+      Left = 182
       Top = 8
       AutoSize = False
       ParentFont = False
@@ -76,7 +76,7 @@ object fFormNewPurchaseCard: TfFormNewPurchaseCard
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -24
-      Font.Name = 'MS Sans Serif'
+      Font.Name = #24494#36719#38597#40657
       Font.Style = []
       ParentFont = False
       TabOrder = 2
@@ -91,7 +91,7 @@ object fFormNewPurchaseCard: TfFormNewPurchaseCard
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -24
-      Font.Name = 'MS Sans Serif'
+      Font.Name = #24494#36719#38597#40657
       Font.Style = []
       ParentFont = False
       TabOrder = 3
@@ -100,22 +100,22 @@ object fFormNewPurchaseCard: TfFormNewPurchaseCard
   end
   object PanelBody: TPanel
     Left = 0
-    Top = 193
-    Width = 938
-    Height = 258
+    Top = 225
+    Width = 956
+    Height = 278
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
     object dxLayout1: TdxLayoutControl
       Left = 0
       Top = 0
-      Width = 938
-      Height = 258
+      Width = 956
+      Height = 278
       Align = alClient
       TabOrder = 0
       TabStop = False
       object BtnOK: TButton
-        Left = 565
+        Left = 556
         Top = 199
         Width = 250
         Height = 41
@@ -123,14 +123,14 @@ object fFormNewPurchaseCard: TfFormNewPurchaseCard
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -24
-        Font.Name = 'MS Sans Serif'
+        Font.Name = #24494#36719#38597#40657
         Font.Style = []
         ParentFont = False
         TabOrder = 5
         OnClick = BtnOKClick
       end
       object BtnExit: TButton
-        Left = 821
+        Left = 812
         Top = 199
         Width = 107
         Height = 41
@@ -138,14 +138,14 @@ object fFormNewPurchaseCard: TfFormNewPurchaseCard
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -24
-        Font.Name = 'MS Sans Serif'
+        Font.Name = #24494#36719#38597#40657
         Font.Style = []
         ParentFont = False
         TabOrder = 6
         OnClick = BtnExitClick
       end
       object EditValue: TcxTextEdit
-        Left = 399
+        Left = 520
         Top = 144
         ParentFont = False
         Style.BorderColor = clWindowFrame
@@ -157,10 +157,10 @@ object fFormNewPurchaseCard: TfFormNewPurchaseCard
         Style.Font.Style = []
         Style.IsFontAssigned = True
         TabOrder = 4
-        Width = 266
+        Width = 387
       end
       object EditProv: TcxTextEdit
-        Left = 399
+        Left = 513
         Top = 28
         ParentFont = False
         Properties.MaxLength = 15
@@ -174,7 +174,7 @@ object fFormNewPurchaseCard: TfFormNewPurchaseCard
         Style.Font.Style = []
         Style.IsFontAssigned = True
         TabOrder = 1
-        Width = 265
+        Width = 394
       end
       object EditID: TcxTextEdit
         Left = 78
@@ -191,7 +191,7 @@ object fFormNewPurchaseCard: TfFormNewPurchaseCard
         Style.Font.Style = []
         Style.IsFontAssigned = True
         TabOrder = 0
-        Width = 259
+        Width = 388
       end
       object EditProduct: TcxTextEdit
         Left = 78
@@ -207,7 +207,7 @@ object fFormNewPurchaseCard: TfFormNewPurchaseCard
         Style.Font.Style = []
         Style.IsFontAssigned = True
         TabOrder = 2
-        Width = 259
+        Width = 388
       end
       object EditTruck: TcxButtonEdit
         Left = 78
@@ -228,44 +228,39 @@ object fFormNewPurchaseCard: TfFormNewPurchaseCard
         Style.ButtonStyle = bts3D
         Style.IsFontAssigned = True
         TabOrder = 3
-        Width = 259
+        Width = 380
       end
       object dxLayoutGroup1: TdxLayoutGroup
-        AlignHorz = ahParentManaged
-        AlignVert = avTop
-        CaptionOptions.Visible = False
-        ButtonOptions.Buttons = <>
+        AutoAligns = [aaHorizontal]
+        ShowCaption = False
         Hidden = True
         ShowBorder = False
         object dxGroup1: TdxLayoutGroup
-          AlignHorz = ahLeft
-          CaptionOptions.Text = #22522#26412#20449#24687
-          ButtonOptions.Buttons = <>
+          AutoAligns = [aaVertical]
+          Caption = #22522#26412#20449#24687
           object dxGroupLayout1Group2: TdxLayoutGroup
-            CaptionOptions.Visible = False
-            ButtonOptions.Buttons = <>
+            ShowCaption = False
             Hidden = True
             LayoutDirection = ldHorizontal
             ShowBorder = False
             object dxLayoutGroup2: TdxLayoutGroup
+              AutoAligns = [aaVertical]
               AlignHorz = ahClient
-              CaptionOptions.Visible = False
-              ButtonOptions.Buttons = <>
+              ShowCaption = False
               Hidden = True
               ShowBorder = False
               object dxLayout1Group1: TdxLayoutGroup
-                CaptionOptions.Visible = False
-                ButtonOptions.Buttons = <>
+                ShowCaption = False
                 Hidden = True
                 LayoutDirection = ldHorizontal
                 ShowBorder = False
                 object dxLayout1Item5: TdxLayoutItem
-                  CaptionOptions.Text = #21512#21516#21333#21495
+                  Caption = #21512#21516#21333#21495
                   Control = EditID
                   ControlOptions.ShowBorder = False
                 end
                 object dxLayout1Item9: TdxLayoutItem
-                  CaptionOptions.Text = #20379#24212#21830
+                  Caption = #20379#24212#21830
                   Control = EditProv
                   ControlOptions.ShowBorder = False
                 end
@@ -273,47 +268,47 @@ object fFormNewPurchaseCard: TfFormNewPurchaseCard
             end
           end
           object dxlytmLayout1Item3: TdxLayoutItem
-            AlignHorz = ahLeft
-            CaptionOptions.Text = #21407#26448#26009
+            AutoAligns = [aaVertical]
+            Caption = #21407#26448#26009
             Control = EditProduct
             ControlOptions.ShowBorder = False
           end
         end
         object dxGroup2: TdxLayoutGroup
-          AlignHorz = ahLeft
-          CaptionOptions.Text = #36135#21333#20449#24687
-          ButtonOptions.Buttons = <>
+          AutoAligns = [aaVertical]
+          Caption = #36135#21333#20449#24687
           object dxGroupLayout1Group6: TdxLayoutGroup
-            CaptionOptions.Visible = False
-            ButtonOptions.Buttons = <>
+            ShowCaption = False
             Hidden = True
             LayoutDirection = ldHorizontal
             ShowBorder = False
             object dxlytmLayout1Item12: TdxLayoutItem
-              CaptionOptions.Text = #20379#36135#36710#36742':'
+              Caption = #20379#36135#36710#36742':'
               Control = EditTruck
               ControlOptions.ShowBorder = False
             end
             object dxLayout1Item8: TdxLayoutItem
-              CaptionOptions.Text = #21150#29702#21544#25968':'
+              Caption = #21150#29702#21544#25968':'
               Control = EditValue
               ControlOptions.ShowBorder = False
             end
           end
         end
         object dxLayoutGroup3: TdxLayoutGroup
+          AutoAligns = [aaVertical]
           AlignHorz = ahRight
-          CaptionOptions.Visible = False
-          ButtonOptions.Buttons = <>
+          ShowCaption = False
           Hidden = True
           LayoutDirection = ldHorizontal
           ShowBorder = False
           object dxLayoutItem1: TdxLayoutItem
+            AutoAligns = [aaVertical]
             AlignHorz = ahRight
             Control = BtnOK
             ControlOptions.ShowBorder = False
           end
           object dxLayout1Item2: TdxLayoutItem
+            AutoAligns = [aaVertical]
             AlignHorz = ahRight
             Control = BtnExit
             ControlOptions.ShowBorder = False
@@ -325,8 +320,8 @@ object fFormNewPurchaseCard: TfFormNewPurchaseCard
   object pnlMiddle: TPanel
     Left = 0
     Top = 89
-    Width = 938
-    Height = 104
+    Width = 956
+    Height = 136
     Align = alTop
     BevelOuter = bvNone
     Caption = 'pnlMiddle'
@@ -340,15 +335,15 @@ object fFormNewPurchaseCard: TfFormNewPurchaseCard
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clWindowText
       Style.Font.Height = -19
-      Style.Font.Name = 'MS Sans Serif'
+      Style.Font.Name = #24494#36719#38597#40657
       Style.Font.Style = []
       Style.IsFontAssigned = True
     end
     object lvOrders: TListView
       Left = 0
-      Top = 28
-      Width = 938
-      Height = 76
+      Top = 29
+      Width = 956
+      Height = 107
       Align = alClient
       Columns = <>
       Font.Charset = DEFAULT_CHARSET

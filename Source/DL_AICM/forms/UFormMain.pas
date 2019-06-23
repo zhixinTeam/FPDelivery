@@ -60,8 +60,6 @@ type
     FHotKey: Cardinal;
 
     FHYDan,FStockName:string;
-    FHyDanPrinterName,FDefaultPrinterName:string;
-    //FReadCardThread:TReadCardThread;
     Fbegin:TDateTime;
     procedure ActionComPort(const nStop: Boolean);
     //´®¿Ú´¦Àí
