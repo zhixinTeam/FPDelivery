@@ -87,22 +87,18 @@ inherited fFormStockNo: TfFormStockNo
     end
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
-        CaptionOptions.Text = #26597#35810#26465#20214
         object dxLayout1Item5: TdxLayoutItem
-          CaptionOptions.Text = #27700#27877#32534#21495':'
+          Caption = #27700#27877#32534#21495':'
           Control = EditNo
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item7: TdxLayoutItem
-          CaptionOptions.Text = 'cxLabel1'
-          CaptionOptions.Visible = False
           Control = cxLabel1
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item6: TdxLayoutItem
+          AutoAligns = [aaHorizontal]
           AlignVert = avClient
-          CaptionOptions.Text = #26597#35810#32467#26524':'
-          CaptionOptions.Visible = False
           Control = ListStock
           ControlOptions.ShowBorder = False
         end

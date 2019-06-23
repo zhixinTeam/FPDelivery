@@ -105,36 +105,36 @@ inherited fFrameInvoiceZZ: TfFrameInvoiceZZ
     inherited dxGroup1: TdxLayoutGroup
       inherited GroupSearch1: TdxLayoutGroup
         object dxLayout1Item7: TdxLayoutItem
-          CaptionOptions.Text = #23458#25143#21517#31216':'
+          Caption = #23458#25143#21517#31216':'
           Control = EditCus
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item1: TdxLayoutItem
-          CaptionOptions.Text = #21608#26399#31579#36873':'
+          Caption = #21608#26399#31579#36873':'
           Control = EditWeek
           ControlOptions.ShowBorder = False
         end
       end
       inherited GroupDetail1: TdxLayoutGroup
         object dxLayout1Item6: TdxLayoutItem
-          CaptionOptions.Text = #27700#27877#21517#31216':'
+          Caption = #27700#27877#21517#31216':'
           Control = cxTextEdit4
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item5: TdxLayoutItem
-          AlignHorz = ahLeft
-          CaptionOptions.Text = #21333#20215'('#20803'/'#21544'):'
+          Caption = #21333#20215'('#20803'/'#21544'):'
           Control = cxTextEdit3
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item2: TdxLayoutItem
-          CaptionOptions.Text = #30003#35831#37327'('#21544'):'
+          Caption = #30003#35831#37327'('#21544'):'
           Control = cxTextEdit5
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item4: TdxLayoutItem
+          AutoAligns = [aaVertical]
           AlignHorz = ahClient
-          CaptionOptions.Text = #23458#25143#21517#31216':'
+          Caption = #23458#25143#21517#31216':'
           Control = cxTextEdit2
           ControlOptions.ShowBorder = False
         end

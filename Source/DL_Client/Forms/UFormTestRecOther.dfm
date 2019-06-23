@@ -117,43 +117,43 @@ inherited fFormTestRecOther: TfFormTestRecOther
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
         object dxLayout1Item3: TdxLayoutItem
-          CaptionOptions.Text = #29289#26009#32534#21495':'
+          Caption = #29289#26009#32534#21495':'
           Control = cbStockNo
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item4: TdxLayoutItem
-          CaptionOptions.Text = #29289#26009#21517#31216':'
+          Caption = #29289#26009#21517#31216':'
           Enabled = False
           Control = editStockName
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item6: TdxLayoutItem
-          CaptionOptions.Text = #36215#22987#26102#38388':'
+          Caption = #36215#22987#26102#38388':'
           Control = editDateBegin
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item7: TdxLayoutItem
-          CaptionOptions.Text = #32467#26463#26102#38388':'
+          Caption = #32467#26463#26102#38388':'
           Control = editDateEnd
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item10: TdxLayoutItem
-          CaptionOptions.Text = #20379' '#24212' '#21830':'
+          Caption = #20379' '#24212' '#21830':'
           Control = editProd
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item8: TdxLayoutItem
-          CaptionOptions.Text = #36136'    '#37327':'
+          Caption = #36136'    '#37327':'
           Control = editResult
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item5: TdxLayoutItem
-          CaptionOptions.Text = #27700'    '#20998':'
+          Caption = #27700'    '#20998':'
           Control = editSF
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item9: TdxLayoutItem
-          CaptionOptions.Text = #22791'    '#27880':'
+          Caption = #22791'    '#27880':'
           Control = Memo1
         end
       end

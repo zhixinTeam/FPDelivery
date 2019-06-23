@@ -107,43 +107,38 @@ inherited fFormTodo: TfFormTodo
     end
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
-        CaptionOptions.Text = #20107#39033#21015#34920
+        Caption = #26102#39033#21015#34920
         object dxLayout1Item7: TdxLayoutItem
-          CaptionOptions.Text = 'cxLabel1'
-          CaptionOptions.Visible = False
           Control = cxLabel1
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item3: TdxLayoutItem
+          AutoAligns = [aaHorizontal]
           AlignVert = avClient
-          CaptionOptions.Text = 'cxListView1'
-          CaptionOptions.Visible = False
           Control = ListTodo
           ControlOptions.ShowBorder = False
         end
       end
       object dxGroup2: TdxLayoutGroup [1]
+        AutoAligns = [aaHorizontal]
         AlignVert = avBottom
-        CaptionOptions.Text = #22788#29702#26041#24335':'
-        ButtonOptions.Buttons = <>
+        Caption = #22788#29702#26041#24335
         object dxLayout1Item4: TdxLayoutItem
-          CaptionOptions.Text = #26102#38388':'
+          Caption = #26102#38388':'
           Control = EditDate
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item5: TdxLayoutItem
-          CaptionOptions.Text = #26469#28304':'
+          Caption = #26469#28304':'
           Control = EditFrom
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item6: TdxLayoutItem
-          CaptionOptions.Text = #20869#23481':'
+          Caption = #20869#23481':'
           Control = EditEvent
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item8: TdxLayoutItem
-          CaptionOptions.Text = 'cxRadioGroup1'
-          CaptionOptions.Visible = False
           Control = cxRadio1
           ControlOptions.ShowBorder = False
         end

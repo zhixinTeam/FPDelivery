@@ -1,4 +1,6 @@
 inherited fFormQryCard: TfFormQryCard
+  Left = 607
+  Top = 236
   Caption = #26597#35810#30913#21345#20449#24687
   ClientHeight = 260
   ClientWidth = 339
@@ -91,37 +93,37 @@ inherited fFormQryCard: TfFormQryCard
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
         object dxLayout1Item3: TdxLayoutItem
-          CaptionOptions.Text = #30913#21345#32534#21495':'
+          Caption = #30913#21345#32534#21495':'
           Control = EditCard
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item4: TdxLayoutItem
-          CaptionOptions.Text = #30913#21345#31867#22411':'
+          Caption = #30913#21345#31867#22411':'
           Control = editCardType
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item6: TdxLayoutItem
-          CaptionOptions.Text = #32465#23450#36710#36742':'
+          Caption = #32465#23450#36710#36742':'
           Control = editTruck
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item5: TdxLayoutItem
-          CaptionOptions.Text = #25552#36135#21333#21495':'
+          Caption = #25552#36135#21333#21495':'
           Control = editBill
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item7: TdxLayoutItem
-          CaptionOptions.Text = #21697#31181#21517#31216':'
+          Caption = #21697#31181#21517#31216':'
           Control = editStockName
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item8: TdxLayoutItem
-          CaptionOptions.Text = #25552#36135#25968#37327':'
+          Caption = #25552#36135#25968#37327':'
           Control = editNum
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item9: TdxLayoutItem
-          CaptionOptions.Text = #23458#25143#21517#31216':'
+          Caption = #23458#25143#21517#31216':'
           Control = editCusName
           ControlOptions.ShowBorder = False
         end

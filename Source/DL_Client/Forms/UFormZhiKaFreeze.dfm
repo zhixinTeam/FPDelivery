@@ -89,48 +89,34 @@ inherited fFormZKFreeze: TfFormZKFreeze
     end
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
-        CaptionOptions.Text = #27700#27877#21697#31181
         object dxLayout1Item9: TdxLayoutItem
-          CaptionOptions.Text = #21697#31181#21015#34920':'
-          CaptionOptions.Visible = False
           Control = ListStock
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Group2: TdxLayoutGroup
-          CaptionOptions.Visible = False
-          ButtonOptions.Buttons = <>
+          ShowCaption = False
           Hidden = True
           LayoutDirection = ldHorizontal
           ShowBorder = False
           object dxLayout1Item7: TdxLayoutItem
-            CaptionOptions.Text = 'cxCheckBox1'
-            CaptionOptions.Visible = False
             Control = Check1
             ControlOptions.ShowBorder = False
           end
           object dxLayout1Item8: TdxLayoutItem
-            CaptionOptions.Text = 'cxCheckBox1'
-            CaptionOptions.Visible = False
             Control = Check2
             ControlOptions.ShowBorder = False
           end
         end
         object dxLayout1Item5: TdxLayoutItem
-          CaptionOptions.Text = 'cxLabel1'
-          CaptionOptions.Visible = False
           Control = cxLabel1
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item3: TdxLayoutItem
-          CaptionOptions.Text = 'cxRadioButton1'
-          CaptionOptions.Visible = False
           Control = Radio1
           ControlOptions.AutoColor = True
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item4: TdxLayoutItem
-          CaptionOptions.Text = 'cxRadioButton2'
-          CaptionOptions.Visible = False
           Control = Radio2
           ControlOptions.AutoColor = True
           ControlOptions.ShowBorder = False

@@ -24,7 +24,7 @@ inherited fFormCard: TfFormCard
     end
     object EditBill: TcxTextEdit [2]
       Left = 81
-      Top = 18
+      Top = 36
       ParentFont = False
       Properties.ReadOnly = True
       Style.BorderColor = clWindowFrame
@@ -35,7 +35,7 @@ inherited fFormCard: TfFormCard
     end
     object EditTruck: TcxTextEdit [3]
       Left = 81
-      Top = 43
+      Top = 61
       ParentFont = False
       Properties.ReadOnly = True
       Style.BorderColor = clWindowFrame
@@ -46,7 +46,7 @@ inherited fFormCard: TfFormCard
     end
     object cxLabel1: TcxLabel [4]
       Left = 23
-      Top = 68
+      Top = 86
       AutoSize = False
       ParentFont = False
       Properties.LineOptions.Alignment = cxllaBottom
@@ -57,7 +57,7 @@ inherited fFormCard: TfFormCard
     end
     object EditCard: TcxTextEdit [5]
       Left = 81
-      Top = 93
+      Top = 111
       ParentFont = False
       Properties.MaxLength = 15
       Style.BorderColor = clWindowFrame
@@ -68,25 +68,22 @@ inherited fFormCard: TfFormCard
     end
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
-        CaptionOptions.Text = ''
         object dxLayout1Item3: TdxLayoutItem
-          CaptionOptions.Text = #20132#36135#21333#21495':'
+          Caption = #20132#36135#21333#21495':'
           Control = EditBill
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item4: TdxLayoutItem
-          CaptionOptions.Text = #36710#33337#21495#30721':'
+          Caption = #36710#33337#21495#30721':'
           Control = EditTruck
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item5: TdxLayoutItem
-          CaptionOptions.Text = 'cxLabel1'
-          CaptionOptions.Visible = False
           Control = cxLabel1
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item6: TdxLayoutItem
-          CaptionOptions.Text = #30913#21345#32534#21495':'
+          Caption = #30913#21345#32534#21495':'
           Control = EditCard
           ControlOptions.ShowBorder = False
         end

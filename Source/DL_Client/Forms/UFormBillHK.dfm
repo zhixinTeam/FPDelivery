@@ -1,6 +1,6 @@
 inherited fFormBillHK: TfFormBillHK
   Left = 607
-  Top = 231
+  Top = 225
   ClientHeight = 465
   ClientWidth = 394
   OnClose = FormClose
@@ -30,7 +30,7 @@ inherited fFormBillHK: TfFormBillHK
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
       TabOrder = 0
-      Width = 174
+      Width = 347
     end
     object EditZhiKa: TcxButtonEdit [3]
       Left = 81
@@ -164,75 +164,74 @@ inherited fFormBillHK: TfFormBillHK
     end
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
-        CaptionOptions.Text = #25552#36135#21333#20449#24687
+        Caption = #25552#36135#21333#20449#24687
         object dxLayout1Item4: TdxLayoutItem
-          AlignHorz = ahClient
-          CaptionOptions.Text = #25552#36135#21333#21495':'
+          Caption = #25552#36135#21333#21495':'
           Control = EditLID
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item7: TdxLayoutItem
-          CaptionOptions.Text = #23458#25143#32534#21495':'
+          Caption = #23458#25143#32534#21495':'
           Control = EditCusID
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item8: TdxLayoutItem
-          CaptionOptions.Text = #23458#25143#21517#31216':'
+          Caption = #23458#25143#21517#31216':'
           Control = EditCusName
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item3: TdxLayoutItem
-          CaptionOptions.Text = #27700#27877#32534#21495':'
+          Caption = #27700#27877#32534#21495':'
           Control = EditSID
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item9: TdxLayoutItem
-          CaptionOptions.Text = #27700#27877#21517#31216':'
+          Caption = #27700#27877#21517#31216':'
           Control = EditSName
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item13: TdxLayoutItem
-          CaptionOptions.Text = #36710#29260#21495#30721':'
+          Caption = #36710#29260#21495#30721':'
           Control = EditTruck
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item10: TdxLayoutItem
-          CaptionOptions.Text = #25552' '#36135' '#37327':'
+          Caption = #25552' '#36135' '#37327':'
           Control = EditValue
           ControlOptions.ShowBorder = False
         end
       end
       object dxGroup2: TdxLayoutGroup [1]
+        AutoAligns = [aaHorizontal]
         AlignVert = avClient
-        CaptionOptions.Text = #24453#21512#21345#35746#21333
-        ButtonOptions.Buttons = <>
+        Caption = #24453#21512#21345#20449#24687
         object dxLayout1Item6: TdxLayoutItem
-          CaptionOptions.Text = #35746#21333#32534#21495':'
+          Caption = #35746#21333#32534#21495':'
           Control = EditZhiKa
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item11: TdxLayoutItem
-          CaptionOptions.Text = #35746#21333#21517#31216':'
+          Caption = #35746#21333#21517#31216':'
           Control = EditZName
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item12: TdxLayoutItem
-          CaptionOptions.Text = #39033#30446#21517#31216':'
+          Caption = #39033#30446#21517#31216':'
           Control = EditProject
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item5: TdxLayoutItem
-          CaptionOptions.Text = #23458#25143#32534#21495':'
+          Caption = #23458#25143#32534#21495':'
           Control = EditNCusID
           ControlOptions.ShowBorder = False
         end
         object dxlytmNCusName: TdxLayoutItem
-          CaptionOptions.Text = #23458#25143#21517#31216':'
+          Caption = #23458#25143#21517#31216':'
           Control = EditNCusName
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item14: TdxLayoutItem
-          CaptionOptions.Text = #21487#29992#37329#39069':'
+          Caption = #21487#29992#37329#39069':'
           Control = EditMoney
           ControlOptions.ShowBorder = False
         end

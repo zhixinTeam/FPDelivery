@@ -22,7 +22,7 @@ inherited fFrameCustomer_FP: TfFrameCustomer_FP
     Width = 966
     Height = 131
     object cxTextEdit1: TcxTextEdit [0]
-      Left = 87
+      Left = 81
       Top = 93
       Hint = 'T.C_ID'
       ParentFont = False
@@ -33,7 +33,7 @@ inherited fFrameCustomer_FP: TfFrameCustomer_FP
       Width = 121
     end
     object cxTextEdit2: TcxTextEdit [1]
-      Left = 277
+      Left = 265
       Top = 93
       Hint = 'T.C_Name'
       ParentFont = False
@@ -44,7 +44,7 @@ inherited fFrameCustomer_FP: TfFrameCustomer_FP
       Width = 121
     end
     object cxTextEdit3: TcxTextEdit [2]
-      Left = 455
+      Left = 437
       Top = 93
       Hint = 'T.C_LiXiRen'
       ParentFont = False
@@ -55,7 +55,7 @@ inherited fFrameCustomer_FP: TfFrameCustomer_FP
       Width = 121
     end
     object EditID: TcxButtonEdit [3]
-      Left = 87
+      Left = 81
       Top = 36
       ParentFont = False
       Properties.Buttons = <
@@ -73,7 +73,7 @@ inherited fFrameCustomer_FP: TfFrameCustomer_FP
       Width = 121
     end
     object EditName: TcxButtonEdit [4]
-      Left = 277
+      Left = 265
       Top = 36
       ParentFont = False
       Properties.Buttons = <
@@ -91,7 +91,7 @@ inherited fFrameCustomer_FP: TfFrameCustomer_FP
       Width = 121
     end
     object cxTextEdit4: TcxTextEdit [5]
-      Left = 645
+      Left = 621
       Top = 93
       Hint = 'T.C_Phone'
       ParentFont = False
@@ -104,34 +104,34 @@ inherited fFrameCustomer_FP: TfFrameCustomer_FP
     inherited dxGroup1: TdxLayoutGroup
       inherited GroupSearch1: TdxLayoutGroup
         object dxLayout1Item4: TdxLayoutItem
-          CaptionOptions.Text = #23458#25143#32534#21495#65306
+          Caption = #23458#25143#32534#21495':'
           Control = EditID
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item5: TdxLayoutItem
-          CaptionOptions.Text = #23458#25143#21517#31216#65306
+          Caption = #23458#25143#21517#31216':'
           Control = EditName
           ControlOptions.ShowBorder = False
         end
       end
       inherited GroupDetail1: TdxLayoutGroup
         object dxLayout1Item1: TdxLayoutItem
-          CaptionOptions.Text = #23458#25143#32534#21495#65306
+          Caption = #23458#25143#32534#21495':'
           Control = cxTextEdit1
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item2: TdxLayoutItem
-          CaptionOptions.Text = #23458#25143#21517#31216#65306
+          Caption = #23458#25143#21517#31216':'
           Control = cxTextEdit2
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item3: TdxLayoutItem
-          CaptionOptions.Text = #32852#31995#20154#65306
+          Caption = #32852#31995#20154':'
           Control = cxTextEdit3
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item6: TdxLayoutItem
-          CaptionOptions.Text = #32852#31995#30005#35805#65306
+          Caption = #32852#31995#30005#35805':'
           Control = cxTextEdit4
           ControlOptions.ShowBorder = False
         end

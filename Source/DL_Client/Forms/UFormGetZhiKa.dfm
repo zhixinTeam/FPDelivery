@@ -139,50 +139,49 @@ inherited fFormGetZhiKa: TfFormGetZhiKa
     end
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
-        CaptionOptions.Text = '1.'#36873#25321#23458#25143
+        Caption = #36873#25321#23458#25143
         object dxLayout1Item7: TdxLayoutItem
-          AlignVert = avTop
           Control = ListInfo
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Group4: TdxLayoutGroup
+          AutoAligns = [aaHorizontal]
           AlignVert = avBottom
-          CaptionOptions.Visible = False
-          ButtonOptions.Buttons = <>
+          ShowCaption = False
           Hidden = True
           LayoutDirection = ldHorizontal
           ShowBorder = False
           object dxLayout1Item8: TdxLayoutItem
-            AlignHorz = ahLeft
-            CaptionOptions.Text = #23458#25143#32534#21495':'
+            Caption = #23458#25143#32534#21495':'
             Control = EditID
             ControlOptions.ShowBorder = False
           end
           object dxLayout1Item9: TdxLayoutItem
+            AutoAligns = [aaVertical]
             AlignHorz = ahClient
-            CaptionOptions.Text = #19994#21153#20154#21592':'
+            Caption = #19994#21153#20154#21592':'
             Control = EditSalesMan
             ControlOptions.ShowBorder = False
           end
         end
         object dxLayout1Item10: TdxLayoutItem
-          AlignHorz = ahClient
+          AutoAligns = [aaHorizontal]
           AlignVert = avBottom
-          CaptionOptions.Text = #23458#25143#21517#31216':'
+          Caption = #23458#25143#21517#31216':'
           Control = EditName
           ControlOptions.ShowBorder = False
         end
       end
       object dxGroup2: TdxLayoutGroup [1]
+        AutoAligns = [aaHorizontal]
         AlignVert = avClient
-        CaptionOptions.Text = '2.'#36873#25321#32440#21345
-        ButtonOptions.Buttons = <>
         object dxLayout1Item4: TdxLayoutItem
-          CaptionOptions.Text = #35746#21333#21015#34920':'
+          Caption = #35746#21333#21015#34920':'
           Control = EditZK
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item3: TdxLayoutItem
+          AutoAligns = [aaHorizontal]
           AlignVert = avClient
           Control = ListDetail
           ControlOptions.ShowBorder = False

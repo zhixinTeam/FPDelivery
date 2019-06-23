@@ -141,7 +141,7 @@ inherited fFormAdjustMoney: TfFormAdjustMoney
       end
     end
     object editMemo: TcxTextEdit [5]
-      Left = 63
+      Left = 23
       Top = 264
       ParentFont = False
       Style.BorderColor = clWindowFrame
@@ -153,27 +153,20 @@ inherited fFormAdjustMoney: TfFormAdjustMoney
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
         object dxLayout1Item3: TdxLayoutItem
-          CaptionOptions.Text = 'cxGroupBox1'
-          CaptionOptions.Visible = False
           Control = cxGroupBox1
           ControlOptions.AutoColor = True
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item5: TdxLayoutItem
-          CaptionOptions.Text = 'cxGroupBox3'
-          CaptionOptions.Visible = False
           Control = cxGroupBox3
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item4: TdxLayoutItem
-          CaptionOptions.Text = 'cxGroupBox2'
-          CaptionOptions.Visible = False
           Control = cxGroupBox2
           ControlOptions.AutoColor = True
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item6: TdxLayoutItem
-          CaptionOptions.Text = #22791#27880#65306
           Control = editMemo
           ControlOptions.ShowBorder = False
         end

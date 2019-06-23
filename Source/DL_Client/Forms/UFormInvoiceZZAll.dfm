@@ -32,8 +32,8 @@ inherited fFormInvoiceZZAll: TfFormInvoiceZZAll
       Style.BorderStyle = ebsSingle
       Style.Edges = [bLeft, bTop, bRight, bBottom]
       TabOrder = 2
-      Height = 45
-      Width = 403
+      Height = 151
+      Width = 391
     end
     object EditWeek: TcxButtonEdit [3]
       Left = 81
@@ -66,21 +66,19 @@ inherited fFormInvoiceZZAll: TfFormInvoiceZZAll
     end
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
-        CaptionOptions.Text = #36873#39033
         object dxLayout1Item3: TdxLayoutItem
-          CaptionOptions.Text = #32467#31639#21608#26399':'
+          Caption = #32467#31639#21608#26399':'
           Control = EditWeek
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item4: TdxLayoutItem
-          CaptionOptions.Text = 'cxLabel1'
-          CaptionOptions.Visible = False
           Control = cxLabel1
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item12: TdxLayoutItem
+          AutoAligns = [aaHorizontal]
           AlignVert = avClient
-          CaptionOptions.Text = #25552#31034#20449#24687':'
+          Caption = #25552#31034#20449#24687':'
           CaptionOptions.Layout = clTop
           Control = EditMemo
           ControlOptions.ShowBorder = False

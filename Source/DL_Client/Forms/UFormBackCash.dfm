@@ -1,4 +1,6 @@
 inherited fFormBackCash: TfFormBackCash
+  Left = 659
+  Top = 318
   Caption = 'fFormBackCash'
   ClientHeight = 267
   ClientWidth = 368
@@ -19,7 +21,7 @@ inherited fFormBackCash: TfFormBackCash
       TabOrder = 3
     end
     object EditWeek: TcxButtonEdit [2]
-      Left = 81
+      Left = 23
       Top = 36
       ParentFont = False
       Properties.Buttons = <
@@ -36,7 +38,7 @@ inherited fFormBackCash: TfFormBackCash
       Width = 121
     end
     object EditMemo: TcxMemo [3]
-      Left = 81
+      Left = 23
       Top = 61
       ParentFont = False
       Properties.ScrollBars = ssVertical
@@ -51,12 +53,10 @@ inherited fFormBackCash: TfFormBackCash
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
         object dxLayout1Item3: TdxLayoutItem
-          CaptionOptions.Text = #32467#31639#21608#26399':'
           Control = EditWeek
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item4: TdxLayoutItem
-          CaptionOptions.Text = #25552#31034#20449#24687':'
           CaptionOptions.AlignVert = tavTop
           Control = EditMemo
           ControlOptions.ShowBorder = False

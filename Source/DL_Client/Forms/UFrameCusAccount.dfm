@@ -104,35 +104,36 @@ inherited fFrameCusAccount: TfFrameCusAccount
     inherited dxGroup1: TdxLayoutGroup
       inherited GroupSearch1: TdxLayoutGroup
         object dxLayout1Item2: TdxLayoutItem
-          CaptionOptions.Text = #23458#25143#32534#21495':'
+          Caption = #23458#25143#32534#21495':'
           Control = EditID
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item8: TdxLayoutItem
-          CaptionOptions.Text = #23458#25143#21517#31216':'
+          Caption = #23458#25143#21517#31216':'
           Control = EditCustomer
           ControlOptions.ShowBorder = False
         end
       end
       inherited GroupDetail1: TdxLayoutGroup
         object dxLayout1Item5: TdxLayoutItem
-          CaptionOptions.Text = #23458#25143#32534#21495':'
+          Caption = #23458#25143#32534#21495':'
           Control = cxTextEdit3
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item7: TdxLayoutItem
-          CaptionOptions.Text = #23458#25143#21517#31216':'
+          Caption = #23458#25143#21517#31216':'
           Control = cxTextEdit4
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item1: TdxLayoutItem
-          CaptionOptions.Text = #38134#34892#36134#25143':'
+          Caption = #38134#34892#36134#25143':'
           Control = cxTextEdit1
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item10: TdxLayoutItem
+          AutoAligns = [aaVertical]
           AlignHorz = ahClient
-          CaptionOptions.Text = #24320#25143#38134#34892':'
+          Caption = #24320#25143#38134#34892':'
           Control = cxTextEdit5
           ControlOptions.ShowBorder = False
         end

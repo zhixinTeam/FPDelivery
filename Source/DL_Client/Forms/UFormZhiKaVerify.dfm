@@ -10,7 +10,6 @@ inherited fFormZhiKaVerify: TfFormZhiKaVerify
   inherited dxLayout1: TdxLayoutControl
     Width = 352
     Height = 360
-    OptionsItem.AutoControlAreaAlignment = False
     inherited BtnOK: TButton
       Left = 206
       Top = 327
@@ -109,52 +108,50 @@ inherited fFormZhiKaVerify: TfFormZhiKaVerify
     end
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
-        CaptionOptions.Text = #35746#21333#20449#24687
+        Caption = #35746#21333#20449#24687
         object dxLayout1Item3: TdxLayoutItem
+          AutoAligns = [aaHorizontal]
           AlignVert = avClient
           Control = ListInfo
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item5: TdxLayoutItem
-          CaptionOptions.Text = #35746#21333#32534#21495':'
+          Caption = #35746#21333#32534#21495':'
           Control = EditZID
           ControlOptions.ShowBorder = False
         end
       end
       object dxGroup2: TdxLayoutGroup [1]
-        CaptionOptions.Text = #23457#26680#22238#27454
-        ButtonOptions.Buttons = <>
+        Caption = #23457#26680#22238#27454
         object dxLayout1Item9: TdxLayoutItem
-          CaptionOptions.Text = #24453#32564#37329#39069':'
+          Caption = #20195#32564#37329#39069':'
           Control = EditInfo
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Group2: TdxLayoutGroup
-          CaptionOptions.Visible = False
-          ButtonOptions.Buttons = <>
+          ShowCaption = False
           Hidden = True
           LayoutDirection = ldHorizontal
           ShowBorder = False
           object dxLayout1Item6: TdxLayoutItem
-            CaptionOptions.Text = #20184#27454#26041#24335':'
+            Caption = #20184#27454#26041#24335':'
             Control = EditType
             ControlOptions.ShowBorder = False
           end
           object dxLayout1Item8: TdxLayoutItem
+            AutoAligns = [aaVertical]
             AlignHorz = ahClient
-            CaptionOptions.Text = #32564#32435#37329#39069':'
+            Caption = #32564#32435#37329#39069':'
             Control = EditMoney
             ControlOptions.ShowBorder = False
           end
           object dxLayout1Item7: TdxLayoutItem
-            CaptionOptions.Text = 'cxLabel1'
-            CaptionOptions.Visible = False
             Control = cxLabel1
             ControlOptions.ShowBorder = False
           end
         end
         object dxLayout1Item4: TdxLayoutItem
-          CaptionOptions.Text = #22791#27880#20449#24687':'
+          Caption = #22791#27880#20449#24687':'
           Control = EditDesc
           ControlOptions.ShowBorder = False
         end

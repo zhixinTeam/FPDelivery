@@ -113,44 +113,44 @@ inherited fFrameTestResult: TfFrameTestResult
     inherited dxGroup1: TdxLayoutGroup
       inherited GroupSearch1: TdxLayoutGroup
         object dxLayout1Item1: TdxLayoutItem
-          CaptionOptions.Text = #29289#26009#20449#24687':'
+          Caption = #29289#26009#20449#24687':'
           Control = cxButtonEdit1
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item2: TdxLayoutItem
-          CaptionOptions.Text = #25805#20316#21592':'
+          Caption = #25805#20316#21592':'
           Control = cxButtonEdit2
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item3: TdxLayoutItem
-          CaptionOptions.Text = #24320#22987#26102#38388':'
+          Caption = #24320#22987#26102#38388':'
           Control = dateBegin
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item7: TdxLayoutItem
-          CaptionOptions.Text = #32467#26463#26102#38388':'
+          Caption = #32467#26463#26102#38388':'
           Control = dateEnd
           ControlOptions.ShowBorder = False
         end
       end
       inherited GroupDetail1: TdxLayoutGroup
         object dxLayout1Item4: TdxLayoutItem
-          CaptionOptions.Text = #29289#26009#21517#31216':'
+          Caption = #29289#26009#21517#31216':'
           Control = cxTextEdit1
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item5: TdxLayoutItem
-          CaptionOptions.Text = #26816#39564#32467#26524':'
+          Caption = #26816#39564#32467#26524':'
           Control = cxTextEdit2
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item6: TdxLayoutItem
-          CaptionOptions.Text = #25187#37325#20449#24687':'
+          Caption = #25187#37325#20449#24687':'
           Control = cxTextEdit3
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item8: TdxLayoutItem
-          CaptionOptions.Text = #25805#20316#21592':'
+          Caption = #25805#20316#21592':'
           Control = cxTextEdit4
           ControlOptions.ShowBorder = False
         end

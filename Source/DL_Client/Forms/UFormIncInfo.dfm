@@ -3,8 +3,8 @@ inherited fFormIncInfo: TfFormIncInfo
   Top = 173
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
-  ClientHeight = 249
-  ClientWidth = 358
+  ClientHeight = 255
+  ClientWidth = 363
   OldCreateOrder = True
   Position = poMainFormCenter
   PixelsPerInch = 96
@@ -12,15 +12,14 @@ inherited fFormIncInfo: TfFormIncInfo
   object dxLayoutControl1: TdxLayoutControl
     Left = 0
     Top = 0
-    Width = 358
-    Height = 249
+    Width = 363
+    Height = 255
     Align = alClient
     TabOrder = 0
     TabStop = False
-    LayoutLookAndFeel = FDM.dxLayoutWeb1
     object EditName: TcxTextEdit
-      Left = 81
-      Top = 36
+      Left = 84
+      Top = 29
       ParentFont = False
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
@@ -28,8 +27,8 @@ inherited fFormIncInfo: TfFormIncInfo
       Width = 254
     end
     object EditPhone: TcxTextEdit
-      Left = 81
-      Top = 61
+      Left = 84
+      Top = 55
       ParentFont = False
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
@@ -37,8 +36,8 @@ inherited fFormIncInfo: TfFormIncInfo
       Width = 121
     end
     object EditWeb: TcxTextEdit
-      Left = 81
-      Top = 111
+      Left = 84
+      Top = 107
       ParentFont = False
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
@@ -46,8 +45,8 @@ inherited fFormIncInfo: TfFormIncInfo
       Width = 121
     end
     object EditMail: TcxTextEdit
-      Left = 81
-      Top = 86
+      Left = 84
+      Top = 81
       ParentFont = False
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
@@ -55,8 +54,8 @@ inherited fFormIncInfo: TfFormIncInfo
       Width = 121
     end
     object EditAddr: TcxTextEdit
-      Left = 81
-      Top = 136
+      Left = 84
+      Top = 133
       ParentFont = False
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
@@ -64,8 +63,8 @@ inherited fFormIncInfo: TfFormIncInfo
       Width = 121
     end
     object EditMemo: TcxMemo
-      Left = 81
-      Top = 161
+      Left = 84
+      Top = 159
       Align = alClient
       ParentFont = False
       Properties.ScrollBars = ssVertical
@@ -76,8 +75,8 @@ inherited fFormIncInfo: TfFormIncInfo
       Width = 252
     end
     object BtnExit: TButton
-      Left = 272
-      Top = 213
+      Left = 276
+      Top = 218
       Width = 75
       Height = 22
       Caption = #21462#28040
@@ -85,8 +84,8 @@ inherited fFormIncInfo: TfFormIncInfo
       TabOrder = 7
     end
     object BtnOK: TButton
-      Left = 192
-      Top = 213
+      Left = 195
+      Top = 218
       Width = 75
       Height = 22
       Caption = #30830#23450
@@ -94,65 +93,58 @@ inherited fFormIncInfo: TfFormIncInfo
       OnClick = BtnOKClick
     end
     object dxLayoutControl1Group_Root: TdxLayoutGroup
-      AlignHorz = ahParentManaged
-      AlignVert = avTop
-      CaptionOptions.Visible = False
-      ButtonOptions.Buttons = <>
+      ShowCaption = False
       Hidden = True
       ShowBorder = False
       object dxLayoutControl1Group1: TdxLayoutGroup
-        CaptionOptions.Text = #20844#21496#20449#24687
-        ButtonOptions.Buttons = <>
         object dxLayoutControl1Item1: TdxLayoutItem
-          CaptionOptions.Text = #20844#21496#21517#31216':'
+          Caption = #20844#21496#21517#31216':'
           Control = EditName
           ControlOptions.ShowBorder = False
         end
         object dxLayoutControl1Item2: TdxLayoutItem
-          CaptionOptions.Text = #20844#21496#30005#35805':'
+          Caption = #20844#21496#30005#35805':'
           Control = EditPhone
           ControlOptions.ShowBorder = False
         end
         object dxLayoutControl1Item4: TdxLayoutItem
-          CaptionOptions.Text = #20844#21496#37038#31665':'
+          Caption = #20844#21496#37038#31665':'
           Control = EditMail
           ControlOptions.ShowBorder = False
         end
         object dxLayoutControl1Item3: TdxLayoutItem
-          CaptionOptions.Text = #20844#21496#32593#22336':'
+          Caption = #20844#21496#32593#22336':'
           Control = EditWeb
           ControlOptions.ShowBorder = False
         end
         object dxLayoutControl1Item5: TdxLayoutItem
-          CaptionOptions.Text = #20844#21496#22320#22336':'
+          Caption = #20844#21496#22320#22336':'
           Control = EditAddr
           ControlOptions.ShowBorder = False
         end
         object dxLayoutControl1Item6: TdxLayoutItem
-          CaptionOptions.Text = #22791#27880#20449#24687':'
+          Caption = #22791#27880#20449#24687':'
           Control = EditMemo
           ControlOptions.ShowBorder = False
         end
       end
       object dxLayoutControl1Group2: TdxLayoutGroup
+        AutoAligns = [aaVertical]
         AlignHorz = ahRight
-        CaptionOptions.Visible = False
-        ButtonOptions.Buttons = <>
+        ShowCaption = False
         Hidden = True
         LayoutDirection = ldHorizontal
         ShowBorder = False
         object dxLayoutControl1Item8: TdxLayoutItem
+          AutoAligns = [aaVertical]
           AlignHorz = ahRight
-          CaptionOptions.Text = 'Button2'
-          CaptionOptions.Visible = False
           Control = BtnOK
           ControlOptions.ShowBorder = False
         end
         object dxLayoutControl1Item7: TdxLayoutItem
+          AutoAligns = []
           AlignHorz = ahRight
           AlignVert = avBottom
-          CaptionOptions.Text = 'Button1'
-          CaptionOptions.Visible = False
           Control = BtnExit
           ControlOptions.ShowBorder = False
         end

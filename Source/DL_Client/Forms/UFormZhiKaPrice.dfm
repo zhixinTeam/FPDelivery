@@ -129,59 +129,48 @@ inherited fFormZKPrice: TfFormZKPrice
     end
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
-        CaptionOptions.Text = #36873#39033
         object dxLayout1Item3: TdxLayoutItem
-          CaptionOptions.Text = #27700#27877#21697#31181':'
+          Caption = #27700#27877#21697#31181':'
           Control = EditStock
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item4: TdxLayoutItem
-          CaptionOptions.Text = #38144#21806#20215#26684':'
+          Caption = #38144#21806#20215#26684':'
           Control = EditPrice
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item5: TdxLayoutItem
-          CaptionOptions.Text = #26032' '#21333' '#20215':'
+          Caption = #26032' '#21333' '#20215':'
           Control = EditNew
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item6: TdxLayoutItem
-          CaptionOptions.Text = 'cxCheckBox1'
-          CaptionOptions.Visible = False
           Control = Check1
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item7: TdxLayoutItem
-          AlignHorz = ahClient
-          CaptionOptions.Text = 'cxCheckBox1'
-          CaptionOptions.Visible = False
           Control = Check2
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item9: TdxLayoutItem
-          CaptionOptions.Text = 'cxLabel1'
-          CaptionOptions.Visible = False
           Control = cxLabel1
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item8: TdxLayoutItem
-          CaptionOptions.Visible = False
           Control = Check3
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item10: TdxLayoutItem
-          CaptionOptions.Text = #24320#22987#26102#38388':'
+          Caption = #24320#22987#26102#38388':'
           Control = EditStart
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item11: TdxLayoutItem
-          CaptionOptions.Text = #32467#26463#26102#38388':'
+          Caption = #32467#26463#26102#38388':'
           Control = EditEnd
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item12: TdxLayoutItem
-          CaptionOptions.Text = 'cxLabel2'
-          CaptionOptions.Visible = False
           Control = cxLabel2
           ControlOptions.ShowBorder = False
         end

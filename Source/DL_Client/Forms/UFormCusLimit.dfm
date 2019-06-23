@@ -111,49 +111,47 @@ inherited fFormCusLimit: TfFormCusLimit
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
         object dxLayout1Group3: TdxLayoutGroup
-          ButtonOptions.Buttons = <>
+          ShowCaption = False
           Hidden = True
           LayoutDirection = ldHorizontal
           ShowBorder = False
           object dxLayout1Item3: TdxLayoutItem
-            CaptionOptions.Text = #29289#26009#21517#31216':'
+            Caption = #29289#26009#21517#31216':'
             Control = cbbStockNo
             ControlOptions.ShowBorder = False
           end
           object dxLayout1Item4: TdxLayoutItem
-            CaptionOptions.Text = 'cxCheckBox1'
-            CaptionOptions.Visible = False
             Control = cxCheckBox1
             ControlOptions.ShowBorder = False
           end
         end
       end
       object dxlytgrpLayout1Group2: TdxLayoutGroup [1]
+        AutoAligns = [aaHorizontal]
         AlignVert = avClient
-        CaptionOptions.Text = #35814#32454#20449#24687
-        ButtonOptions.Buttons = <>
         object dxlytgrpLayout1Group3: TdxLayoutGroup
-          ButtonOptions.Buttons = <>
+          ShowCaption = False
           Hidden = True
           LayoutDirection = ldHorizontal
           ShowBorder = False
           object dxLayout1Item6: TdxLayoutItem
-            CaptionOptions.Text = #23458#25143#32534#21495':'
+            Caption = #23458#25143#32534#21495':'
             Control = editCusNo
             ControlOptions.ShowBorder = False
           end
           object dxLayout1Item7: TdxLayoutItem
-            CaptionOptions.Text = #23458#25143#21517#31216':'
+            Caption = #23458#25143#21517#31216':'
             Control = editCusName
             ControlOptions.ShowBorder = False
           end
         end
         object dxLayout1Item8: TdxLayoutItem
-          CaptionOptions.Text = #38480#25552#21544#25968
+          Caption = #38480#25552#21544#25968':'
           Control = editValue
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item5: TdxLayoutItem
+          AutoAligns = [aaHorizontal]
           AlignVert = avBottom
           Control = ListDetail
           ControlOptions.ShowBorder = False

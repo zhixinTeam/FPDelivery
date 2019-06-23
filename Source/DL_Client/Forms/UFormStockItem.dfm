@@ -1,8 +1,8 @@
 inherited fFormStockItem: TfFormStockItem
   Left = 288
   Top = 142
-  Width = 630
-  Height = 547
+  Width = 632
+  Height = 566
   Caption = #29289#26009#31649#29702
   OldCreateOrder = True
   OnCreate = FormCreate
@@ -12,16 +12,14 @@ inherited fFormStockItem: TfFormStockItem
   object dxLayout1: TdxLayoutControl
     Left = 0
     Top = 0
-    Width = 614
-    Height = 509
+    Width = 616
+    Height = 528
     Align = alClient
     TabOrder = 0
     TabStop = False
-    LayoutLookAndFeel = FDM.dxLayoutWeb1
-    OptionsItem.AutoControlAreaAlignment = False
     object BtnEdit: TButton
-      Left = 453
-      Top = 469
+      Left = 455
+      Top = 480
       Width = 65
       Height = 22
       Caption = #20462#25913
@@ -29,8 +27,8 @@ inherited fFormStockItem: TfFormStockItem
       OnClick = BtnEditClick
     end
     object BtnDel: TButton
-      Left = 523
-      Top = 469
+      Left = 526
+      Top = 480
       Width = 65
       Height = 22
       Caption = #21024#38500
@@ -38,12 +36,13 @@ inherited fFormStockItem: TfFormStockItem
       OnClick = BtnDelClick
     end
     object cxPG1: TcxPageControl
-      Left = 35
-      Top = 43
+      Left = 37
+      Top = 47
       Width = 541
       Height = 414
       ActivePage = cxTabSheet1
       Align = alClient
+      Color = clBtnFace
       ParentColor = False
       TabOrder = 0
       OnChange = cxPG1Change
@@ -424,8 +423,8 @@ inherited fFormStockItem: TfFormStockItem
       end
     end
     object BtnAdd: TButton
-      Left = 383
-      Top = 469
+      Left = 384
+      Top = 480
       Width = 65
       Height = 22
       Caption = #28155#21152
@@ -433,27 +432,27 @@ inherited fFormStockItem: TfFormStockItem
       OnClick = BtnAddClick
     end
     object dxLayoutGroup1: TdxLayoutGroup
+      AutoAligns = []
       AlignHorz = ahClient
       AlignVert = avClient
-      CaptionOptions.Visible = False
-      ButtonOptions.Buttons = <>
+      ShowCaption = False
       Hidden = True
       LayoutDirection = ldHorizontal
       ShowBorder = False
       object dxLayout1Group5: TdxLayoutGroup
-        ButtonOptions.Buttons = <>
+        ShowCaption = False
         Hidden = True
         ShowBorder = False
         object dxLayout1Group1: TdxLayoutGroup
+          AutoAligns = [aaHorizontal]
           AlignVert = avClient
-          CaptionOptions.Text = #39033#30446#31867#22411
-          ButtonOptions.Buttons = <>
+          Caption = #39033#30446#31867#22411
           object dxLayout1Group3: TdxLayoutGroup
-            AlignHorz = ahClient
+            AutoAligns = [aaHorizontal]
             AlignVert = avClient
-            ButtonOptions.Buttons = <>
             LayoutDirection = ldHorizontal
             object dxLayout1Item1: TdxLayoutItem
+              AutoAligns = []
               AlignHorz = ahClient
               AlignVert = avClient
               Control = cxPG1
@@ -462,30 +461,27 @@ inherited fFormStockItem: TfFormStockItem
             end
           end
           object dxLayoutGroup2: TdxLayoutGroup
+            AutoAligns = [aaHorizontal]
             AlignVert = avBottom
-            CaptionOptions.Visible = False
-            ButtonOptions.Buttons = <>
+            ShowCaption = False
             Hidden = True
             LayoutDirection = ldHorizontal
             ShowBorder = False
             object dxLayout1Item4: TdxLayoutItem
+              AutoAligns = [aaVertical]
               AlignHorz = ahRight
-              CaptionOptions.Text = 'Button1'
-              CaptionOptions.Visible = False
               Control = BtnAdd
               ControlOptions.ShowBorder = False
             end
             object dxLayoutItem1: TdxLayoutItem
+              AutoAligns = [aaVertical]
               AlignHorz = ahRight
-              CaptionOptions.Text = 'Button1'
-              CaptionOptions.Visible = False
               Control = BtnEdit
               ControlOptions.ShowBorder = False
             end
             object dxLayout1Item2: TdxLayoutItem
+              AutoAligns = [aaVertical]
               AlignHorz = ahRight
-              CaptionOptions.Text = 'Button2'
-              CaptionOptions.Visible = False
               Control = BtnDel
               ControlOptions.ShowBorder = False
             end

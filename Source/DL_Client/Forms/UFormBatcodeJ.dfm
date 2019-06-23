@@ -189,71 +189,64 @@ inherited fFormBatcode: TfFormBatcode
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
         object dxLayout1Item4: TdxLayoutItem
-          CaptionOptions.Text = #29289#26009#32534#21495':'
+          Caption = #29289#26009#32534#21495':'
           Control = EditStock
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item9: TdxLayoutItem
-          AlignHorz = ahClient
-          CaptionOptions.Text = #29289#26009#21517#31216':'
+          Caption = #29289#26009#21517#31216':'
           Control = EditName
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Group3: TdxLayoutGroup
-          CaptionOptions.Visible = False
-          ButtonOptions.Buttons = <>
+          ShowCaption = False
           Hidden = True
           ShowBorder = False
           object dxLayout1Group6: TdxLayoutGroup
-            CaptionOptions.Visible = False
-            ButtonOptions.Buttons = <>
+            ShowCaption = False
             Hidden = True
             LayoutDirection = ldHorizontal
             ShowBorder = False
             object dxLayout1Item5: TdxLayoutItem
-              AlignHorz = ahLeft
-              CaptionOptions.Text = #32534#21495#21069#32512':'
+              Caption = #32534#21495#21069#32512':'
               Control = EditPrefix
               ControlOptions.ShowBorder = False
             end
             object dxLayout1Item8: TdxLayoutItem
+              AutoAligns = [aaVertical]
               AlignHorz = ahClient
-              CaptionOptions.Text = #32534#21495#38271#24230':'
+              Caption = #32534#21495#38271#24230':'
               Control = EditLen
               ControlOptions.ShowBorder = False
             end
           end
           object dxLayout1Group2: TdxLayoutGroup
-            CaptionOptions.Visible = False
-            ButtonOptions.Buttons = <>
+            ShowCaption = False
             Hidden = True
             LayoutDirection = ldHorizontal
             ShowBorder = False
             object dxLayout1Item7: TdxLayoutItem
-              CaptionOptions.Text = #32534#21495#22522#25968':'
+              Caption = #32534#21495#22522#25968':'
               Control = EditBase
               ControlOptions.ShowBorder = False
             end
             object dxLayout1Item6: TdxLayoutItem
+              AutoAligns = [aaVertical]
               AlignHorz = ahClient
-              CaptionOptions.Text = #32534#21495#22686#37327':'
+              Caption = #32534#21495#22686#37327':'
               Control = EditInc
               ControlOptions.ShowBorder = False
             end
           end
           object dxLayout1Group4: TdxLayoutGroup
-            CaptionOptions.Visible = False
-            ButtonOptions.Buttons = <>
+            ShowCaption = False
             Hidden = True
             ShowBorder = False
             object dxLayout1Item10: TdxLayoutItem
-              CaptionOptions.Text = 'cxCheckBox1'
-              CaptionOptions.Visible = False
               Control = Check1
               ControlOptions.ShowBorder = False
             end
             object dxLayout1Item3: TdxLayoutItem
-              CaptionOptions.Visible = False
               Control = Check3
               ControlOptions.ShowBorder = False
             end
@@ -261,87 +254,70 @@ inherited fFormBatcode: TfFormBatcode
         end
       end
       object dxGroup2: TdxLayoutGroup [1]
-        CaptionOptions.Text = #32534#21495#21464#26356
-        ButtonOptions.Buttons = <>
         object dxLayout1Group9: TdxLayoutGroup
-          CaptionOptions.Visible = False
-          ButtonOptions.Buttons = <>
+          ShowCaption = False
           Hidden = True
           LayoutDirection = ldHorizontal
           ShowBorder = False
           object dxLayout1Item16: TdxLayoutItem
-            CaptionOptions.Text = #26816' '#27979' '#37327':'
+            Caption = #26816' '#27979' '#37327':'
             Control = EditValue
             ControlOptions.ShowBorder = False
           end
           object dxLayout1Item17: TdxLayoutItem
-            CaptionOptions.Text = 'cxLabel3'
-            CaptionOptions.Visible = False
             Control = cxLabel3
             ControlOptions.ShowBorder = False
           end
         end
         object dxLayout1Group5: TdxLayoutGroup
-          CaptionOptions.Visible = False
-          ButtonOptions.Buttons = <>
+          ShowCaption = False
           Hidden = True
           ShowBorder = False
           object dxLayout1Group7: TdxLayoutGroup
-            CaptionOptions.Visible = False
-            ButtonOptions.Buttons = <>
+            ShowCaption = False
             Hidden = True
             LayoutDirection = ldHorizontal
             ShowBorder = False
             object dxLayout1Item11: TdxLayoutItem
-              CaptionOptions.Text = #36229#21457#25552#37266':'
+              Caption = #36229#21457#25552#37266':'
               Control = EditLow
               ControlOptions.ShowBorder = False
             end
             object dxLayout1Item14: TdxLayoutItem
-              CaptionOptions.Text = 'cxLabel1'
-              CaptionOptions.Visible = False
               Control = cxLabel1
               ControlOptions.ShowBorder = False
             end
           end
           object dxLayout1Group8: TdxLayoutGroup
-            CaptionOptions.Visible = False
-            ButtonOptions.Buttons = <>
+            ShowCaption = False
             Hidden = True
             ShowBorder = False
             object dxLayout1Group10: TdxLayoutGroup
-              CaptionOptions.Visible = False
-              ButtonOptions.Buttons = <>
+              ShowCaption = False
               Hidden = True
               LayoutDirection = ldHorizontal
               ShowBorder = False
               object dxLayout1Item12: TdxLayoutItem
-                AlignHorz = ahLeft
-                CaptionOptions.Text = #36229#21457#19978#38480':'
+                Caption = #36229#21457#19978#38480':'
                 Control = EditHigh
                 ControlOptions.ShowBorder = False
               end
               object dxLayout1Item15: TdxLayoutItem
-                CaptionOptions.Text = 'cxLabel2'
-                CaptionOptions.Visible = False
                 Control = cxLabel2
                 ControlOptions.ShowBorder = False
               end
             end
             object dxLayout1Group11: TdxLayoutGroup
-              CaptionOptions.Visible = False
-              ButtonOptions.Buttons = <>
+              ShowCaption = False
               Hidden = True
               LayoutDirection = ldHorizontal
               ShowBorder = False
               object dxLayout1Item18: TdxLayoutItem
-                CaptionOptions.Text = #32534#21495#21608#26399':'
+                Caption = #32534#21495#21608#26399':'
                 Control = EditWeek
                 ControlOptions.ShowBorder = False
               end
               object dxLayout1Item19: TdxLayoutItem
-                CaptionOptions.Text = 'cxLabel4'
-                CaptionOptions.Visible = False
                 Control = cxLabel4
                 ControlOptions.ShowBorder = False
               end
@@ -349,8 +325,6 @@ inherited fFormBatcode: TfFormBatcode
           end
         end
         object dxLayout1Item13: TdxLayoutItem
-          CaptionOptions.Text = 'cxCheckBox1'
-          CaptionOptions.Visible = False
           Control = Check2
           ControlOptions.ShowBorder = False
         end

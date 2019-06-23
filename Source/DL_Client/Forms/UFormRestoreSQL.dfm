@@ -3,7 +3,6 @@ inherited fFormRestoreSQL: TfFormRestoreSQL
   Top = 161
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
-  ClientHeight = 296
   ClientWidth = 416
   OldCreateOrder = True
   Position = poMainFormCenter

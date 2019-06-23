@@ -14,7 +14,7 @@ uses
   UBitmapPanel, cxSplitter, dxLayoutControl, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGrid, ComCtrls, ToolWin, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxLCPainter;
 
 type
   TfFrameNormal = class(TBaseFrame)

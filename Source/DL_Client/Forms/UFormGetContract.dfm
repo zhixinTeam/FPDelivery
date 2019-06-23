@@ -109,38 +109,33 @@ inherited fFormGetContract: TfFormGetContract
     end
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
-        CaptionOptions.Text = #26597#35810#26465#20214
         object dxLayout1Item5: TdxLayoutItem
-          CaptionOptions.Text = #21512#21516#32534#21495':'
+          Caption = #21512#21516#32534#21495':'
           Control = EditCID
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Group2: TdxLayoutGroup
-          CaptionOptions.Visible = False
-          ButtonOptions.Buttons = <>
+          ShowCaption = False
           Hidden = True
           ShowBorder = False
           object dxLayout1Item3: TdxLayoutItem
-            CaptionOptions.Text = #19994#21153#20154#21592':'
+            Caption = #19994#21153#20154#21592':'
             Control = EditSMan
             ControlOptions.ShowBorder = False
           end
           object dxLayout1Item4: TdxLayoutItem
-            CaptionOptions.Text = #23458#25143#21517#31216':'
+            Caption = #23458#25143#21517#31216':'
             Control = EditCustom
             ControlOptions.ShowBorder = False
           end
         end
         object dxLayout1Item7: TdxLayoutItem
-          CaptionOptions.Text = 'cxLabel1'
-          CaptionOptions.Visible = False
           Control = cxLabel1
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item6: TdxLayoutItem
+          AutoAligns = [aaHorizontal]
           AlignVert = avClient
-          CaptionOptions.Text = #26597#35810#32467#26524':'
-          CaptionOptions.Visible = False
           Control = ListContract
           ControlOptions.ShowBorder = False
         end

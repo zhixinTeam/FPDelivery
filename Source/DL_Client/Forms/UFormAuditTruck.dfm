@@ -27,10 +27,9 @@ inherited fFormAuditTruck: TfFormAuditTruck
     Align = alClient
     TabOrder = 0
     TabStop = False
-    LayoutLookAndFeel = FDM.dxLayoutWeb1
     object EditType: TcxTextEdit
-      Left = 81
-      Top = 354
+      Left = 84
+      Top = 349
       ParentFont = False
       Properties.ReadOnly = True
       Style.BorderColor = clWindowFrame
@@ -39,8 +38,8 @@ inherited fFormAuditTruck: TfFormAuditTruck
       Width = 213
     end
     object EditTruck: TcxTextEdit
-      Left = 81
-      Top = 329
+      Left = 84
+      Top = 323
       ParentFont = False
       Properties.ReadOnly = True
       Style.BorderColor = clWindowFrame
@@ -49,8 +48,8 @@ inherited fFormAuditTruck: TfFormAuditTruck
       Width = 213
     end
     object EditMemo: TcxMemo
-      Left = 81
-      Top = 429
+      Left = 84
+      Top = 427
       Align = alClient
       ParentFont = False
       Properties.ScrollBars = ssVertical
@@ -61,8 +60,8 @@ inherited fFormAuditTruck: TfFormAuditTruck
       Width = 252
     end
     object BtnExit: TButton
-      Left = 507
-      Top = 481
+      Left = 514
+      Top = 486
       Width = 75
       Height = 22
       Caption = #21462#28040
@@ -70,8 +69,8 @@ inherited fFormAuditTruck: TfFormAuditTruck
       TabOrder = 10
     end
     object BtnOK: TButton
-      Left = 427
-      Top = 481
+      Left = 433
+      Top = 486
       Width = 75
       Height = 22
       Caption = #30830#23450
@@ -79,8 +78,8 @@ inherited fFormAuditTruck: TfFormAuditTruck
       OnClick = BtnOKClick
     end
     object ImageTruck: TcxImage
-      Left = 81
-      Top = 36
+      Left = 84
+      Top = 29
       Align = alTop
       Properties.ReadOnly = True
       Style.BorderColor = clWindowFrame
@@ -90,8 +89,8 @@ inherited fFormAuditTruck: TfFormAuditTruck
       Width = 489
     end
     object EditResult: TcxComboBox
-      Left = 81
-      Top = 404
+      Left = 84
+      Top = 401
       ParentFont = False
       Properties.DropDownListStyle = lsFixedList
       Properties.Items.Strings = (
@@ -107,8 +106,8 @@ inherited fFormAuditTruck: TfFormAuditTruck
       Width = 121
     end
     object editTypeName: TcxTextEdit
-      Left = 357
-      Top = 354
+      Left = 363
+      Top = 349
       ParentFont = False
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
@@ -117,8 +116,8 @@ inherited fFormAuditTruck: TfFormAuditTruck
       Width = 213
     end
     object editSB: TcxTextEdit
-      Left = 357
-      Top = 379
+      Left = 363
+      Top = 375
       ParentFont = False
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
@@ -127,8 +126,8 @@ inherited fFormAuditTruck: TfFormAuditTruck
       Width = 213
     end
     object editHZ: TcxTextEdit
-      Left = 81
-      Top = 379
+      Left = 84
+      Top = 375
       ParentFont = False
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
@@ -137,8 +136,8 @@ inherited fFormAuditTruck: TfFormAuditTruck
       Width = 213
     end
     object eeditPhone: TcxTextEdit
-      Left = 357
-      Top = 329
+      Left = 363
+      Top = 323
       ParentFont = False
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
@@ -147,93 +146,86 @@ inherited fFormAuditTruck: TfFormAuditTruck
       Width = 213
     end
     object dxLayoutControl1Group_Root: TdxLayoutGroup
-      AlignHorz = ahParentManaged
-      AlignVert = avParentManaged
-      CaptionOptions.Visible = False
-      ButtonOptions.Buttons = <>
+      ShowCaption = False
       Hidden = True
       ShowBorder = False
       object dxLayoutControl1Group5: TdxLayoutGroup
-        AlignVert = avTop
-        ButtonOptions.Buttons = <>
+        ShowCaption = False
         Hidden = True
         LayoutDirection = ldHorizontal
         ShowBorder = False
         object dxLayoutControl1Group6: TdxLayoutGroup
+          AutoAligns = [aaVertical]
           AlignHorz = ahClient
-          ButtonOptions.Buttons = <>
+          ShowCaption = False
           Hidden = True
           ShowBorder = False
           object dxLayoutControl1Group1: TdxLayoutGroup
-            AlignHorz = ahClient
-            AlignVert = avTop
-            CaptionOptions.Text = #36710#36742#20449#24687
-            ButtonOptions.Buttons = <>
             object dxLayoutControl1Item9: TdxLayoutItem
-              CaptionOptions.Text = #36710#36742#22270#29255
+              Caption = #36710#36742#22270#29255':'
               Control = ImageTruck
               ControlOptions.ShowBorder = False
             end
             object dxLayoutControl1Group3: TdxLayoutGroup
-              ButtonOptions.Buttons = <>
+              ShowCaption = False
               Hidden = True
               ShowBorder = False
               object dxLayoutControl1Group8: TdxLayoutGroup
-                ButtonOptions.Buttons = <>
+                ShowCaption = False
                 Hidden = True
                 LayoutDirection = ldHorizontal
                 ShowBorder = False
                 object dxLayoutControl1Item2: TdxLayoutItem
-                  CaptionOptions.Text = #36710#29260#21495#30721':'
+                  Caption = #36710#29260#21495#30721':'
                   Control = EditTruck
                   ControlOptions.ShowBorder = False
                 end
                 object dxLayoutControl1Item11: TdxLayoutItem
-                  CaptionOptions.Text = #32852#31995#30005#35805':'
+                  Caption = #32852#31995#30005#35805':'
                   Control = eeditPhone
                   ControlOptions.ShowBorder = False
                 end
               end
               object dxLayoutControl1Group7: TdxLayoutGroup
-                ButtonOptions.Buttons = <>
+                ShowCaption = False
                 Hidden = True
                 LayoutDirection = ldHorizontal
                 ShowBorder = False
                 object dxLayoutControl1Item1: TdxLayoutItem
-                  CaptionOptions.Text = #36710#36742#31867#22411':'
+                  Caption = #36710#36742#31867#22411':'
                   Control = EditType
                   ControlOptions.ShowBorder = False
                 end
                 object dxLayoutControl1Item4: TdxLayoutItem
-                  CaptionOptions.Text = #36710#22411#21517#31216':'
+                  Caption = #36710#22411#21517#31216':'
                   Control = editTypeName
                   ControlOptions.ShowBorder = False
                 end
               end
             end
             object dxLayoutControl1Group4: TdxLayoutGroup
-              ButtonOptions.Buttons = <>
+              ShowCaption = False
               Hidden = True
               LayoutDirection = ldHorizontal
               ShowBorder = False
               object dxLayoutControl1Item10: TdxLayoutItem
-                CaptionOptions.Text = #33655#36733#37325#37327':'
+                Caption = #33655#36733#37325#37327':'
                 Control = editHZ
                 ControlOptions.ShowBorder = False
               end
               object dxLayoutControl1Item5: TdxLayoutItem
-                CaptionOptions.Text = #30003#25253#30382#37325':'
+                Caption = #30003#25253#30382#37325':'
                 Control = editSB
                 ControlOptions.ShowBorder = False
               end
             end
             object dxLayoutControl1Item3: TdxLayoutItem
-              CaptionOptions.Text = #23457#26680#32467#26524':'
+              Caption = #23457#26680#32467#26524':'
               Control = EditResult
               ControlOptions.ShowBorder = False
             end
             object dxLayoutControl1Item6: TdxLayoutItem
-              CaptionOptions.Text = #23457#26680#22791#27880':'
+              Caption = #23457#26680#22791#27880':'
               Control = EditMemo
               ControlOptions.ShowBorder = False
             end
@@ -241,24 +233,22 @@ inherited fFormAuditTruck: TfFormAuditTruck
         end
       end
       object dxLayoutControl1Group2: TdxLayoutGroup
+        AutoAligns = [aaVertical]
         AlignHorz = ahRight
-        CaptionOptions.Visible = False
-        ButtonOptions.Buttons = <>
+        ShowCaption = False
         Hidden = True
         LayoutDirection = ldHorizontal
         ShowBorder = False
         object dxLayoutControl1Item8: TdxLayoutItem
+          AutoAligns = [aaVertical]
           AlignHorz = ahRight
-          CaptionOptions.Text = 'Button2'
-          CaptionOptions.Visible = False
           Control = BtnOK
           ControlOptions.ShowBorder = False
         end
         object dxLayoutControl1Item7: TdxLayoutItem
+          AutoAligns = []
           AlignHorz = ahRight
           AlignVert = avBottom
-          CaptionOptions.Text = 'Button1'
-          CaptionOptions.Visible = False
           Control = BtnExit
           ControlOptions.ShowBorder = False
         end

@@ -10,7 +10,6 @@ inherited fFormZhiKaAdjust: TfFormZhiKaAdjust
   inherited dxLayout1: TdxLayoutControl
     Width = 412
     Height = 428
-    OptionsItem.AutoControlAreaAlignment = False
     inherited BtnOK: TButton
       Left = 266
       Top = 395
@@ -128,62 +127,45 @@ inherited fFormZhiKaAdjust: TfFormZhiKaAdjust
     end
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
-        CaptionOptions.Text = #32440#21345#21015#34920
         object dxLayout1Item9: TdxLayoutItem
-          AlignHorz = ahClient
-          CaptionOptions.Text = 'cxLabel4'
-          CaptionOptions.Visible = False
           Control = cxLabel4
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item10: TdxLayoutItem
+          AutoAligns = [aaHorizontal]
           AlignVert = avClient
-          CaptionOptions.Text = 'cxListView1'
-          CaptionOptions.Visible = False
           Control = ListZK
           ControlOptions.ShowBorder = False
         end
       end
       object dxGroup2: TdxLayoutGroup [1]
+        AutoAligns = [aaHorizontal]
         AlignVert = avBottom
-        CaptionOptions.Text = #22788#29702#26041#27861
-        ButtonOptions.Buttons = <>
+        Caption = #22788#29702#26041#27861
         object dxLayout1Item4: TdxLayoutItem
-          CaptionOptions.Text = 'cxRadioButton2'
-          CaptionOptions.Visible = False
           Control = Radio1
           ControlOptions.AutoColor = True
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item6: TdxLayoutItem
-          CaptionOptions.Text = 'cxLabel1'
-          CaptionOptions.Visible = False
           Control = cxLabel1
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item5: TdxLayoutItem
-          CaptionOptions.Text = 'cxRadioButton3'
-          CaptionOptions.Visible = False
           Control = Radio2
           ControlOptions.AutoColor = True
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item7: TdxLayoutItem
-          CaptionOptions.Text = 'cxLabel2'
-          CaptionOptions.Visible = False
           Control = cxLabel2
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item3: TdxLayoutItem
-          CaptionOptions.Text = 'cxRadioButton1'
-          CaptionOptions.Visible = False
           Control = Radio3
           ControlOptions.AutoColor = True
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item8: TdxLayoutItem
-          CaptionOptions.Text = 'cxLabel3'
-          CaptionOptions.Visible = False
           Control = cxLabel3
           ControlOptions.ShowBorder = False
         end

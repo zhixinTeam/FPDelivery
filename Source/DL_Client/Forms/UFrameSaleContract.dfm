@@ -80,7 +80,7 @@ inherited fFrameSaleContract: TfFrameSaleContract
       Width = 125
     end
     object cxTextEdit4: TcxTextEdit [4]
-      Left = 445
+      Left = 439
       Top = 93
       Hint = 'T.S_Name'
       ParentFont = False
@@ -90,7 +90,7 @@ inherited fFrameSaleContract: TfFrameSaleContract
       Width = 125
     end
     object cxTextEdit3: TcxTextEdit [5]
-      Left = 633
+      Left = 627
       Top = 93
       Hint = 'T.C_Project'
       ParentFont = False
@@ -119,40 +119,41 @@ inherited fFrameSaleContract: TfFrameSaleContract
     inherited dxGroup1: TdxLayoutGroup
       inherited GroupSearch1: TdxLayoutGroup
         object dxLayout1Item1: TdxLayoutItem
-          CaptionOptions.Text = #21512#21516#32534#21495':'
+          Caption = #21512#21516#32534#21495':'
           Control = EditID
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item2: TdxLayoutItem
-          CaptionOptions.Text = #23458#25143#21517#31216':'
+          Caption = #23458#25143#21517#31216':'
           Control = EditName
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item7: TdxLayoutItem
-          CaptionOptions.Text = #19994#21153#21592':'
+          Caption = #19994#21153#21592':'
           Control = EditCustomer
           ControlOptions.ShowBorder = False
         end
       end
       inherited GroupDetail1: TdxLayoutGroup
         object dxLayout1Item3: TdxLayoutItem
-          CaptionOptions.Text = #21512#21516#32534#21495':'
+          Caption = #21512#21516#32534#21495':'
           Control = cxTextEdit1
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item4: TdxLayoutItem
-          CaptionOptions.Text = #23458#25143#21517#31216':'
+          Caption = #23458#25143#21517#31216':'
           Control = cxTextEdit2
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item6: TdxLayoutItem
-          CaptionOptions.Text = #19994#21153#21592':'
+          Caption = #19994#21153#21592
           Control = cxTextEdit4
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item5: TdxLayoutItem
+          AutoAligns = [aaVertical]
           AlignHorz = ahClient
-          CaptionOptions.Text = #24037#31243#21517#31216':'
+          Caption = #24037#31243#21517#31216':'
           Control = cxTextEdit3
           ControlOptions.ShowBorder = False
         end

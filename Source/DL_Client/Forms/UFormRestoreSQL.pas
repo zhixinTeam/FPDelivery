@@ -9,7 +9,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   UDataModule, dxLayoutControl, cxControls, StdCtrls, cxMemo, cxContainer,
-  cxEdit, cxTextEdit, cxMCListBox, Menus, UFormBase;
+  cxEdit, cxTextEdit, cxMCListBox, Menus, UFormBase, cxGraphics,
+  cxLookAndFeels, cxLookAndFeelPainters;
 
 type
   TfFormRestoreSQL = class(TBaseForm)

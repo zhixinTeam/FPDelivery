@@ -69,19 +69,19 @@ inherited fFrameProvider: TfFrameProvider
     inherited dxGroup1: TdxLayoutGroup
       inherited GroupSearch1: TdxLayoutGroup
         object dxLayout1Item2: TdxLayoutItem
-          CaptionOptions.Text = #20379#24212#21830':'
+          Caption = #20379#24212#21830':'
           Control = EditName
           ControlOptions.ShowBorder = False
         end
       end
       inherited GroupDetail1: TdxLayoutGroup
         object dxLayout1Item1: TdxLayoutItem
-          CaptionOptions.Text = #20379#24212#21830':'
+          Caption = #20379#24212#21830':'
           Control = cxTextEdit1
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item4: TdxLayoutItem
-          CaptionOptions.Text = #22791#27880#20449#24687':'
+          Caption = #22791#27880#20449#24687':'
           Control = cxTextEdit2
           ControlOptions.ShowBorder = False
         end

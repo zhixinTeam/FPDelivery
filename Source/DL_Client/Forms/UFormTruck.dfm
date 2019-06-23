@@ -162,107 +162,88 @@ inherited fFormTruck: TfFormTruck
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
         object dxLayout1Item9: TdxLayoutItem
-          AlignHorz = ahClient
-          CaptionOptions.Text = #36710#29260#21495#30721':'
+          Caption = #36710#29260#21495#30721':'
           Control = EditTruck
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Group3: TdxLayoutGroup
-          CaptionOptions.Visible = False
-          ButtonOptions.Buttons = <>
+          ShowCaption = False
           Hidden = True
           ShowBorder = False
           object dxLayout1Item5: TdxLayoutItem
-            AlignHorz = ahClient
-            CaptionOptions.Text = #36710#20027#22995#21517':'
+            Caption = #36710#20027#22995#21517':'
             Control = EditOwner
             ControlOptions.ShowBorder = False
           end
           object dxLayout1Item3: TdxLayoutItem
-            AlignHorz = ahClient
-            CaptionOptions.Text = #32852#31995#26041#24335':'
+            Caption = #32852#31995#26041#24335':'
             Control = EditPhone
             ControlOptions.ShowBorder = False
           end
         end
         object dxLayout1Item12: TdxLayoutItem
-          CaptionOptions.Text = #36710#12288#12288#22411':'
+          Caption = #36710'    '#22411':'
           Control = EditCarModel
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item13: TdxLayoutItem
-          CaptionOptions.Text = #38480#36733#37325#37327':'
+          Caption = #38480#36733#37325#37327':'
           Control = EditValue
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item11: TdxLayoutItem
-          CaptionOptions.Text = #30003#25253#30382#37325':'
+          Caption = #30003#25253#30382#37325':'
           Control = EditSBTare
           ControlOptions.ShowBorder = False
         end
       end
       object dxGroup2: TdxLayoutGroup [1]
-        CaptionOptions.Text = #36710#36742#21442#25968
-        ButtonOptions.Buttons = <>
+        Caption = #36710#36742#21442#25968
         object dxLayout1Group5: TdxLayoutGroup
-          ButtonOptions.Buttons = <>
+          ShowCaption = False
           Hidden = True
           LayoutDirection = ldHorizontal
           ShowBorder = False
           object dxLayout1Item4: TdxLayoutItem
-            CaptionOptions.Text = 'cxCheckBox1'
-            CaptionOptions.Visible = False
             Control = CheckValid
             ControlOptions.ShowBorder = False
           end
           object dxLayout1Item14: TdxLayoutItem
-            CaptionOptions.Text = 'cxCheckBox1'
-            CaptionOptions.Visible = False
             Control = checkNoLimit
             ControlOptions.ShowBorder = False
           end
         end
         object dxLayout1Group2: TdxLayoutGroup
-          CaptionOptions.Visible = False
-          ButtonOptions.Buttons = <>
+          ShowCaption = False
           Hidden = True
           LayoutDirection = ldHorizontal
           ShowBorder = False
           object dxLayout1Item6: TdxLayoutItem
-            CaptionOptions.Visible = False
             Control = CheckUserP
             ControlOptions.ShowBorder = False
           end
           object dxLayout1Item8: TdxLayoutItem
-            CaptionOptions.Text = 'cxCheckBox1'
-            CaptionOptions.Visible = False
             Control = CheckVip
             ControlOptions.ShowBorder = False
           end
         end
         object dxLayout1Group4: TdxLayoutGroup
-          CaptionOptions.Visible = False
-          ButtonOptions.Buttons = <>
+          ShowCaption = False
           Hidden = True
           LayoutDirection = ldHorizontal
           ShowBorder = False
           object dxLayout1Item7: TdxLayoutItem
-            CaptionOptions.Text = 'cxCheckBox2'
-            CaptionOptions.Visible = False
             Control = CheckVerify
             ControlOptions.ShowBorder = False
           end
           object dxLayout1Item10: TdxLayoutItem
-            CaptionOptions.Text = 'cxCheckBox1'
-            CaptionOptions.Visible = False
             Control = CheckGPS
             ControlOptions.ShowBorder = False
           end
         end
       end
       object dxLayout1Group6: TdxLayoutGroup [2]
-        CaptionOptions.Text = #36710#36742#25551#36848
-        ButtonOptions.Buttons = <>
+        Caption = #36710#36742#25551#36848
         object dxLayout1Item15: TdxLayoutItem
           Control = editMemo
           ControlOptions.ShowBorder = False

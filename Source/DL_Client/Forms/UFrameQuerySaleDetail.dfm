@@ -165,45 +165,46 @@ inherited fFrameSaleDetailQuery: TfFrameSaleDetailQuery
     inherited dxGroup1: TdxLayoutGroup
       inherited GroupSearch1: TdxLayoutGroup
         object dxLayout1Item7: TdxLayoutItem
-          CaptionOptions.Text = #20132#36135#21333#21495':'
+          Caption = #20132#36135#21333#21495':'
           Control = EditBill
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item4: TdxLayoutItem
-          CaptionOptions.Text = #36710#29260#21495#30721':'
+          Caption = #36710#29260#21495#30721':'
           Control = EditTruck
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item8: TdxLayoutItem
-          CaptionOptions.Text = #23458#25143#21517#31216':'
+          Caption = #23458#25143#21517#31216':'
           Control = EditCustomer
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item6: TdxLayoutItem
-          CaptionOptions.Text = #26085#26399#31579#36873':'
+          Caption = #26085#26399#31579#36873':'
           Control = EditDate
           ControlOptions.ShowBorder = False
         end
       end
       inherited GroupDetail1: TdxLayoutGroup
         object dxLayout1Item2: TdxLayoutItem
-          CaptionOptions.Text = #20132#36135#21333#21495':'
+          Caption = #20132#36135#21333#21495':'
           Control = cxtxtdt3
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item3: TdxLayoutItem
-          CaptionOptions.Text = #21697#31181#21517#31216':'
+          Caption = #21697#31181#21517#31216':'
           Control = cxtxtdt4
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item1: TdxLayoutItem
-          CaptionOptions.Text = #20132#36135#37327'('#21544'):'
+          Caption = #20132#36135#37327'('#21544'):'
           Control = cxtxtdt2
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item5: TdxLayoutItem
+          AutoAligns = [aaVertical]
           AlignHorz = ahClient
-          CaptionOptions.Text = #23458#25143#21517#31216':'
+          Caption = #23458#25143#21517#31216':'
           Control = cxtxtdt1
           ControlOptions.ShowBorder = False
         end

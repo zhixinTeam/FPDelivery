@@ -18,7 +18,7 @@ inherited fFormSealNum: TfFormSealNum
       TabOrder = 3
     end
     object EditCard: TcxTextEdit [2]
-      Left = 87
+      Left = 81
       Top = 36
       ParentFont = False
       Style.BorderColor = clWindowFrame
@@ -28,7 +28,7 @@ inherited fFormSealNum: TfFormSealNum
       Width = 121
     end
     object EditSealNum: TcxTextEdit [3]
-      Left = 87
+      Left = 81
       Top = 61
       ParentFont = False
       Style.BorderColor = clWindowFrame
@@ -41,12 +41,12 @@ inherited fFormSealNum: TfFormSealNum
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
         object dxLayout1Item3: TdxLayoutItem
-          CaptionOptions.Text = #30913#21345#32534#21495#65306
+          Caption = #30913#21345#32534#21495':'
           Control = EditCard
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item4: TdxLayoutItem
-          CaptionOptions.Text = #23553#31614#32534#21495#65306
+          Caption = #23553#31614#32534#21495':'
           Control = EditSealNum
           ControlOptions.ShowBorder = False
         end

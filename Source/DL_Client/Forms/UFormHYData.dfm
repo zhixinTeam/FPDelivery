@@ -130,59 +130,57 @@ inherited fFormHYData: TfFormHYData
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
         object dxLayout1Item13: TdxLayoutItem
-          AlignHorz = ahClient
-          CaptionOptions.Text = #19994' '#21153' '#21592':'
+          Caption = #19994' '#21153' '#21592':'
           Control = EditSMan
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item3: TdxLayoutItem
-          CaptionOptions.Text = #23458#25143#21517#31216':'
+          Caption = #23458#25143#21517#31216':'
           Control = EditCustom
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item9: TdxLayoutItem
-          CaptionOptions.Text = #24320#21333#23458#25143':'
+          Caption = #24320#21333#23458#25143':'
           Control = EditName
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item6: TdxLayoutItem
-          CaptionOptions.Visible = False
           Control = cxLabel2
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Group4: TdxLayoutGroup
-          CaptionOptions.Visible = False
-          ButtonOptions.Buttons = <>
+          ShowCaption = False
           Hidden = True
           LayoutDirection = ldHorizontal
           ShowBorder = False
           object dxLayout1Item5: TdxLayoutItem
-            CaptionOptions.Text = #25552#36135#26085#26399':'
+            Caption = #25552#36135#26085#26399':'
             Control = EditDate
             ControlOptions.ShowBorder = False
           end
           object dxLayout1Item4: TdxLayoutItem
+            AutoAligns = [aaVertical]
             AlignHorz = ahClient
-            CaptionOptions.Text = #27700#27877#32534#21495':'
+            Caption = #27700#27877#32534#21495':'
             Control = EditNo
             ControlOptions.ShowBorder = False
           end
         end
         object dxLayout1Group2: TdxLayoutGroup
-          CaptionOptions.Visible = False
-          ButtonOptions.Buttons = <>
+          ShowCaption = False
           Hidden = True
           LayoutDirection = ldHorizontal
           ShowBorder = False
           object dxLayout1Item7: TdxLayoutItem
-            CaptionOptions.Text = #25552#36135#36710#36742':'
+            Caption = #25552#36135#36710#36742':'
             Visible = False
             Control = EditTruck
             ControlOptions.ShowBorder = False
           end
           object dxLayout1Item8: TdxLayoutItem
+            AutoAligns = [aaVertical]
             AlignHorz = ahClient
-            CaptionOptions.Text = #25552#36135#37327'('#21544'):'
+            Caption = #25552#36135#37327'('#21544'):'
             Control = EditValue
             ControlOptions.ShowBorder = False
           end
