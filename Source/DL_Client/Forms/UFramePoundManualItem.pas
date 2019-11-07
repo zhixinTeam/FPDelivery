@@ -909,6 +909,7 @@ end;
 procedure TfFrameManualPoundItem.BtnSaveClick(Sender: TObject);
 var nBool: Boolean;
 begin
+  {$IFDEF HardMon}
   {$IFDEF MITTruckProber}
     if not IsTunnelOK(FPoundTunnel.FID) then
   {$ELSE}
@@ -922,6 +923,7 @@ begin
     ShowMsg('³µÁ¾Î´Õ¾ÎÈ,ÇëÉÔºó', sHint);
     Exit;
   end;
+  {$ENDIF}
 
   nBool := False;
   try
@@ -939,6 +941,7 @@ begin
       
       Timer2.Enabled := True;
 
+      {$IFDEF HardMon}
       {$IFDEF MITTruckProber}
         TunnelOC(FPoundTunnel.FID, True);
       {$ELSE}
@@ -947,6 +950,7 @@ begin
         {$ELSE}
         gProberManager.TunnelOC(FPoundTunnel.FID, True);
         {$ENDIF}
+      {$ENDIF}
       {$ENDIF}
 
       //¿ªºìÂÌµÆ

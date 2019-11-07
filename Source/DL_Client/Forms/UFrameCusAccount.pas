@@ -9,7 +9,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  UFrameNormal, cxGraphics, cxControls, cxLookAndFeels,
+  UFrameNormal, cxGraphics, cxControls, cxLookAndFeels, USysPopedom,
   cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter, cxData,
   cxDataStorage, cxEdit, DB, cxDBData, cxContainer, Menus, dxLayoutControl,
   cxMaskEdit, cxButtonEdit, cxTextEdit, ADODB, cxLabel, UBitmapPanel,
@@ -121,7 +121,7 @@ begin
   {$ELSE}
   N4.Visible := False;
   {$ENDIF}
-  N6.Enabled := gSysParam.FIsAdmin;
+  N6.Enabled := gSysParam.FIsAdmin or (gPopedomManager.HasPopedom(PopedomItem, sPopedom_Edit));
 end;
 
 //Desc: ¿ì½Ý²Ëµ¥

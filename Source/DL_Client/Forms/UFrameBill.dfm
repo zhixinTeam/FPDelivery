@@ -1,6 +1,6 @@
 inherited fFrameBill: TfFrameBill
   Width = 1028
-  Height = 493
+  Height = 514
   inherited ToolBar1: TToolBar
     Width = 1028
     inherited BtnAdd: TToolButton
@@ -15,19 +15,20 @@ inherited fFrameBill: TfFrameBill
     end
   end
   inherited cxGrid1: TcxGrid
-    Top = 205
+    Top = 253
     Width = 1028
-    Height = 288
+    Height = 261
+    OnMouseEnter = cxGrid1MouseEnter
     inherited cxView1: TcxGridDBTableView
       PopupMenu = PMenu1
     end
   end
   inherited dxLayout1: TdxLayoutControl
     Width = 1028
-    Height = 138
+    Height = 181
     object EditCus: TcxButtonEdit [0]
-      Left = 244
-      Top = 36
+      Left = 250
+      Top = 50
       ParentFont = False
       Properties.Buttons = <
         item
@@ -43,8 +44,8 @@ inherited fFrameBill: TfFrameBill
       Width = 125
     end
     object EditCard: TcxButtonEdit [1]
-      Left = 432
-      Top = 36
+      Left = 438
+      Top = 50
       ParentFont = False
       Properties.Buttons = <
         item
@@ -60,8 +61,8 @@ inherited fFrameBill: TfFrameBill
       Width = 125
     end
     object cxTextEdit1: TcxTextEdit [2]
-      Left = 81
-      Top = 94
+      Left = 87
+      Top = 121
       Hint = 'T.L_ID'
       ParentFont = False
       Style.BorderColor = clWindowFrame
@@ -70,8 +71,8 @@ inherited fFrameBill: TfFrameBill
       Width = 100
     end
     object cxTextEdit2: TcxTextEdit [3]
-      Left = 244
-      Top = 94
+      Left = 250
+      Top = 121
       Hint = 'T.L_CusName'
       ParentFont = False
       Style.BorderColor = clWindowFrame
@@ -80,8 +81,8 @@ inherited fFrameBill: TfFrameBill
       Width = 125
     end
     object cxTextEdit4: TcxTextEdit [4]
-      Left = 620
-      Top = 94
+      Left = 626
+      Top = 121
       Hint = 'T.L_Truck'
       ParentFont = False
       Style.BorderColor = clWindowFrame
@@ -90,8 +91,8 @@ inherited fFrameBill: TfFrameBill
       Width = 100
     end
     object cxTextEdit3: TcxTextEdit [5]
-      Left = 795
-      Top = 94
+      Left = 801
+      Top = 121
       Hint = 'T.L_Value'
       ParentFont = False
       Style.BorderColor = clWindowFrame
@@ -100,8 +101,8 @@ inherited fFrameBill: TfFrameBill
       Width = 100
     end
     object EditDate: TcxButtonEdit [6]
-      Left = 620
-      Top = 36
+      Left = 626
+      Top = 50
       ParentFont = False
       Properties.Buttons = <
         item
@@ -116,8 +117,8 @@ inherited fFrameBill: TfFrameBill
       Width = 176
     end
     object EditLID: TcxButtonEdit [7]
-      Left = 81
-      Top = 36
+      Left = 87
+      Top = 50
       ParentFont = False
       Properties.Buttons = <
         item
@@ -133,8 +134,8 @@ inherited fFrameBill: TfFrameBill
       Width = 100
     end
     object Edit1: TcxTextEdit [8]
-      Left = 432
-      Top = 94
+      Left = 438
+      Top = 121
       Hint = 'T.L_StockName'
       ParentFont = False
       Style.BorderColor = clWindowFrame
@@ -143,8 +144,8 @@ inherited fFrameBill: TfFrameBill
       Width = 125
     end
     object CheckDelete: TcxCheckBox [9]
-      Left = 801
-      Top = 36
+      Left = 807
+      Top = 50
       Caption = #26597#35810#24050#21024#38500
       ParentFont = False
       Style.BorderColor = clWindowFrame
@@ -155,8 +156,8 @@ inherited fFrameBill: TfFrameBill
       Width = 105
     end
     object cxCheckBox1: TcxCheckBox [10]
-      Left = 911
-      Top = 36
+      Left = 917
+      Top = 50
       Caption = #26597#35810#36820#29616
       ParentFont = False
       Style.BorderColor = clWindowFrame
@@ -227,7 +228,7 @@ inherited fFrameBill: TfFrameBill
     end
   end
   inherited cxSplitter1: TcxSplitter
-    Top = 197
+    Top = 245
     Width = 1028
   end
   inherited TitlePanel1: TZnBitmapPanel
@@ -242,17 +243,17 @@ inherited fFrameBill: TfFrameBill
   end
   inherited SQLQuery: TADOQuery
     Left = 4
-    Top = 236
+    Top = 295
   end
   inherited DataSource1: TDataSource
     Left = 32
-    Top = 236
+    Top = 295
   end
   object PMenu1: TPopupMenu
     AutoHotkeys = maManual
     OnPopup = PMenu1Popup
     Left = 4
-    Top = 264
+    Top = 323
     object N1: TMenuItem
       Caption = #25171#21360#25552#36135#21333
       OnClick = N1Click

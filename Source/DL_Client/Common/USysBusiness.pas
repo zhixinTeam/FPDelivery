@@ -134,6 +134,7 @@ function ChangeLadingTruckNo(const nBill,nTruck: string): Boolean;
 //更改提货车辆
 function BillSaleAdjust(const nBill, nNewZK: string): Boolean;
 //交货单调拨
+
 function SetBillCard(const nBill,nTruck: string; nVerify: Boolean): Boolean;
 //为交货单办理磁卡
 function SaveBillLSCard(const nCard,nTruck: string): Boolean;
@@ -1593,7 +1594,6 @@ var nOut: TWorkerBusinessCommand;
 begin
   Result := CallBusinessSaleBill(cBC_SaleAdjust, nBill, nNewZK, @nOut);
 end;
-
 //Date: 2014-09-17
 //Parm: 交货单;车牌号;校验制卡开关
 //Desc: 为nBill交货单制卡

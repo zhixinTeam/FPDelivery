@@ -82,13 +82,12 @@ begin
   Result := 'Select con.*,sm.S_Name,sm.S_PY,cus.C_Name as Cus_Name,' +
             'cus.C_PY From $Con con' +
             ' Left Join $SM sm On sm.S_ID=con.C_SaleMan' +
-            ' Left Join $Cus cus On cus.C_ID=con.C_Customer';
+            ' Left Join $Cus cus On cus.C_ID=con.C_Customer'+
+            ' Where IsNull(C_Freeze, '''')<>''$Yes'' And IsNull(C_EndCot, '''')<>''$Yes'' ';
   //xxxxx
 
-  if nWhere = '' then
-       Result := Result + ' Where IsNull(C_Freeze, '''')<>''$Yes'''+
-                  ' and IsNull(C_EndCot, '''')<>''$Yes'''
-  else Result := Result + ' Where (' + nWhere + ')';
+  if nWhere <> '' then
+    Result := Result + ' And (' + nWhere + ')';
 
   Result := MacroValue(Result, [MI('$Con', sTable_SaleContract),
             MI('$SM', sTable_Salesman),

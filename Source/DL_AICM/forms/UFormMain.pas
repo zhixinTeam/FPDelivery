@@ -164,7 +164,7 @@ begin
   begin
     FDR := TFDR.Create(Application);
   end;
-  imgPrint.Visible := False;
+  //imgPrint.Visible := False;
 end;
 
 procedure TfFormMain.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -543,37 +543,44 @@ begin
     nStockname := nP.FParamC;
     nstockno := nP.FParamD;
     nShortFileName := gSysParam.FQCReportFR3Map.Values[nstockno];
-    if nHyDan='' then
+    if (nHyDan='') or (nP.FParamE='') then
     begin
       ShowMsg('当前品种无需打印化验单。',sHint);
       Exit;
     end;
-
+              {
     if (nShortFileName='') then
     begin
       nStr := '品种[ '+nstockno+' ]暂不支持自助打印质检单，请到开票窗口咨询';
       ShowMsg(nStr,sHint);
       WriteLog(nStr);
       Exit;
-    end;
+    end;     }
 
     if not Assigned(FDR) then
     begin
       FDR := TFDR.Create(Application);
     end;
 
-    {if PrintHuaYanReport(nHYDan, nStockName,nstockno,nShortFileName, False) then
+    //if PrintHuaYanReport(nHYDan, nStockName,nstockno,nShortFileName, False) then
+    if PrintHuaYanReport(nP.FParamE, False) then
     begin
       ShowMsg('打印成功，请在下方出纸口取走您的化验单',sHint);
     end
     else begin
       ShowMsg('打印失败，请联系开票员补打',sHint);
-    end;}
+    end;
   end;
 end;
 
 procedure TfFormMain.imgCardClick(Sender: TObject);
 begin
+  if gSysParam.FTTCEK720ID = '' then
+  begin
+    ShowMsg('未配置发卡机,请联系管理员', sHint);
+    Exit;
+  end;
+
   if Sender=imgCard then
   begin
     if not Assigned(fFormNewCard) then

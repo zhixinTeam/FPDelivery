@@ -555,22 +555,44 @@ begin
 
   nNewCardNo := '';
   Fbegin := Now;
+  try
+    //连续三次读卡均失败，则回收卡片，重新发卡
+    for nIdx:=0 to 3 do
+    begin
+      nNewCardNo := gDispenserManager.GetCardNo(gSysParam.FTTCEK720ID, nHint, False);
+      if nNewCardNo <> '' then
+        Break;
+      Sleep(500);
+    end;
+    //连续三次读卡,成功则退出。
 
-  for nIdx:=0 to 3 do
-  begin
-    nNewCardNo := gDispenserManager.GetCardNo(gSysParam.FTTCEK720ID, nHint, False);
-    if nNewCardNo <> '' then
-      Break;
-    Sleep(500);
-  end;
-  //连续三次读卡,成功则退出。
 
-  if nNewCardNo = '' then
-  begin
-    ShowDlg('卡箱异常,请查看是否有卡.', sWarn, Self.Handle);
-    Exit;
+      //连续三次读卡均失败，则回收卡片，重新发卡
+      for i := 0 to 3 do
+      begin
+        for nIdx:=0 to 3 do
+        begin
+          nNewCardNo:= gDispenserManager.GetCardNo(gSysParam.FTTCEK720ID, nHint, False);
+          if nNewCardNo<>'' then Break;
+          Sleep(500);
+        end;
+        //连续三次读卡,成功则退出。
+        if nNewCardNo<>'' then
+          if IsCardValid(nNewCardNo) then Break;
+      end;
+
+    if nNewCardNo = '' then
+    begin
+      ShowDlg('卡箱异常,请查看是否有卡.', sWarn, Self.Handle);
+      Exit;
+    end;
+    WriteLog('读取到卡片: ' + nNewCardNo);
+  except on Ex:Exception do
+    begin
+      WriteLog('卡箱异常 '+Ex.Message);
+      ShowDlg('卡箱异常, 请联系管理人员.', sWarn, Self.Handle);
+    end;
   end;
-  WriteLog('读取到卡片: ' + nNewCardNo);
 
   if not IsCardValid(nNewCardNo) then
   begin
@@ -591,6 +613,7 @@ begin
       nTmp.Values['Type'] := 'D'
     else
       nTmp.Values['Type'] := 'S';
+
     nTmp.Values['StockNO'] := EditStock.Text;
     nTmp.Values['StockName'] := EditSName.Text;//copy(EditSName.Text,1,Length(EditSName.Text)-2);//EditSName.Text;
     nTmp.Values['Price'] := EditPrice.Text;

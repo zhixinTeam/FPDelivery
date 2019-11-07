@@ -1,10 +1,10 @@
 inherited fFormCustomer: TfFormCustomer
-  Left = 366
-  Top = 82
+  Left = 578
+  Top = 107
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
-  ClientHeight = 586
-  ClientWidth = 529
+  ClientHeight = 583
+  ClientWidth = 535
   OldCreateOrder = True
   OnClose = FormClose
   OnCreate = FormCreate
@@ -22,8 +22,8 @@ inherited fFormCustomer: TfFormCustomer
   object dxLayoutControl1: TdxLayoutControl
     Left = 0
     Top = 0
-    Width = 529
-    Height = 586
+    Width = 535
+    Height = 583
     Align = alClient
     TabOrder = 0
     TabStop = False
@@ -36,7 +36,7 @@ inherited fFormCustomer: TfFormCustomer
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
       TabOrder = 0
-      Width = 413
+      Width = 333
     end
     object EditPhone: TcxTextEdit
       Left = 84
@@ -47,7 +47,7 @@ inherited fFormCustomer: TfFormCustomer
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
       TabOrder = 4
-      Width = 413
+      Width = 333
     end
     object EditMemo: TcxMemo
       Left = 84
@@ -59,14 +59,14 @@ inherited fFormCustomer: TfFormCustomer
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
       Style.Edges = [bBottom]
-      TabOrder = 14
+      TabOrder = 15
       Height = 45
-      Width = 413
+      Width = 333
     end
     object InfoList1: TcxMCListBox
       Left = 24
       Top = 397
-      Width = 438
+      Width = 333
       Height = 131
       HeaderSections = <
         item
@@ -76,12 +76,12 @@ inherited fFormCustomer: TfFormCustomer
         item
           AutoSize = True
           Text = #20869#23481
-          Width = 329
+          Width = 224
         end>
       ParentFont = False
       Style.BorderStyle = cbsOffice11
       Style.Edges = [bLeft, bTop, bRight, bBottom]
-      TabOrder = 19
+      TabOrder = 20
     end
     object InfoItems: TcxComboBox
       Left = 84
@@ -96,7 +96,7 @@ inherited fFormCustomer: TfFormCustomer
       Style.BorderStyle = ebsSingle
       Style.ButtonStyle = btsHotFlat
       Style.PopupBorderStyle = epbsSingle
-      TabOrder = 15
+      TabOrder = 16
       Width = 100
     end
     object EditInfo: TcxTextEdit
@@ -106,43 +106,43 @@ inherited fFormCustomer: TfFormCustomer
       Properties.MaxLength = 50
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
-      TabOrder = 17
+      TabOrder = 18
       Width = 120
     end
     object BtnAdd: TButton
-      Left = 452
+      Left = 462
       Top = 345
       Width = 46
       Height = 18
       Caption = #28155#21152
-      TabOrder = 16
+      TabOrder = 17
       OnClick = BtnAddClick
     end
     object BtnDel: TButton
-      Left = 453
+      Left = 463
       Top = 371
       Width = 45
       Height = 17
       Caption = #21024#38500
-      TabOrder = 18
+      TabOrder = 19
       OnClick = BtnDelClick
     end
     object BtnOK: TButton
-      Left = 365
+      Left = 375
       Top = 547
       Width = 70
       Height = 22
       Caption = #20445#23384
-      TabOrder = 21
+      TabOrder = 22
       OnClick = BtnOKClick
     end
     object BtnExit: TButton
-      Left = 441
+      Left = 451
       Top = 547
       Width = 70
       Height = 22
       Caption = #21462#28040
-      TabOrder = 22
+      TabOrder = 23
       OnClick = BtnExitClick
     end
     object cxTextEdit1: TcxTextEdit
@@ -154,7 +154,7 @@ inherited fFormCustomer: TfFormCustomer
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
       TabOrder = 2
-      Width = 211
+      Width = 222
     end
     object cxTextEdit2: TcxTextEdit
       Left = 84
@@ -176,7 +176,7 @@ inherited fFormCustomer: TfFormCustomer
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
       TabOrder = 6
-      Width = 211
+      Width = 222
     end
     object cxTextEdit4: TcxTextEdit
       Left = 84
@@ -198,7 +198,7 @@ inherited fFormCustomer: TfFormCustomer
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
       TabOrder = 8
-      Width = 211
+      Width = 222
     end
     object EditBank: TcxComboBox
       Left = 84
@@ -222,11 +222,11 @@ inherited fFormCustomer: TfFormCustomer
       Top = 185
       Hint = 'T.C_Account'
       ParentFont = False
-      Properties.MaxLength = 18
+      Properties.MaxLength = 100
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
       TabOrder = 10
-      Width = 211
+      Width = 222
     end
     object EditCredit: TcxTextEdit
       Left = 84
@@ -277,12 +277,12 @@ inherited fFormCustomer: TfFormCustomer
       ParentFont = False
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebsSingle
-      TabOrder = 20
+      TabOrder = 21
       Transparent = True
       Width = 218
     end
     object EditWX: TcxComboBox
-      Left = 84
+      Left = 286
       Top = 237
       Hint = 'T.C_WeiXin'
       ParentFont = False
@@ -293,8 +293,8 @@ inherited fFormCustomer: TfFormCustomer
       Style.BorderStyle = ebsSingle
       Style.ButtonStyle = btsHotFlat
       Style.PopupBorderStyle = epbsSingle
-      TabOrder = 13
-      Width = 413
+      TabOrder = 14
+      Width = 222
     end
     object editParent: TcxComboBox
       Left = 84
@@ -307,7 +307,23 @@ inherited fFormCustomer: TfFormCustomer
       Style.ButtonStyle = btsHotFlat
       Style.PopupBorderStyle = epbsSingle
       TabOrder = 3
-      Width = 413
+      Width = 333
+    end
+    object cbb_Fact: TcxComboBox
+      Left = 84
+      Top = 237
+      Hint = 'T.C_BillFact'
+      ParentFont = False
+      Properties.DropDownRows = 20
+      Properties.ImmediateDropDown = False
+      Properties.IncrementalSearch = False
+      Properties.ItemHeight = 20
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsSingle
+      Style.ButtonStyle = btsHotFlat
+      Style.PopupBorderStyle = epbsSingle
+      TabOrder = 13
+      Width = 136
     end
     object dxLayoutControl1Group_Root: TdxLayoutGroup
       ShowCaption = False
@@ -428,10 +444,21 @@ inherited fFormCustomer: TfFormCustomer
               ControlOptions.ShowBorder = False
             end
           end
-          object dxLayoutControl1Item22: TdxLayoutItem
-            Caption = #24494#20449#36134#21495':'
-            Control = EditWX
-            ControlOptions.ShowBorder = False
+          object dxLayoutControl1Group9: TdxLayoutGroup
+            ShowCaption = False
+            Hidden = True
+            LayoutDirection = ldHorizontal
+            ShowBorder = False
+            object dxLayoutControl1Item23: TdxLayoutItem
+              Caption = #31080#25454#24037#21378':'
+              Control = cbb_Fact
+              ControlOptions.ShowBorder = False
+            end
+            object dxLayoutControl1Item22: TdxLayoutItem
+              Caption = #24494#20449#36134#21495':'
+              Control = EditWX
+              ControlOptions.ShowBorder = False
+            end
           end
         end
         object dxLayoutControl1Item4: TdxLayoutItem

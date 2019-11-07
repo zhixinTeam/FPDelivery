@@ -17,13 +17,14 @@ inherited fFrameZhiKaDetail: TfFrameZhiKaDetail
     end
   end
   inherited cxGrid1: TcxGrid
-    Top = 205
+    Top = 210
     Width = 686
-    Height = 162
+    Height = 166
     LevelTabs.Slants.Kind = skCutCorner
     inherited cxView1: TcxGridDBTableView
       PopupMenu = PMenu1
       OptionsSelection.MultiSelect = True
+      OptionsView.DataRowHeight = 24
     end
     inherited cxLevel1: TcxGridLevel
       Caption = #24050#21150#29702
@@ -33,8 +34,8 @@ inherited fFrameZhiKaDetail: TfFrameZhiKaDetail
     Width = 686
     Height = 138
     object cxTextEdit1: TcxTextEdit [0]
-      Left = 81
-      Top = 93
+      Left = 87
+      Top = 120
       Hint = 'T.Z_ID'
       ParentFont = False
       Style.BorderColor = clWindowFrame
@@ -43,8 +44,8 @@ inherited fFrameZhiKaDetail: TfFrameZhiKaDetail
       Width = 112
     end
     object EditCus: TcxButtonEdit [1]
-      Left = 256
-      Top = 36
+      Left = 262
+      Top = 50
       ParentFont = False
       Properties.Buttons = <
         item
@@ -60,8 +61,8 @@ inherited fFrameZhiKaDetail: TfFrameZhiKaDetail
       Width = 135
     end
     object EditZK: TcxButtonEdit [2]
-      Left = 81
-      Top = 36
+      Left = 87
+      Top = 50
       ParentFont = False
       Properties.Buttons = <
         item
@@ -77,8 +78,8 @@ inherited fFrameZhiKaDetail: TfFrameZhiKaDetail
       Width = 112
     end
     object EditDate: TcxButtonEdit [3]
-      Left = 454
-      Top = 36
+      Left = 460
+      Top = 50
       ParentFont = False
       Properties.Buttons = <
         item
@@ -94,8 +95,8 @@ inherited fFrameZhiKaDetail: TfFrameZhiKaDetail
       Width = 185
     end
     object cxTextEdit4: TcxTextEdit [4]
-      Left = 256
-      Top = 93
+      Left = 262
+      Top = 120
       Hint = 'T.D_StockName'
       ParentFont = False
       Style.BorderColor = clWindowFrame
@@ -104,8 +105,8 @@ inherited fFrameZhiKaDetail: TfFrameZhiKaDetail
       Width = 135
     end
     object cxTextEdit2: TcxTextEdit [5]
-      Left = 617
-      Top = 93
+      Left = 623
+      Top = 120
       Hint = 'T.C_Name'
       ParentFont = False
       Style.BorderColor = clWindowFrame
@@ -114,8 +115,8 @@ inherited fFrameZhiKaDetail: TfFrameZhiKaDetail
       Width = 121
     end
     object cxTextEdit3: TcxTextEdit [6]
-      Left = 454
-      Top = 93
+      Left = 460
+      Top = 120
       Hint = 'T.D_Value'
       ParentFont = False
       Style.BorderColor = clWindowFrame
@@ -168,7 +169,7 @@ inherited fFrameZhiKaDetail: TfFrameZhiKaDetail
     end
   end
   inherited cxSplitter1: TcxSplitter
-    Top = 197
+    Top = 202
     Width = 686
   end
   inherited TitlePanel1: TZnBitmapPanel
@@ -192,7 +193,7 @@ inherited fFrameZhiKaDetail: TfFrameZhiKaDetail
   object PMenu1: TPopupMenu
     AutoHotkeys = maManual
     OnPopup = PMenu1Popup
-    Left = 2
+    Left = 1
     Top = 270
     object N4: TMenuItem
       Caption = #8251#32440#21345#20923#32467#8251
@@ -212,6 +213,20 @@ inherited fFrameZhiKaDetail: TfFrameZhiKaDetail
       Caption = #25353#21697#31181#20923#32467
       OnClick = N8Click
     end
+    object N24: TMenuItem
+      Caption = '-'
+    end
+    object N21: TMenuItem
+      Caption = #25353#35746#21333#21517#31216#20923#32467
+      OnClick = N21Click
+    end
+    object N22: TMenuItem
+      Caption = #25353#35746#21333#21517#31216#35299#20923
+      OnClick = N21Click
+    end
+    object N23: TMenuItem
+      Caption = '-'
+    end
     object N17: TMenuItem
       Caption = #25353#21512#21516#21306#22495#20923#32467
       OnClick = N17Click
@@ -219,6 +234,9 @@ inherited fFrameZhiKaDetail: TfFrameZhiKaDetail
     object N18: TMenuItem
       Caption = #25353#21512#21516#21306#22495#35299#20923
       OnClick = N17Click
+    end
+    object N25: TMenuItem
+      Caption = '-'
     end
     object N20: TMenuItem
       Caption = #25353#19994#21153#21592#21306#22495#20923#32467

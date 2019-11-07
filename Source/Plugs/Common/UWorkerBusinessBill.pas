@@ -457,7 +457,7 @@ end;
 function TWorkerBusinessBills.SaveBills(var nData: string): Boolean;
 var nIdx: Integer;
     nVal,nMoney,nLimitValue,nLeaveValue: Double;   //限提量
-    nStr,nSQL,nFixMoney: string;
+    nStr,nSQL,nFixMoney, nFact: string;
     {$IFDEF TruckInNow}
     nStatus, nNextStatus: string;
     {$ENDIF}
@@ -470,6 +470,16 @@ begin
     writelog('验证开单信息失败,原因:'+nData);
     Exit;
   end;
+
+  {$IFDEF PrintFactorysBill}
+  nFact:= '黄陵';
+  nSQL := 'select * from %s where C_ID=''%s''';
+  nSQL := Format(nSQL,[sTable_Customer,FListA.Values['CusID']]);
+  with gDBConnManager.WorkerQuery(FDBConn, nSQL) do
+  begin
+    nFact:= FieldByName('C_BillFact').AsString;
+  end;
+  {$ENDIF}
 
   nSQL := 'select * from %s where T_Truck=''%s''';
   nSQL := Format(nSQL,[sTable_Truck,FListA.Values['Truck']]);
@@ -677,6 +687,7 @@ begin
       //获取批次号信息
 
       nStr := MakeSQLByStr([SF('L_ID', nOut.FData),
+      {$IFDEF PrintFactorysBill} SF('L_BillFact', nFact), {$ENDIF}
               SF('L_ZhiKa', FListA.Values['ZhiKa']),
               SF('L_Order', FListC.Values['OrderNo']),
               SF('L_Project', FListA.Values['Project']),
@@ -733,6 +744,12 @@ begin
               FListC.Values['HYDan']]);
       gDBConnManager.WorkerExec(FDBConn, nStr);
       //更新批次号使用量
+
+
+      nStr := 'UPDate %s Set L_Project=Z_Name From S_ZhiKa Where L_ZhiKa=Z_ID And L_ID=''%s''';
+      nStr := Format(nStr, [sTable_Bill, nOut.FData]);
+      gDBConnManager.WorkerExec(FDBConn, nStr);
+
 
       if FListA.Values['Card'] = '' then
       begin

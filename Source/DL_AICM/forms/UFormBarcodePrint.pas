@@ -33,7 +33,7 @@ type
     { Private declarations }
     FAutoClose:Integer;
     FParam: PFormCommandParam;
-    function GetHYDan(const nwebOrderid:string; var nHYDan,nStockname,nStockno:string):Boolean;
+    function GetHYDan(const nwebOrderid:string; var nHYDan,nStockname,nStockno,nLID:string):Boolean;
     procedure Writelog(nMsg:string);
   public
     { Public declarations }
@@ -78,7 +78,7 @@ end;
 procedure TfFormBarcodePrint.BtnOKClick(Sender: TObject);
 var
   nWebOrderID:string;
-  nHyDan,nstockname,nstockno:string;
+  nHyDan,nstockname,nstockno,nLID:string;
   nMsg:string;
 begin
   nWebOrderID := Trim(editWebOrderNo.Text);
@@ -88,14 +88,15 @@ begin
     ShowMsg(nMsg,sHint);
     Exit;
   end;
-  if not GetHYDan(nWebOrderID,nHyDan,nstockname,nstockno) then Exit;
+  if not GetHYDan(nWebOrderID,nHyDan,nstockname,nstockno,nLID) then Exit;
   FParam.FParamB := nHyDan;
   FParam.FParamC := nstockname;
   FParam.FParamD := nstockno;
+  FParam.FParamE := nLID;
   ModalResult := mrok;
 end;
 
-function TfFormBarcodePrint.GetHYDan(const nwebOrderid:string;var nHYDan,nStockname,nStockno: string): Boolean;
+function TfFormBarcodePrint.GetHYDan(const nwebOrderid:string;var nHYDan,nStockname,nStockno,nLID: string): Boolean;
 var
   nStr:string;
   nBillno:string;
@@ -116,11 +117,12 @@ begin
       Exit;
     end;
     nBillno := FieldByName('WOM_LID').AsString;
+    nLID    := FieldByName('WOM_LID').AsString;
   end;
 
-  nStr := 'select L_Status,L_HYDan,L_StockName,l_Stockno from %s where L_ID=''%s''';
+  nStr := 'select L_Status,L_HYDan,L_StockName,l_Stockno From %s where L_ID=''%s''';
   nStr := Format(nStr,[sTable_Bill,nBillno]);
-  with fdm.QueryTemp(nStr) do
+  with FDM.QueryTemp(nStr) do
   begin
     if RecordCount<1 then
     begin
@@ -141,6 +143,12 @@ begin
     nStockName := FieldByName('L_StockName').AsString;
     nStockno := FieldByName('l_Stockno').AsString;
     Result := True;
+
+    nStr :='Insert into S_StockHuaYan(H_Custom,H_CusName,H_SerialNo,H_Truck,H_Value,H_BillDate,H_ReportDate,H_Reporter) '+
+             'Select L_CusID,L_CusName,L_HYDan,L_Truck,L_Value,L_OutFact,GETDATE(),L_ID '+
+             'From S_Bill Where L_ID=''%s'' And not exists(Select * From S_StockHuaYan Where H_Reporter=''%s'')';
+    nStr := Format(nStr,[nBillno,nBillno]);
+    FDM.ExecuteSQL(nStr);
   end;  
 end;
 

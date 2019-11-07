@@ -1,6 +1,6 @@
 object fFormMain: TfFormMain
-  Left = 329
-  Top = 201
+  Left = 404
+  Top = 212
   Width = 557
   Height = 394
   BorderIcons = [biSystemMenu, biMinimize]
@@ -85,7 +85,7 @@ object fFormMain: TfFormMain
     Left = 0
     Top = 70
     Width = 541
-    Height = 267
+    Height = 266
     Align = alClient
     ImeName = #35895#27468#25340#38899#36755#20837#27861' 2'
     ScrollBars = ssBoth
@@ -93,7 +93,7 @@ object fFormMain: TfFormMain
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 337
+    Top = 336
     Width = 541
     Height = 19
     Panels = <>

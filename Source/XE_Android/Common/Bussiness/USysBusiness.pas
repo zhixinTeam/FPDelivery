@@ -176,6 +176,9 @@ begin
          nIn.FBase.FParam := ''
     else nIn.FBase.FParam := sParam_NoHintOnError;
 
+    nIn.FBase.FParam := sParam_NoHintOnError;
+    //≤ªÃ· æ
+
     nWorker := gBusinessWorkerManager.LockWorker(sCLI_BusinessPurchaseOrder);
     //get worker
     Result := nWorker.WorkActive(@nIn, nOut);

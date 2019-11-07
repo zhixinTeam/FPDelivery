@@ -470,11 +470,21 @@ begin
       nCode := Date2Str(Now) + Fields[1].AsString + nCode;
       //富平: 年月日 + 水泥批次号 + 流水号
       {$ENDIF}
+
+      {$IFDEF HLST}
+      nCode := Fields[0].AsString;
+      System.Delete(nCode, 1, Length('TH170707'));
+      //nCode := Date2Str(Now) + Fields[1].AsString + nCode;
+      nCode := Fields[0].AsString + Fields[1].AsString ;
+      //黄陵: 提货单号 + 水泥批次号
+      {$ENDIF}
     end;
   end;
 
+  WriteLog(Format('向通道[ %s ]发送防违流码[ %s ].', [FIn.FExtParam, nCode]));
   if not gCodePrinterManager.PrintCode(FIn.FExtParam, nCode, nStr) then
   begin
+    WriteLog(Format('向通道[ %s ]发送防违流码[ %s ]失败.', [FIn.FExtParam, nCode]));
     Result := False;
     nData := nStr;
     Exit;

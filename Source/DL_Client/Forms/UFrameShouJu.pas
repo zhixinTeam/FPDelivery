@@ -101,12 +101,11 @@ end;
 function TfFrameShouJu.InitFormDataSQL(const nWhere: string): string;
 begin
   EditDate.Text := Format('%s жа %s', [Date2Str(FStart), Date2Str(FEnd)]);
-  Result := 'Select * From $SJ ';
+  Result := 'Select * From $SJ Where (S_Date>=''$S'' and S_Date <''$E'') ';
 
-  if nWhere = '' then
-       Result := Result + 'Where (S_Date>=''$S'' and S_Date <''$E'')'
-  else Result := Result + 'Where (' + nWhere + ')';
-  
+  if nWhere <> '' then
+    Result := Result + 'And (' + nWhere + ')';
+
   Result := MacroValue(Result, [MI('$SJ', sTable_SysShouJu),
             MI('$S', Date2Str(FStart)), MI('$E', Date2Str(FEnd + 1))]);
   //xxxxx                                                                        )

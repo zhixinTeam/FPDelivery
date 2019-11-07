@@ -64,47 +64,54 @@ begin
     Exit;
   end;
 
-  with ComPort1 do
-  begin
-    with Timeouts do
+  try
+    with ComPort1 do
     begin
-      ReadTotalConstant := 100;
-      ReadTotalMultiplier := 10;
-    end;
-
-    nIni := TIniFile.Create(gPath + 'Reader.Ini');
-    with gReaderItem do
-    try
-      nInt := nIni.ReadInteger('Param', 'Type', 1);
-      FType := TReaderType(nInt - 1);
-
-      FPort := nIni.ReadString('Param', 'Port', '');
-      FBaud := nIni.ReadString('Param', 'Rate', '4800');
-      FDataBit := nIni.ReadInteger('Param', 'DataBit', 8);
-      FStopBit := nIni.ReadInteger('Param', 'StopBit', 0);
-      FCheckMode := nIni.ReadInteger('Param', 'CheckMode', 0);
-
-      Port := FPort;
-      BaudRate := StrToBaudRate(FBaud);
-
-      case FDataBit of
-       5: DataBits := dbFive;
-       6: DataBits := dbSix;
-       7: DataBits :=  dbSeven else DataBits := dbEight;
+      with Timeouts do
+      begin
+        ReadTotalConstant := 100;
+        ReadTotalMultiplier := 10;
       end;
 
-      case FStopBit of
-       2: StopBits := sbTwoStopBits;
-       15: StopBits := sbOne5StopBits
-       else StopBits := sbOneStopBit;
-      end;
-    finally
-      nIni.Free;
-    end;
+      nIni := TIniFile.Create(gPath + 'Reader.Ini');
+      with gReaderItem do
+      try
+        nInt := nIni.ReadInteger('Param', 'Type', 1);
+        FType := TReaderType(nInt - 1);
 
-    if ComPort1.Port <> '' then
-      ComPort1.Open;
-    //xxxxx
+        FPort := nIni.ReadString('Param', 'Port', '');
+        FBaud := nIni.ReadString('Param', 'Rate', '4800');
+        FDataBit := nIni.ReadInteger('Param', 'DataBit', 8);
+        FStopBit := nIni.ReadInteger('Param', 'StopBit', 0);
+        FCheckMode := nIni.ReadInteger('Param', 'CheckMode', 0);
+
+        Port := FPort;
+        BaudRate := StrToBaudRate(FBaud);
+
+        case FDataBit of
+         5: DataBits := dbFive;
+         6: DataBits := dbSix;
+         7: DataBits :=  dbSeven else DataBits := dbEight;
+        end;
+
+        case FStopBit of
+         2: StopBits := sbTwoStopBits;
+         15: StopBits := sbOne5StopBits
+         else StopBits := sbOneStopBit;
+        end;
+      finally
+        nIni.Free;
+      end;
+
+      if ComPort1.Port <> '' then
+        ComPort1.Open;
+      //xxxxx
+    end;
+  except
+    on Ex : Exception do
+    begin
+      ShowMsg('请检查刷卡器设备是否连接正确：'+Ex.Message, '提示');
+    end;
   end;
 end;
 

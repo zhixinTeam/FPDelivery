@@ -13,7 +13,7 @@ uses
   cxControls, cxLookAndFeelPainters, ExtCtrls, Menus,
   UBitmapPanel, cxPC, cxClasses, dxNavBarBase, dxNavBarCollns, dxNavBar,
   cxSplitter, ComCtrls, StdCtrls, cxLookAndFeels, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxNavBar2Painter;
 
 type
   TfMainForm = class(TForm)

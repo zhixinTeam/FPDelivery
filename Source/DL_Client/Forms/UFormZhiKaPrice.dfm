@@ -1,7 +1,7 @@
 inherited fFormZKPrice: TfFormZKPrice
   Left = 296
   Top = 302
-  ClientHeight = 375
+  ClientHeight = 320
   ClientWidth = 465
   OnClose = FormClose
   OnCreate = FormCreate
@@ -9,16 +9,16 @@ inherited fFormZKPrice: TfFormZKPrice
   TextHeight = 12
   inherited dxLayout1: TdxLayoutControl
     Width = 465
-    Height = 375
+    Height = 320
     inherited BtnOK: TButton
       Left = 319
-      Top = 342
+      Top = 287
       Caption = #30830#23450
       TabOrder = 10
     end
     inherited BtnExit: TButton
       Left = 389
-      Top = 342
+      Top = 287
       TabOrder = 11
     end
     object EditStock: TcxTextEdit [2]

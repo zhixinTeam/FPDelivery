@@ -277,7 +277,8 @@ begin
 
         FListA.Text := PackerDecodeStr(PackerDecodeStr(nList.Values['details']));
         editStockName.Text :=  FListA.Values['materielName'];
-        editNum.Text := StringReplace(FListA.Values['quantity'], '.', '', [rfReplaceAll]);
+        //editNum.Text := StringReplace(FListA.Values['quantity'], '.', '', [rfReplaceAll]);
+        editNum.Text := FloatToStr(StrToFloatDef(FListA.Values['quantity'], 0));
 
         if Trim(nList.Values['type']) = 'œ˙ €' then
         begin

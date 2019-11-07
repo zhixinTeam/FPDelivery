@@ -157,6 +157,7 @@ function PrintBillReport(nBill: string; const nAsk: Boolean): Boolean;
 //打印提货单
 function PrintPoundReport(const nPound: string; nAsk: Boolean): Boolean;
 //打印榜单
+function PrintHuaYanReport(const nHID: string; const nAsk: Boolean): Boolean;
 function PrintHeGeReport(const nHID: string; const nAsk: Boolean): Boolean;
 //化验单,合格证
 function PrintBillLoadReport(nBill: string; const nAsk: Boolean): Boolean;
@@ -1339,6 +1340,83 @@ begin
   Result := FDR.PrintSuccess;
 end;
 
+//Desc: 获取nStock品种的报表文件
+function GetReportFileByStock(const nStock: string): string;
+begin
+  Result := GetPinYinOfStr(nStock);
+
+  if Pos('dj', Result) > 0 then
+    Result := gPath + sReportDir + 'HuaYan42_DJ.fr3'
+  else if Pos('gsysl', Result) > 0 then
+    Result := gPath + sReportDir + 'HuaYan_gsl.fr3'
+  else if Pos('kzf', Result) > 0 then
+    Result := gPath + sReportDir + 'HuaYan_kzf.fr3'
+  else if Pos('qz', Result) > 0 then
+    Result := gPath + sReportDir + 'HuaYan_qz.fr3'
+  else if Pos('32', Result) > 0 then
+    Result := gPath + sReportDir + 'HuaYan32.fr3'
+  else if Pos('42', Result) > 0 then
+    Result := gPath + sReportDir + 'HuaYan42.fr3'
+  else if Pos('52', Result) > 0 then
+    Result := gPath + sReportDir + 'HuaYan42.fr3'
+  else if Pos('kf', Result) > 0 then
+    Result := gPath + sReportDir + 'HuaYan_KF.fr3'
+  else Result := '';
+end;
+
+//Desc: 打印标识为nHID的化验单
+function PrintHuaYanReport(const nHID: string; const nAsk: Boolean): Boolean;
+var nStr,nSR: string;
+begin
+  if nAsk then
+  begin
+    Result := True;
+    nStr := '是否要打印化验单?';
+    if not QueryDlg(nStr, sAsk) then Exit;
+  end else Result := False;
+
+  nSR := 'Select * From %s sr ' +
+         ' Left Join %s sp on sp.P_ID=sr.R_PID';
+  nSR := Format(nSR, [sTable_StockRecord, sTable_StockParam]);
+
+  nStr := 'Select hy.*,sr.*,C_Name From $HY hy ' +
+          ' Left Join $Cus cus on cus.C_ID=hy.H_Custom' +
+          ' Left Join ($SR) sr on sr.R_SerialNo=H_SerialNo ' +
+          'Where H_Reporter=''$ID''';
+  //xxxxx
+
+  nStr := MacroValue(nStr, [MI('$HY', sTable_StockHuaYan),
+          MI('$Cus', sTable_Customer), MI('$SR', nSR), MI('$ID', nHID)]);
+  //xxxxx
+
+  try
+    if FDM.QueryTemp(nStr).RecordCount < 1 then
+    begin
+      nStr := '编号为[ %s ] 的化验单记录已无效!!';
+      nStr := Format(nStr, [nHID]);
+      ShowMsg(nStr, sHint); Exit;
+    end;
+
+    nStr := FDM.SqlTemp.FieldByName('P_Stock').AsString;
+    nStr := GetReportFileByStock(nStr);
+
+    if not FDR.LoadReportFile(nStr) then
+    begin
+      nStr := '无法正确加载报表文件';
+      ShowMsg(nStr, sHint); Exit;
+    end;
+
+    FDR.Dataset1.DataSet := FDM.SqlTemp;
+    FDR.ShowReport;
+    Result := FDR.PrintSuccess;
+  except
+    on Ex: Exception do
+    begin
+      WriteLog('打印失败：'+ Ex.Message);
+    end;
+  end;
+end;
+
 //Date: 2012-4-15
 //Parm: 过磅单号;是否询问
 //Desc: 打印nPound过磅记录
@@ -1461,29 +1539,29 @@ begin
   Result := FDR.PrintSuccess;
 end;
 
-//Desc: 获取nStock品种的报表文件
-function GetReportFileByStock(const nStock: string): string;
-begin
-  Result := GetPinYinOfStr(nStock);
-
-  if Pos('dj', Result) > 0 then
-    Result := gPath + sReportDir + 'HuaYan42_DJ.fr3'
-  else if Pos('gsysl', Result) > 0 then
-    Result := gPath + sReportDir + 'HuaYan_gsl.fr3'
-  else if Pos('kzf', Result) > 0 then
-    Result := gPath + sReportDir + 'HuaYan_kzf.fr3'
-  else if Pos('qz', Result) > 0 then
-    Result := gPath + sReportDir + 'HuaYan_qz.fr3'
-  else if Pos('a32', Result) > 0 then
-    Result := gPath + sReportDir + 'HuaYan32_psa.fr3'
-  else if Pos('32', Result) > 0 then
-    Result := gPath + sReportDir + 'HuaYan32.fr3'
-  else if Pos('42', Result) > 0 then
-    Result := gPath + sReportDir + 'HuaYan42.fr3'
-  else if Pos('52', Result) > 0 then
-    Result := gPath + sReportDir + 'HuaYan52.5.fr3'
-  else Result := '';
-end;
+////Desc: 获取nStock品种的报表文件
+//function GetReportFileByStock(const nStock: string): string;
+//begin
+//  Result := GetPinYinOfStr(nStock);
+//
+//  if Pos('dj', Result) > 0 then
+//    Result := gPath + sReportDir + 'HuaYan42_DJ.fr3'
+//  else if Pos('gsysl', Result) > 0 then
+//    Result := gPath + sReportDir + 'HuaYan_gsl.fr3'
+//  else if Pos('kzf', Result) > 0 then
+//    Result := gPath + sReportDir + 'HuaYan_kzf.fr3'
+//  else if Pos('qz', Result) > 0 then
+//    Result := gPath + sReportDir + 'HuaYan_qz.fr3'
+//  else if Pos('a32', Result) > 0 then
+//    Result := gPath + sReportDir + 'HuaYan32_psa.fr3'
+//  else if Pos('32', Result) > 0 then
+//    Result := gPath + sReportDir + 'HuaYan32.fr3'
+//  else if Pos('42', Result) > 0 then
+//    Result := gPath + sReportDir + 'HuaYan42.fr3'
+//  else if Pos('52', Result) > 0 then
+//    Result := gPath + sReportDir + 'HuaYan52.5.fr3'
+//  else Result := '';
+//end;
 
 //Desc: 打印标识为nID的合格证
 function PrintHeGeReport(const nHID: string; const nAsk: Boolean): Boolean;

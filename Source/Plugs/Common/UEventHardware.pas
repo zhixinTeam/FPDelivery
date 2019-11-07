@@ -34,9 +34,9 @@ implementation
 
 uses
   SysUtils, USysLoger, UHardBusiness, UMgrTruckProbe, UMgrParam,
-  UMgrQueue, UMgrLEDCard, UMgrHardHelper, UMgrRemotePrint, U02NReader,
+  UMgrQueue, UMgrLEDCard, UMgrHardHelper, UMgrRemotePrint, U02NReader, UMgrRemoteSnap,
   {$IFDEF MultiReplay}UMultiJS_Reply, {$ELSE}UMultiJS, {$ENDIF}
-  UMgrERelay, UMgrRemoteVoice, UMgrCodePrinter, UMgrLEDDisp,
+  UMgrERelay, UMgrRemoteVoice, UMgrCodePrinter, UMgrLEDDisp, UMgrBasisWeight,
   UMgrRFID102, UMgrVoiceNet, UBlueReader, UMgrTTCEM100, UMgrSendCardNo;
 
 class function THardwareWorker.ModuleInfo: TPlugModuleInfo;
@@ -127,6 +127,13 @@ begin
     nStr := '定置装车';
     gSendCardNo.LoadConfig(nCfg + 'PLCController.xml');
     {$ENDIF}
+
+    {$IFDEF BasisWeight}
+    nStr := '定量装车业务(称皮毛重、装车)';
+    gBasisWeightManager := TBasisWeightManager.Create;
+    gBasisWeightManager.LoadConfig(nCfg + 'Tunnels.xml');
+    {$ENDIF}
+
   except
     on E:Exception do
     begin
@@ -236,6 +243,12 @@ begin
   gSendCardNo.StartPrinter;
   //sendcard
   {$ENDIF}
+
+  {$IFDEF BasisWeight}  //  定量装车控制
+  //gBasisWeightManager.TunnelManager.OnUserParseWeight := WhenParsePoundWeight;  //特殊地磅解析
+  gBasisWeightManager.OnStatusChange := WhenBasisWeightStatusChange;
+  gBasisWeightManager.StartService;
+  {$ENDIF}
 end;
 
 procedure THardwareWorker.AfterStopServer;
@@ -298,6 +311,12 @@ begin
   gSendCardNo.StopPrinter;
   //sendcard
   {$ENDIF}
+
+  {$IFDEF BasisWeight}
+  gBasisWeightManager.StopService;
+  gBasisWeightManager.OnStatusChange := nil;
+  {$ENDIF}
+  
 end;
 
 end.

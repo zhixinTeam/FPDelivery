@@ -15,7 +15,7 @@ inherited fFormTruckCard: TfFormTruckCard
       TabOrder = 3
     end
     object editCard: TcxTextEdit [2]
-      Left = 63
+      Left = 75
       Top = 61
       ParentFont = False
       Style.BorderColor = clWindowFrame
@@ -25,7 +25,7 @@ inherited fFormTruckCard: TfFormTruckCard
       Width = 121
     end
     object editTruck: TcxTextEdit [3]
-      Left = 63
+      Left = 75
       Top = 36
       Enabled = False
       ParentFont = False
@@ -38,13 +38,13 @@ inherited fFormTruckCard: TfFormTruckCard
     inherited dxLayout1Group_Root: TdxLayoutGroup
       inherited dxGroup1: TdxLayoutGroup
         object dxLayout1Item4: TdxLayoutItem
-          CaptionOptions.Text = #36710#29260#65306
+          Caption = #36710#29260#21495#65306
           Enabled = False
           Control = editTruck
           ControlOptions.ShowBorder = False
         end
         object dxLayout1Item3: TdxLayoutItem
-          CaptionOptions.Text = #21345#21495#65306
+          Caption = #30913#21345#21495#65306
           Control = editCard
           ControlOptions.ShowBorder = False
         end

@@ -15,9 +15,9 @@ inherited fFramePurchaseOrder: TfFramePurchaseOrder
     end
   end
   inherited cxGrid1: TcxGrid
-    Top = 202
+    Top = 207
     Width = 957
-    Height = 234
+    Height = 229
     inherited cxView1: TcxGridDBTableView
       PopupMenu = PMenu1
       OnDblClick = cxView1DblClick
@@ -27,8 +27,8 @@ inherited fFramePurchaseOrder: TfFramePurchaseOrder
     Width = 957
     Height = 135
     object EditID: TcxButtonEdit [0]
-      Left = 81
-      Top = 36
+      Left = 87
+      Top = 50
       ParentFont = False
       Properties.Buttons = <
         item
@@ -41,8 +41,8 @@ inherited fFramePurchaseOrder: TfFramePurchaseOrder
       Width = 125
     end
     object EditTruck: TcxButtonEdit [1]
-      Left = 433
-      Top = 36
+      Left = 439
+      Top = 50
       ParentFont = False
       Properties.Buttons = <
         item
@@ -55,40 +55,40 @@ inherited fFramePurchaseOrder: TfFramePurchaseOrder
       Width = 125
     end
     object cxTextEdit1: TcxTextEdit [2]
-      Left = 81
-      Top = 93
+      Left = 87
+      Top = 120
       Hint = 'T.O_ID'
       ParentFont = False
       TabOrder = 4
       Width = 125
     end
     object cxTextEdit2: TcxTextEdit [3]
-      Left = 257
-      Top = 93
+      Left = 263
+      Top = 120
       Hint = 'T.O_ProName'
       ParentFont = False
       TabOrder = 5
       Width = 125
     end
     object cxTextEdit4: TcxTextEdit [4]
-      Left = 433
-      Top = 93
+      Left = 439
+      Top = 120
       Hint = 'T.O_Truck'
       ParentFont = False
       TabOrder = 6
       Width = 125
     end
     object cxTextEdit3: TcxTextEdit [5]
-      Left = 621
-      Top = 93
+      Left = 627
+      Top = 120
       Hint = 'T.O_Project'
       ParentFont = False
       TabOrder = 7
       Width = 121
     end
     object EditCustomer: TcxButtonEdit [6]
-      Left = 257
-      Top = 36
+      Left = 263
+      Top = 50
       ParentFont = False
       Properties.Buttons = <
         item
@@ -101,8 +101,8 @@ inherited fFramePurchaseOrder: TfFramePurchaseOrder
       Width = 125
     end
     object EditDate: TcxButtonEdit [7]
-      Left = 621
-      Top = 36
+      Left = 627
+      Top = 50
       ParentFont = False
       Properties.Buttons = <
         item
@@ -163,7 +163,7 @@ inherited fFramePurchaseOrder: TfFramePurchaseOrder
     end
   end
   inherited cxSplitter1: TcxSplitter
-    Top = 194
+    Top = 199
     Width = 957
   end
   inherited TitlePanel1: TZnBitmapPanel

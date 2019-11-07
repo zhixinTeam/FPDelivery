@@ -11,9 +11,10 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   {$IFDEF MultiReplay}UMultiJS_Reply, {$ELSE}UMultiJS, {$ENDIF}
-  UMgrCodePrinter, ULibFun, USysConst, UFormWait, UFormInputbox,
-  cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, StdCtrls,
-  ExtCtrls, cxLabel, cxGraphics, cxControls;
+  UMgrCodePrinter, ULibFun, USysConst, UFormWait, UFormInputbox, 
+  cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters,
+  cxContainer, cxEdit, dxSkinsCore, dxSkinsDefaultPainters, ExtCtrls,
+  StdCtrls, cxLabel, UDataModule ;
 
 type
   TfFrameCounter = class(TFrame)
@@ -27,16 +28,23 @@ type
     Timer1: TTimer;
     BtnPause: TButton;
     EditCode: TLabeledEdit;
+    tmr_ClearJS: TTimer;
+    lbl_Info: TLabel;
     procedure BtnClearClick(Sender: TObject);
     procedure BtnStartClick(Sender: TObject);
     procedure EditTonChange(Sender: TObject);
     procedure EditTonDblClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure BtnPauseClick(Sender: TObject);
+    procedure tmr_ClearJSTimer(Sender: TObject);
   private
     { Private declarations }
+    procedure AddOPLog(nStr: string);
   public
-    { Public declarations }
+    FLastHasDone : Integer;
+    FCurrTruck   : string;
+    FTotalDaiNum : Integer;
+
     FBill: string;
     //交货单
     FDaiNum: Integer;
@@ -174,6 +182,7 @@ begin
       Exit;
     {$ENDIF}
 
+    AddOPLog(gSysParam.FUserName+' 为 '+ EditTruck.Text +' 启动装车,袋数：'+EditDai.Text+' 喷码：'+EditCode.Text);
     Timer1.Enabled := True;
     //计数
   finally
@@ -184,6 +193,8 @@ begin
   EditDai.Enabled := False;
   EditTon.Enabled := False;
   BtnStart.Enabled := False;
+
+  
 
   {$IFNDEF USE_MIT}
   BtnPause.Enabled := True;
@@ -225,7 +236,6 @@ begin
     {$ELSE}
     BtnClear.Click;
     {$ENDIF}
-    ShowMsg('装车完成', sHint);
   end;
 end;
 
@@ -240,6 +250,16 @@ begin
   Sleep(500);
   //for delay
   //BtnStart.Enabled := True;
+end;
+
+procedure TfFrameCounter.AddOPLog(nStr: string);
+begin
+  FDM.WriteSysLog('DaiJiShu', 'JiShuQi', nStr, False);
+end;
+
+procedure TfFrameCounter.tmr_ClearJSTimer(Sender: TObject);
+begin
+  //LabelHint.Caption:= '0';
 end;
 
 end.

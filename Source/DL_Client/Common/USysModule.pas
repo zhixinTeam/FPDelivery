@@ -36,7 +36,7 @@ uses
   UFrameWeiXinSendlog, UFormWeiXinSendlog,
   {$ENDIF}
   {.$IFDEF XAZL}
-  UFramePurchaseOrder, UFormPurchaseOrder, UFormPurchasing,
+  UFramePurchaseOrder, UFormPurchaseOrder, UFormPurchasing,      UFramePoundAutoItem, UFramePoundManualItem,
   UFrameQueryOrderDetail, UFrameOrderCard,  UFrameOrderDetail,
   UFormGetProvider, UFormGetMeterails, UFramePOrderBase, UFormPOrderBase,
   UFormGetPOrderBase, UFormOrderDtl,

@@ -100,20 +100,14 @@ function TfFrameOrderDetail.InitFormDataSQL(const nWhere: string): string;
 begin
   EditDate.Text := Format('%s жа %s', [Date2Str(FStart), Date2Str(FEnd)]);
   Result := 'Select *,(D_MValue-D_PValue-D_KZValue) as D_NetWeight ' +
-            'From $OD od Left Join $OO oo on od.D_OID=oo.O_ID ';
+            'From $OD od Left Join $OO oo on od.D_OID=oo.O_ID '+
+            'Where (D_InTime>=''$S'' and D_InTime <''$End'') ';
   //xxxxxx
+  if nWhere <> '' then
+    Result := Result + ' And (' + nWhere + ')';
 
-  if FJBWhere = '' then
-  begin
-    Result := Result + 'Where (D_InTime>=''$S'' and D_InTime <''$End'')';
-
-    if nWhere <> '' then
-      Result := Result + ' And (' + nWhere + ')';
-    //xxxxx
-  end else
-  begin
-    Result := Result + ' Where (' + FJBWhere + ')';
-  end;
+  if FJBWhere <> '' then
+    Result := Result + ' And (' + FJBWhere + ')';
 
   if Check1.Checked then
        Result := MacroValue(Result, [MI('$OD', sTable_OrderDtlBak)])

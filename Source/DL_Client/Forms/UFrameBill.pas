@@ -16,7 +16,7 @@ uses
   ComCtrls, ToolWin, cxTextEdit, cxMaskEdit, cxButtonEdit, Menus,
   UBitmapPanel, cxSplitter, cxLookAndFeels, cxLookAndFeelPainters,
   cxCheckBox, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxLayoutcxEditAdapters;
+  dxLayoutcxEditAdapters, dxSkinsdxLCPainter;
 
 type
   TfFrameBill = class(TfFrameNormal)
@@ -72,6 +72,7 @@ type
     procedure N11Click(Sender: TObject);
     procedure N12Click(Sender: TObject);
     procedure cxCheckBox1Click(Sender: TObject);
+    procedure cxGrid1MouseEnter(Sender: TObject);
   protected
     FStart,FEnd: TDate;
     //时间区间
@@ -232,35 +233,39 @@ end;
 
 //Desc: 删除
 procedure TfFrameBill.BtnDelClick(Sender: TObject);
-var nStr, nReson: string;
+var nStr, nReson, nID: string;
 begin
   if cxView1.DataController.GetSelectedCount < 1 then
   begin
     ShowMsg('请选择要删除的记录', sHint); Exit;
   end;
 
+  nID:= SQLQuery.FieldByName('L_ID').AsString;
   nStr := '确定要删除编号为[ %s ]的单据吗?';
-  nStr := Format(nStr, [SQLQuery.FieldByName('L_ID').AsString]);
+  nStr := Format(nStr, [nID]);
   if not QueryDlg(nStr, sAsk) then Exit;
 
   if not ShowInputBox('请输入删除原因:', sHint, nReson) then Exit;
-  if nReson = '' then
+  if Trim(nReson) = '' then
   begin
     ShowDlg('删除原因不能为空.',sHint);
     Exit;
   end;
 
-  if DeleteBill(SQLQuery.FieldByName('L_ID').AsString) then
+  if DeleteBill(nID) then
   begin
-    FDM.WriteSysLog(sFlag_BillItem, SQLQuery.FieldByName('L_ID').AsString,
-    '删除订单:[ '+ SQLQuery.FieldByName('L_ID').AsString +' ], 原因:' + nReson);
+    nStr := 'UPDate %s Set L_DelReson=''%s'' Where L_ID=''%s''';
+    nStr := Format(nStr, [sTable_BillBak, nReson, nID]);
+    FDM.ExecuteSQL(nStr);
+
+    FDM.WriteSysLog(sFlag_BillItem, nID, '删除订单:[ '+ nID +' ], 原因:' + nReson);
 
     InitFormData(FWhere);
     ShowMsg('提货单已删除', sHint);
   end;
 
   try
-    SaveWebOrderDelMsg(SQLQuery.FieldByName('L_ID').AsString,sFlag_Sale);
+    SaveWebOrderDelMsg(nID,sFlag_Sale);
   except
   end;
   //插入删除推送
@@ -273,6 +278,11 @@ begin
   if cxView1.DataController.GetSelectedCount > 0 then
   begin
     nStr := SQLQuery.FieldByName('L_ID').AsString;
+    if SQLQuery.FieldByName('L_Status').AsString<>'O' then
+    begin
+      ShowMsg('该订单尚未出厂、不能补打单据', '提示');
+      Exit;
+    end;
     PrintBillReport(nStr, False);
   end;
 end;
@@ -490,6 +500,12 @@ begin
     FWhere := '';
 
   InitFormData(FWhere);
+end;
+
+procedure TfFrameBill.cxGrid1MouseEnter(Sender: TObject);
+begin
+  inherited;
+  Self.Align:= alClient;
 end;
 
 initialization

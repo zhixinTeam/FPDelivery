@@ -80,13 +80,14 @@ begin
   EditDate.Text := Format('%s жа %s', [Date2Str(FStart), Date2Str(FEnd)]);
 
   Result := 'Select iom.*,S_Name From $IOM iom ' +
-            ' Left Join $SM sm On sm.S_ID=iom.M_SaleMan ';
+            ' Left Join $SM sm On sm.S_ID=iom.M_SaleMan '+
+            'Where (M_Date>=''$Start'' And M_Date<''$End'') ';
   //xxxxx
 
-  if nWhere = '' then
-       Result := Result + 'Where (M_Date>=''$Start'' And M_Date<''$End'')'
-  else Result := Result + 'Where (' + nWhere + ')';
-  
+  if nWhere <> '' then
+    Result := Result + 'And (' + nWhere + ')';
+
+
   Result := MacroValue(Result, [MI('$SM', sTable_Salesman),
             MI('$IOM', sTable_InOutMoney),
             MI('$Start', Date2Str(FStart)), MI('$End', Date2Str(FEnd + 1))]);

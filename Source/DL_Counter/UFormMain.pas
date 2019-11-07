@@ -10,10 +10,10 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  {$IFDEF MultiReplay}UMultiJS_Reply, {$ELSE}UMultiJS, {$ENDIF}
-  USysConst, UFrameJS, cxGraphics, cxControls, cxLookAndFeels,
+  {$IFDEF MultiReplay}UMultiJS_Reply, {$ELSE}UMultiJS, {$ENDIF}  UClientWorker,
+  USysConst, UFrameJS, cxGraphics, cxControls, cxLookAndFeels, UFormLogin,
   cxLookAndFeelPainters, Menus, ImgList, dxorgchr, cxSplitter, ComCtrls,
-  ToolWin, ExtCtrls, UMemDataPool;
+  ToolWin, ExtCtrls, UMemDataPool, dxSkinsCore, dxSkinsDefaultPainters;
 
 type
   TfFormMain = class(TForm)
@@ -38,6 +38,7 @@ type
     BtnPsw: TToolButton;
     ToolButton6: TToolButton;
     BtnSetPsw: TToolButton;
+    tmr1: TTimer;
     procedure wPanelResize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -57,6 +58,8 @@ type
     procedure BtnCardClick(Sender: TObject);
     procedure BtnPswClick(Sender: TObject);
     procedure BtnSetPswClick(Sender: TObject);
+    procedure tmr1Timer(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     FLastRefresh: Int64;
@@ -91,7 +94,9 @@ type
 
 var
   fFormMain: TfFormMain;
+  fFormLogin: TfFormLogin;
 
+  
 implementation
 
 {$R *.dfm}
@@ -104,7 +109,19 @@ var nInt: Integer;
     nIni: TIniFile;
 begin
   gPath := ExtractFilePath(Application.ExeName);
-  InitGlobalVariant(gPath, gPath + sConfigFile, gPath + sFormConfig);
+  InitGlobalVariant(gPath, gPath + sConfigFile, gPath + sFormConfig, gPath + sDBConfig);
+
+  Timer1.Enabled := False;
+  fFormLogin:= TfFormLogin.Create(nil);
+  fFormLogin.ShowModal;
+
+  if not fFormLogin.FIsLogin then
+    Application.Terminate;
+
+  //fFormLogin.Close;
+  
+  Timer1.Enabled := True;
+  fFormMain.Caption:= '袋装装车计数器    ' + gSysParam.FUserName + '  已登录';
 
   gMemDataManager := TMemDataManager.Create;  
   gMultiJSManager := TMultiJSManager.Create;
@@ -136,9 +153,10 @@ begin
     if not gSysParam.FIsEncode then
     begin
       BtnSetPsw.Visible := False;
-      BtnPsw.Visible := False;
+      BtnPsw.Visible := False;     
     end;
   finally
+    Self.WindowState:= wsMaximized;
     nIni.Free;
   end;
 end;
@@ -252,7 +270,7 @@ begin
 
       nPannel.Parent := wPanel;
       nPannel.FTunnel := nTunnel;
-      nPannel.GroupBox1.Caption := nTunnel.FName;
+      nPannel.GroupBox1.Caption := nTunnel.FName +'   空闲中';
 
       nIni := TIniFile.Create(gPath + sPConfigFile);
       nPannel.EditCode.Text := nIni.ReadString('Tunnel', nTunnel.FID, '');
@@ -327,7 +345,30 @@ begin
   nPanel := FindCounter(nTunnel.FID);
   if Assigned(nPanel) then
   begin
-    nPanel.LabelHint.Caption := IntToStr(nTunnel.FHasDone);
+    nPanel.LabelHint.Caption:= IntToStr(nTunnel.FHasDone);
+    nPanel.GroupBox1.Caption:= nPanel.FTunnel.FName + '   装车中';
+    nPanel.lbl_Info.Caption := '装车中 ('+Format('%d/%d', [nTunnel.FHasDone, nPanel.FDaiNum])+')';
+
+//    if nPanel.FLastHasDone=nTunnel.FHasDone then
+    if nTunnel.FDaiNum=nTunnel.FHasDone then
+    begin
+      //nPanel.LabelHint.Tag:= nPanel.LabelHint.Tag+1;
+      //IF nPanel.LabelHint.Tag<=20 then Exit;
+
+      nPanel.LabelHint.Tag:= 0;
+      nPanel.GroupBox1.Caption:= nPanel.FTunnel.FName + '   装车完毕';
+      nPanel.lbl_Info.Caption := '装车完毕 ('+Format('%d/%d', [nTunnel.FHasDone, nPanel.FDaiNum])+')';
+
+      nPanel.LabelHint.Caption := '0';
+      nPanel.EditTruck.Text := '';
+      nPanel.EditDai.Text := '';
+      nPanel.EditTon.Text := '';
+    end
+    else
+    begin
+      nPanel.LabelHint.Tag:= 0;
+      nPanel.FLastHasDone:= nTunnel.FHasDone;
+    end
   end;
 end;
 
@@ -487,6 +528,7 @@ begin
 
         if FTrucks[nIdx].FTotal < 1 then
         begin
+          nPanel.FTotalDaiNum:= FTrucks[nIdx].FDai;
           nPanel.EditDai.Text := IntToStr(FTrucks[nIdx].FDai);
           nPanel.EditTon.Text := Format('%.3f', [FTrucks[nIdx].FValue]);
         end else
@@ -744,6 +786,18 @@ begin
   nIni := TIniFile.Create(gPath + sPConfigFile);
   nIni.WriteString('Config','PWD',EncodeBase64(nStr));
   nIni.Free;
+end;
+
+procedure TfFormMain.tmr1Timer(Sender: TObject);
+begin
+  tmr1.Enabled:= False;
+  BtnPsw.Click;
+end;
+
+procedure TfFormMain.FormShow(Sender: TObject);
+begin
+  tmr1.Enabled:= True;
+  Self.WindowState:= wsMaximized;
 end;
 
 end.

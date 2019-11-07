@@ -54,6 +54,11 @@ type
     N18: TMenuItem;
     N19: TMenuItem;
     N20: TMenuItem;
+    N21: TMenuItem;
+    N22: TMenuItem;
+    N23: TMenuItem;
+    N24: TMenuItem;
+    N25: TMenuItem;
     procedure EditZKPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
     procedure N1Click(Sender: TObject);
@@ -66,6 +71,10 @@ type
     procedure N15Click(Sender: TObject);
     procedure N17Click(Sender: TObject);
     procedure N20Click(Sender: TObject);
+    procedure N21Click(Sender: TObject);
+    procedure cxView1CustomDrawCell(Sender: TcxCustomGridTableView;
+      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
+      var ADone: Boolean);
   private
     { Private declarations }
   protected
@@ -75,8 +84,12 @@ type
     //启用区间
     FValidFilte: Boolean;
     //启用有效状态
+    Fi, Fti : Integer;
+  private
     procedure OnCreateFrame; override;
     procedure OnDestroyFrame; override;
+    procedure OnInitFormData(var nDefault: Boolean; const nWhere: string = '';
+                    const nQuery: TADOQuery = nil); override;
     procedure AfterInitFormData; override;
     function InitFormDataSQL(const nWhere: string): string; override;
     {*查询SQL*}
@@ -97,7 +110,7 @@ implementation
 {$R *.dfm}
 uses
   ULibFun, UMgrControl, USysConst, USysDB, UDataModule, UFormDateFilter,
-  UFormBase, UFrameBase, UFormBaseInfo;
+  UFormBase, UFrameBase, UFormBaseInfo, UFormInputbox;
 
 //------------------------------------------------------------------------------
 class function TfFrameZhiKaDetail.FrameID: integer;
@@ -152,10 +165,23 @@ begin
   //xxxxx
 end;
 
+procedure TfFrameZhiKaDetail.OnInitFormData(var nDefault: Boolean; const nWhere: string = '';
+     const nQuery: TADOQuery = nil);
+begin
+  Fi := cxView1.Controller.FocusedRowIndex;  //记录焦点行号
+  Fti:= cxView1.Controller.TopRowIndex;      //记录顶行号
+end;
+
 procedure TfFrameZhiKaDetail.AfterInitFormData;
 begin
-  FDateFilte := True;
+  FDateFilte  := True;
   FValidFilte := True;
+
+  try
+    cxView1.Controller.FocusedRowIndex:= Fi;   //焦点行定位到记录值
+    cxView1.Controller.TopRowIndex    := Fti;  //顶行 定位到记录值
+  except
+  end;
 end;
 
 //Desc: 查询
@@ -526,6 +552,61 @@ begin
   InitFormData(FWhere);
 end;
 
+procedure TfFrameZhiKaDetail.N21Click(Sender: TObject);
+var nZName, nStr: string;
+    nFreeze: Boolean;
+begin
+  if cxView1.DataController.GetSelectedCount = 0 then Exit;
+
+  nZName := SQLQuery.FieldByName('Z_Name').AsString;
+  if not ShowInputBox('请输入订单名称:', '填写', nZName, 160) then Exit;
+
+  if (Sender as TMenuItem) = N21 then       nFreeze := True
+  else if (Sender as TMenuItem) = N22 then  nFreeze := False
+  else Exit;
+
+  nStr := '确定要 %s 所有订单名称为[ %s ]的订单吗?';
+  if nFreeze then
+        nStr := Format(nStr, ['冻结', nZName])
+  else  nStr := Format(nStr, ['解冻', nZName]);
+  if not QueryDlg(nStr, sAsk, Handle) then Exit;
+
+  if nFreeze then
+  begin
+    nStr := 'UPDate $ZK Set Z_TJStatus=''$Frz'' Where Z_Name like ''%$ZName%'' And ' +
+            'IsNull(Z_InValid,'''')<>''$Yes'' And Z_ValidDays>$Now';
+    //tjing
+  end else
+  begin
+    nStr := 'UPDate $ZK Set Z_TJStatus=''$Ovr'' Where Z_Name like ''%$ZName%'' And ' +
+            'Z_TJStatus=''$Frz''';
+    //jtover
+  end;
+
+  nStr := MacroValue(nStr, [MI('$ZK', sTable_ZhiKa), MI('$ZName', nZName),
+          MI('$Dtl', sTable_ZhiKaDtl), MI('$Frz', sFlag_TJing),
+          MI('$Ovr', sFlag_TJOver), MI('$Yes', sFlag_Yes),
+          MI('$Now', FDM.SQLServerNow), MI('$HT', sTable_SaleContract)]);
+  FDM.ExecuteSQL(nStr);
+
+  InitFormData(FWhere);
+end;
+
+procedure TfFrameZhiKaDetail.cxView1CustomDrawCell(
+  Sender: TcxCustomGridTableView; ACanvas: TcxCanvas;
+  AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
+var
+  ARec: TRect;
+begin
+  inherited;
+// if (trim(AViewInfo.RecordViewInfo.GridRecord.Values[4]) = 'HTT')
+//    and (AViewInfo.Item.ID = 4) //确定到某一列，如果不加确定是某行底色
+
+  if (AViewInfo.GridRecord.Values[TcxGridDBTableView(Sender).GetColumnByFieldName('Z_TJStatus').Index])=sFlag_TJing then
+      ACanvas.Canvas.Font.Color := $C0C0C0;
+end;
+
 initialization
   gControlManager.RegCtrl(TfFrameZhiKaDetail, TfFrameZhiKaDetail.FrameID);
+  
 end.

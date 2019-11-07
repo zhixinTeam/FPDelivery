@@ -350,8 +350,8 @@ begin
   AddMenuModuleItem('MAIN_A09', cFI_FrameTodo);
 
   AddMenuModuleItem('MAIN_B01', cFI_FormBaseInfo, mtForm);
-  {$IFDEF FPST}
-  AddMenuModuleItem('MAIN_B02', cFI_FrameCustomer_FP);
+  AddMenuModuleItem('MAIN_B02', {$IFDEF FPST}cFI_FrameCustomer_FP{$ELSE}cFI_FrameCustomer {$ENDIF});
+
   AddMenuModuleItem('MAIN_B05', cFI_FrameTrucks);
   AddMenuModuleItem('MAIN_B06', cFI_FormStockItem, mtForm);
   AddMenuModuleItem('MAIN_K08', cFI_FormTestResult, mtForm);
@@ -365,9 +365,7 @@ begin
   AddMenuModuleItem('MAIN_D12', cFI_FormCusLimit, mtForm);
   AddMenuModuleItem('MAIN_D13', cFI_FrameZKRechargeLog);
 
-  {$ELSE}
-  AddMenuModuleItem('MAIN_B02', cFI_FrameCustomer);
-  {$ENDIF}
+
   //AddMenuModuleItem('MAIN_B02', cFI_FrameCustomer);
   AddMenuModuleItem('MAIN_B03', cFI_FrameSalesMan);
   AddMenuModuleItem('MAIN_B04', cFI_FrameSaleContract);

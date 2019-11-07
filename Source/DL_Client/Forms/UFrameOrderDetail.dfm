@@ -3,49 +3,49 @@ inherited fFrameOrderDetail: TfFrameOrderDetail
   Height = 429
   inherited ToolBar1: TToolBar
     Width = 1089
-    ButtonWidth = 79
+    ButtonWidth = 65
     inherited BtnAdd: TToolButton
       Visible = False
     end
     inherited BtnEdit: TToolButton
-      Left = 79
+      Left = 65
       OnClick = BtnEditClick
     end
     inherited BtnDel: TToolButton
-      Left = 158
+      Left = 130
       OnClick = N3Click
     end
     inherited S1: TToolButton
-      Left = 237
+      Left = 195
       Visible = False
     end
     inherited BtnRefresh: TToolButton
-      Left = 245
+      Left = 203
       Caption = '    '#21047#26032'    '
     end
     inherited S2: TToolButton
-      Left = 324
+      Left = 268
     end
     inherited BtnPrint: TToolButton
-      Left = 332
+      Left = 276
     end
     inherited BtnPreview: TToolButton
-      Left = 411
+      Left = 341
     end
     inherited BtnExport: TToolButton
-      Left = 490
+      Left = 406
     end
     inherited S3: TToolButton
-      Left = 569
+      Left = 471
     end
     inherited BtnExit: TToolButton
-      Left = 577
+      Left = 479
     end
   end
   inherited cxGrid1: TcxGrid
-    Top = 205
+    Top = 210
     Width = 1089
-    Height = 224
+    Height = 219
     inherited cxView1: TcxGridDBTableView
       PopupMenu = pmPMenu1
       DataController.Summary.Options = [soNullIgnore]
@@ -55,16 +55,16 @@ inherited fFrameOrderDetail: TfFrameOrderDetail
     Width = 1089
     Height = 138
     object cxtxtdt1: TcxTextEdit [0]
-      Left = 627
-      Top = 93
+      Left = 633
+      Top = 120
       Hint = 'T.O_ProName'
       ParentFont = False
       TabOrder = 7
       Width = 105
     end
     object EditDate: TcxButtonEdit [1]
-      Left = 615
-      Top = 36
+      Left = 621
+      Top = 50
       ParentFont = False
       Properties.Buttons = <
         item
@@ -77,8 +77,8 @@ inherited fFrameOrderDetail: TfFrameOrderDetail
       Width = 185
     end
     object EditCustomer: TcxButtonEdit [2]
-      Left = 437
-      Top = 36
+      Left = 443
+      Top = 50
       ParentFont = False
       Properties.Buttons = <
         item
@@ -91,32 +91,32 @@ inherited fFrameOrderDetail: TfFrameOrderDetail
       Width = 115
     end
     object cxtxtdt2: TcxTextEdit [3]
-      Left = 449
-      Top = 93
+      Left = 455
+      Top = 120
       Hint = 'T.D_NetWeight'
       ParentFont = False
       TabOrder = 6
       Width = 115
     end
     object cxtxtdt3: TcxTextEdit [4]
-      Left = 81
-      Top = 93
+      Left = 87
+      Top = 120
       Hint = 'T.D_ID'
       ParentFont = False
       TabOrder = 4
       Width = 115
     end
     object cxtxtdt4: TcxTextEdit [5]
-      Left = 259
-      Top = 93
+      Left = 265
+      Top = 120
       Hint = 'T.O_StockName'
       ParentFont = False
       TabOrder = 5
       Width = 115
     end
     object EditTruck: TcxButtonEdit [6]
-      Left = 259
-      Top = 36
+      Left = 265
+      Top = 50
       ParentFont = False
       Properties.Buttons = <
         item
@@ -129,8 +129,8 @@ inherited fFrameOrderDetail: TfFrameOrderDetail
       Width = 115
     end
     object EditBill: TcxButtonEdit [7]
-      Left = 81
-      Top = 36
+      Left = 87
+      Top = 50
       ParentFont = False
       Properties.Buttons = <
         item
@@ -192,7 +192,7 @@ inherited fFrameOrderDetail: TfFrameOrderDetail
     end
   end
   inherited cxSplitter1: TcxSplitter
-    Top = 197
+    Top = 202
     Width = 1089
   end
   inherited TitlePanel1: TZnBitmapPanel

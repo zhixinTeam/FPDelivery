@@ -869,6 +869,7 @@ end;
 procedure TfFrameAutoPoundItem.OnPoundData(const nValue: Double);
 var nRet: Boolean;
     nInt: Int64;
+    nStr: string;
 begin
   FLastBT := GetTickCount;
   EditValue.Text := Format('%.2f', [nValue]);
@@ -973,7 +974,14 @@ begin
 
   if nRet then
        TimerDelay.Enabled := True
-  else Timer_SaveFail.Enabled := True;
+  else
+  begin
+    nStr := '本次称重无效,请下磅后联系开票室工作人员帮您处理、请倒车下磅';
+    PlayVoice(nStr);
+    WriteSysLog(Format('车辆 %s 称重无效,请核对该订单所属单位资金情况、可能为信用到期或实际账户资金不足.', [FUIData.FTruck]));
+
+    Timer_SaveFail.Enabled := True;
+  end;
 
   if FBarrierGate then
   begin

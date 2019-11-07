@@ -216,13 +216,14 @@ begin
         nVal := StrToFloat(nList[1]) + nVal;
       nVal := Float2Float(nVal, cPrecision, True);
 
-      nStr := 'Update %s Set D_Price=%.2f,D_PPrice=%s ' +
+      nStr := 'Update %s Set D_Price=%.2f,D_PPrice=%s,D_TJDate=GetDate(),D_Man=''%s''' +
               'Where R_ID=%s And D_TPrice<>''%s''';
-      nStr := Format(nStr, [sTable_ZhiKaDtl, nVal, nList[1], nList[0], sFlag_No]);
+      nStr := Format(nStr, [sTable_ZhiKaDtl, nVal, nList[1],gSysParam.FUserName,
+                                    nList[0], sFlag_No]);
       FDM.ExecuteSQL(nStr);
 
-      nStr := '水泥品种[ %s ]单价调整[ %s -> %.2f ]';
-      nStr := Format(nStr, [nList[4], nList[1], nVal]);
+      nStr := '%s 水泥品种[ %s ]单价调整[ %s -> %.2f ]';
+      nStr := Format(nStr, [gSysParam.FUserName, nList[4], nList[1], nVal]);
       if Check3.Checked then
         nStr := nStr + ',并更新已发货单据.';
       FDM.WriteSysLog(sFlag_ZhiKaItem, nList[2], nStr, False);
@@ -234,8 +235,8 @@ begin
       nStatus := '''' + sFlag_TJOver + '''';
       {$ENDIF}
       
-      nStr := 'Update %s Set Z_TJStatus=%s Where Z_ID=''%s''';
-      nStr := Format(nStr, [sTable_ZhiKa, nStatus, nList[2]]);
+      nStr := 'Update %s Set Z_TJStatus=%s, Z_Man=''%s'', Z_Date=GetDate() Where Z_ID=''%s''';
+      nStr := Format(nStr, [sTable_ZhiKa, nStatus,gSysParam.FUserName, nList[2]]);
       FDM.ExecuteSQL(nStr);
     end;
 

@@ -18,6 +18,19 @@ object fFrameCounter: TfFrameCounter
     Height = 335
     Caption = #35013#36710'1'#36947
     TabOrder = 0
+    object lbl_Info: TLabel
+      Left = 15
+      Top = 265
+      Width = 45
+      Height = 19
+      Caption = 'lbl_Info'
+      Font.Charset = GB2312_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #24494#36719#38597#40657
+      Font.Style = []
+      ParentFont = False
+    end
     object LabelHint: TcxLabel
       Left = 2
       Top = 26
@@ -30,10 +43,13 @@ object fFrameCounter: TfFrameCounter
       Style.Font.Height = -48
       Style.Font.Name = #23435#20307
       Style.Font.Style = [fsBold]
+      Style.TextColor = clRed
       Style.IsFontAssigned = True
       Properties.Alignment.Horz = taCenter
       Properties.Alignment.Vert = taVCenter
       Properties.LabelStyle = cxlsRaised
+      Properties.LineOptions.Alignment = cxllaBottom
+      Properties.Orientation = cxoBottom
       Height = 50
       Width = 261
       AnchorX = 133
@@ -160,5 +176,12 @@ object fFrameCounter: TfFrameCounter
     OnTimer = Timer1Timer
     Left = 18
     Top = 42
+  end
+  object tmr_ClearJS: TTimer
+    Enabled = False
+    Interval = 10000
+    OnTimer = tmr_ClearJSTimer
+    Left = 53
+    Top = 43
   end
 end

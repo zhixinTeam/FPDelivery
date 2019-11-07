@@ -55,8 +55,11 @@ type
     procedure BtnExitClick(Sender: TObject);
     procedure cxView1KeyPress(Sender: TObject; var Key: Char);
     procedure cxView1DataControllerGroupingChanged(Sender: TObject);
+    procedure cxView1CustomDrawCell(Sender: TcxCustomGridTableView;
+      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
+      var ADone: Boolean);
   private
-    { Private declarations }
+    Fi, Fti : Integer;
   protected
     FBarImage: TBitmap;
     {*工具条*}
@@ -266,7 +269,9 @@ end;
 procedure TfFrameNormal.OnInitFormData(var nDefault: Boolean; const nWhere: string;
   const nQuery: TADOQuery);
 begin
-
+  //cxView1.DataController.DataSource.DataSet.DisableControls;
+  Fi := cxView1.Controller.FocusedRowIndex;  //记录焦点行号
+  Fti:= cxView1.Controller.TopRowIndex;      //记录顶行号
 end;
 
 //Desc: 载入界面数据
@@ -298,7 +303,14 @@ end;
 //Desc: 数据载入后
 procedure TfFrameNormal.AfterInitFormData;
 begin
-
+  try
+    cxView1.Controller.FocusedRowIndex:= Fi;   //焦点行定位到记录值
+    cxView1.Controller.TopRowIndex    := Fti;  //顶行 定位到记录值
+  except
+  end;
+//  cxView1.DataController.DataSource.DataSet.EnableControls;
+//  cxView1.EndUpdate;
+//  cxGrid1.EndUpdate;
 end;
 
 //------------------------------------------------------------------------------
@@ -426,6 +438,17 @@ procedure TfFrameNormal.cxView1FocusedRecordChanged(
 begin
   if FShowDetailInfo and Assigned(APrevFocusedRecord) then
     LoadDataToCtrl(SQLQuery, dxLayout1, '', SetData);
+end;
+
+procedure TfFrameNormal.cxView1CustomDrawCell(
+  Sender: TcxCustomGridTableView; ACanvas: TcxCanvas;
+  AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
+begin
+  if AViewInfo.Selected then
+  begin
+    ACanvas.Canvas.Brush.Color := $FF9018;
+    ACanvas.Canvas.Font.Color  := clWhite;
+  end;
 end;
 
 end.

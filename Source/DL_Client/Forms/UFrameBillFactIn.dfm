@@ -15,16 +15,19 @@ inherited fFrameBillFactIn: TfFrameBillFactIn
     end
   end
   inherited cxGrid1: TcxGrid
-    Top = 205
+    Top = 210
     Width = 1028
-    Height = 288
+    Height = 283
+    inherited cxView1: TcxGridDBTableView
+      OptionsView.DataRowHeight = 24
+    end
   end
   inherited dxLayout1: TdxLayoutControl
     Width = 1028
     Height = 138
     object EditCard: TcxButtonEdit [0]
-      Left = 81
-      Top = 36
+      Left = 87
+      Top = 50
       ParentFont = False
       Properties.Buttons = <
         item
@@ -37,24 +40,24 @@ inherited fFrameBillFactIn: TfFrameBillFactIn
       Width = 125
     end
     object cxTextEdit2: TcxTextEdit [1]
-      Left = 269
-      Top = 93
+      Left = 275
+      Top = 120
       Hint = 'T.L_CusName'
       ParentFont = False
       TabOrder = 3
       Width = 176
     end
     object cxTextEdit4: TcxTextEdit [2]
-      Left = 81
-      Top = 93
+      Left = 87
+      Top = 120
       Hint = 'T.L_Truck'
       ParentFont = False
       TabOrder = 2
       Width = 125
     end
     object EditDate: TcxButtonEdit [3]
-      Left = 269
-      Top = 36
+      Left = 275
+      Top = 50
       ParentFont = False
       Properties.Buttons = <
         item
@@ -93,7 +96,7 @@ inherited fFrameBillFactIn: TfFrameBillFactIn
     end
   end
   inherited cxSplitter1: TcxSplitter
-    Top = 197
+    Top = 202
     Width = 1028
   end
   inherited TitlePanel1: TZnBitmapPanel

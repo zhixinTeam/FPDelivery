@@ -353,6 +353,62 @@ end;
 //Date: 2012-4-1
 //Parm: 交货单号;提示;数据对象;打印机
 //Desc: 打印nBill交货单号
+function PrintBillReportEx(const nBill: string; var nHint: string;
+ const nPrinter: string = ''; const nMoney: string = '0'): Boolean;
+var nStr: string;
+    nDS: TDataSet;
+begin
+  nHint := '';
+  Result := False;
+
+  nStr := 'Select *,%s As L_ValidMoney,c.* From %s b,%s c Where '+
+          ' b.L_Truck=c.T_Truck and L_ID=''%s''';
+  nStr := Format(nStr, [nMoney, sTable_Bill,sTable_Truck, nBill]);
+
+  nDS := FDM.SQLQuery(nStr, FDM.SQLQuery1);
+  if not Assigned(nDS) then Exit;
+
+  if nDS.RecordCount < 1 then
+  begin
+    nHint := '交货单[ %s ] 已无效!!';
+    nHint := Format(nHint, [nBill]);
+    Exit;
+  end;
+
+  nStr := gPath + 'Report\LadingBill.fr3';
+  if not FDR.LoadReportFile(nStr) then
+  begin
+    nHint := '【LadingBill】无法正确加载报表文件';
+    Exit;
+  end;
+
+  if nPrinter = '' then
+       FDR.Report1.PrintOptions.Printer := 'My_Default_Printer'
+  else FDR.Report1.PrintOptions.Printer := nPrinter;
+
+  FDR.Dataset1.DataSet := FDM.SQLQuery1;
+  FDR.PrintReport;
+  Result := FDR.PrintSuccess;
+
+  {$IFDEF PrintGLF}
+  if nDS.FieldByName('L_PrintGLF').AsString <> 'Y' then Exit;
+
+  nStr := gPath + 'Report\BillLoad.fr3';
+  if not FDR.LoadReportFile(nStr) then
+  begin
+    nHint := '无法正确加载报表文件: ' + nStr;
+    Exit;
+  end;
+
+  FDR.Dataset1.DataSet := FDM.SQLQuery1;
+  FDR.PrintReport;
+  {$ENDIF}
+end;
+
+//------------------------------------------------------------------------------
+//Date: 2012-4-1
+//Parm: 交货单号;提示;数据对象;打印机
+//Desc: 打印nBill交货单号
 function PrintBillReport(const nBill: string; var nHint: string;
  const nPrinter: string = ''; const nMoney: string = '0'): Boolean;
 var nStr: string;
@@ -427,7 +483,7 @@ begin
   nStr := gPath + 'Report\LadingBill.fr3';
   if not FDR.LoadReportFile(nStr) then
   begin
-    nHint := '无法正确加载报表文件';
+    nHint := '【提货单】无法正确加载报表文件';
     Exit;
   end;
 
@@ -442,7 +498,7 @@ begin
             FloatToStrF(WeightList[i].FValue,ffFixed,5,2)+' as l_Value,'+
             'L_ID,L_ZhiKa,L_Order,L_Project,L_Area,L_CusID,L_CusName,L_SaleID,L_SaleMan,L_Type,'+
             'L_StockNo,L_StockName,L_Price,L_Truck,L_InTime,L_InMan,L_PValue,L_PDate,L_PMan,L_MDate,L_MMan,'+
-            'L_OutFact,L_OutMan,L_Seal,L_HYDan,L_PrintHY,L_Man,L_Date,L_Lading,'+
+            'L_OutFact,L_OutMan,L_Seal,L_HYDan,L_PrintHY,L_Man,L_Date,L_Lading,l_BillFact, '+
             '%s As L_ValidMoney From %s b Where L_ID=''%s''';
     nStr := Format(nStr, [nMoney, sTable_Bill, nBill]);
     nDS := FDM.SQLQuery(nStr, FDM.SQLQuery1);
@@ -471,7 +527,7 @@ begin
   nStr := gPath + 'Report\BillLoad.fr3';
   if not FDR.LoadReportFile(nStr) then
   begin
-    nHint := '无法正确加载报表文件: ' + nStr;
+    nHint := '【过路费】无法正确加载报表文件: ' + nStr;
     Exit;
   end;
 
@@ -508,7 +564,7 @@ begin
   nStr := gPath + 'Report\PurchaseOrder.fr3';
   if not FDR.LoadReportFile(nStr) then
   begin
-    nHint := '无法正确加载报表文件: ' + nStr;
+    nHint := '【原料单】无法正确加载报表文件: ' + nStr;
     Exit;
   end;
 
@@ -545,6 +601,8 @@ begin
   else if Pos('52', Result) > 0 then
     Result := gPath + 'Report\HuaYan52.fr3'
   else Result := '';
+
+  WriteLog(Format('获取物料报表: %s %s', [nStock, Result]));
 end;
 
 //Desc: 打印标识为nHID的化验单
@@ -563,6 +621,7 @@ begin
           MI('$SR', sTable_StockRecord), MI('$SP', sTable_StockParam)]);
   //xxxxx
 
+  WriteLog(Format('打印化验单: %s ', [nStr]));
   if FDM.SQLQuery(nStr, FDM.SqlTemp).RecordCount < 1 then
   begin
     nHint := '提货单[ %s ]没有对应的化验单';
@@ -579,7 +638,7 @@ begin
 
   if not FDR.LoadReportFile(nStr) then
   begin
-    nHint := '无法正确加载报表文件: ' + nStr;
+    nHint := '【化验单】无法正确加载报表文件: ' + nStr;
     Exit;
   end;
 
@@ -643,7 +702,7 @@ begin
   nStr := gPath + 'Report\HeGeZheng.fr3';
   if not FDR.LoadReportFile(nStr) then
   begin
-    nHint := '无法正确加载报表文件: ' + nStr;
+    nHint := '【合格证】无法正确加载报表文件: ' + nStr;
     Exit;
   end;
 
@@ -740,6 +799,10 @@ begin
         if nHint <> '' then WriteLog(nHint);
       end else
       begin
+        {$IFNDEF FPST} PrintBillReportEx(nBill, nHint, nPrinter, nMoney);
+        {$ELSE} PrintBillReport(nBill, nHint, nPrinter, nMoney);
+        {$ENDIF}
+        
         {$IFDEF PrintHYEach}
           {$IFNDEF HeGeZhengOnly}
           if PrintHuaYanReport(nBill, nHint, nHYPrinter) then
@@ -754,7 +817,7 @@ begin
           //PrintHeGeReport(nBill, nHint, nHYPrinter);
           //if nHint <> '' then WriteLog(nHint);
         {$ENDIF}
-        PrintBillReport(nBill, nHint, nPrinter, nMoney);
+
         if nHint <> '' then WriteLog(nHint);
       end;
     except

@@ -52,12 +52,12 @@
 //通用版本
 
 
-{$DEFINE FPST}
-//特定系统
+{$DEFINE HLST}
+//特定系统            HLST   FPST  
 
 {$IFDEF FPST} 
 //富平生态水泥
-{$DEFINE FPST}
+  {$DEFINE FPST}
   {$DEFINE HYRFID201}
   //华益读卡器
   {$DEFINE MultiReplay}
@@ -96,7 +96,51 @@
   //使用二期微信中间件
 {$ENDIF}
 
+{$IFDEF HLST} 
+//黄陵生态水泥
+  {$DEFINE FPST}
+  {$DEFINE PrintFactorysBill} //打印多厂单据
+  {$DEFINE BasisWeight}
+  //启用定量装车
+  {.$DEFINE BasisWeightWithPM}
+  //库底计量: 定量装车时过皮毛重
 
-
+  {$DEFINE HYRFID201}
+  //华益读卡器
+  {$DEFINE MultiReplay}
+  //计数器应答模式
+  {$DEFINE MITTruckProber}
+  //车检由中间件控制
+  {$DEFINE DaiStepWuCha}
+  //包装阶梯误差
+  {$DEFINE BatchInHYOfBill}
+  //批次保存在化验单字段
+  {.$DEFINE EnableWebMall}
+  //启用网上商城
+  {$DEFINE PrintHYEach}
+  //随车开化验单
+  {$DEFINE StockLimited}
+  //日发货量限制
+  {$DEFINE M100Reader}
+  //吞卡机
+  {$DEFINE ChangeBillWhenPriceAdjust}
+  //纸卡调价时修改已提货单据价格
+  {$DEFINE AdjustMoney}
+  //金额调拨功能
+  {.$DEFINE FixLoad}
+  //定置装车
+  {$DEFINE MicroMsg}
+  //使用微信
+  {$DEFINE UseCustomertMoney}
+  //订单量使用客户余额计算
+  {$DEFINE AutoProId}
+  //自动生成供应商编号
+  {$DEFINE PrintHY}
+  //出厂打印化验单
+  {$DEFINE NoCheckOnPayment}
+  //退款时不校验资金余额
+ {$DEFINE UseWXServiceEx}
+  //使用二期微信中间件
+{$ENDIF}
 
 

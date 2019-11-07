@@ -200,6 +200,7 @@ const
   sFlag_CustomerItem  = 'CustomerItem';              //客户信息项
   sFlag_BankItem      = 'BankItem';                  //银行信息项
   sFlag_UserLogItem   = 'UserLogItem';               //用户登录项
+  sFlag_BillFactItem  = 'BillFact';                  //工厂信息项
 
   sFlag_StockItem     = 'StockItem';                 //水泥信息项
   sFlag_ContractItem  = 'ContractItem';              //合同信息项
@@ -757,7 +758,7 @@ const
   sSQL_NewZhiKaDtl = 'Create Table $Table(R_ID $Inc, D_ZID varChar(15),' +
        'D_Type Char(1), D_StockNo varChar(20), D_StockName varChar(80),' +
        'D_Price $Float, D_Value $Float, D_PPrice $Float, ' +
-       'D_TPrice Char(1) Default ''Y'')';
+       'D_TPrice Char(1) Default ''Y'', D_Man varchar(20),D_TJDate DateTime)';
   {-----------------------------------------------------------------------------
    纸卡明细:ZhiKaDtl
    *.R_ID:记录编号
@@ -790,7 +791,7 @@ const
        'L_Man varChar(32), L_Date DateTime,' +
        'L_DelMan varChar(32), L_DelDate DateTime, L_KZValue $Float,'+
        'L_KZMan varchar(50), L_KZDate DateTime, L_FPType Integer,'+
-       'L_Freight $Float, L_MustSeal bit, l_BillType Char(1))';
+       'L_Freight $Float, L_MustSeal bit, l_BillType Char(1),L_DelReson varchar(80))';
   {-----------------------------------------------------------------------------
    交货单表: Bill
    *.R_ID: 编号

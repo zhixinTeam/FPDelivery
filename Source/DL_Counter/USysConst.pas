@@ -73,6 +73,7 @@ type
     //停止线程
   end;
 
+
 //------------------------------------------------------------------------------
 var
   gPath: string;                                     //程序所在路径
@@ -104,12 +105,16 @@ resourceString
   sTime               = '时间:【%s】';               //任务栏时间
   sUser               = '用户:【%s】';               //任务栏用户
 
+  sLogDir             = 'Logs\';                     //日志目录
+  sLogExt             = '.log';                      //日志扩展名
+
   sConfigFile         = 'Config.Ini';                //主配置文件
   sConfigSec          = 'Config';                    //主配置小节
   sVerifyCode         = ';Verify:';                  //校验码标记
   sFormConfig         = 'FormInfo.ini';              //窗体配置
   sPConfigFile        = 'PConfig.Ini';               //面板加载控制
-
+  sDBConfig           = 'DBConn.ini';                //数据连接
+  
   sInvalidConfig      = '配置文件无效或已经损坏';    //配置文件无效
   sCloseQuery         = '确定要退出程序吗?';         //主窗口退出
 
@@ -185,6 +190,7 @@ begin
     if not IsNumber(FList.Values[FTunnel.FID], False) then Continue;
 
     FTunnel.FHasDone := StrToInt(FList.Values[FTunnel.FID]);
+    FTunnel.FDaiNum  := StrToInt(FList.Values[FTunnel.FID+'Dai']);
     FOnData(@FTunnel);
   end;
 end;
@@ -391,6 +397,26 @@ begin
   end;
 end;
 
+//Date: 2019-09-05
+//Parm: 通道号
+//Desc: 获取通道计数器状态
+function GetTunnelJSStatus(const nTunnel: string): Boolean;
+var nIn: TWorkerBusinessCommand;
+    nOut: TWorkerBusinessCommand;
+    nWorker: TBusinessWorkerBase;
+begin
+  nWorker := nil;
+  try
+    nIn.FCommand := cBC_JSGetStatus;
+    nIn.FData := nTunnel;
+
+    nWorker := gBusinessWorkerManager.LockWorker(sCLI_HardwareCommand);
+    Result := nWorker.WorkActive(@nIn, @nOut);
+  finally
+    gBusinessWorkerManager.RelaseWorker(nWorker);
+  end;
+end;
+
 //Date: 2012-9-14
 //Parm: 通道号;交货单;提示
 //Desc: 向nTunnel的喷码机发送打印nBill请求
@@ -420,5 +446,6 @@ begin
     gBusinessWorkerManager.RelaseWorker(nWorker);
   end;
 end;
+
 
 end.

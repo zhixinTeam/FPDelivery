@@ -65,7 +65,10 @@ begin
   with TfFormSealNum.Create(Application) do
   begin
     ActiveControl := EditCard;
-    ActionComPort(False);
+    try
+      ActionComPort(False);
+    except
+    end;
     ShowModal;
     Free;
   end;

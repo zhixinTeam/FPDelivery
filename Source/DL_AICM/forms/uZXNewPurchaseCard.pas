@@ -544,7 +544,7 @@ begin
   if not IsCardValid(nNewCardNo) then
   begin
     gDispenserManager.RecoveryCard(gSysParam.FTTCEK720ID, nHint);
-    nHint := '卡号' + nNewCardNo + '非法,回收中,请稍后重新取卡';
+    nHint := '卡号' + nNewCardNo + '非法,回收中,请稍后重新扫码取卡';
     WriteLog(nHint);
     ShowMsg(nHint, sWarn);
     Exit;

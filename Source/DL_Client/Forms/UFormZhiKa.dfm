@@ -10,15 +10,15 @@ inherited fFormZhiKa: TfFormZhiKa
   TextHeight = 12
   inherited dxLayout1: TdxLayoutControl
     Width = 460
-    Height = 463
+    Height = 462
     inherited BtnOK: TButton
       Left = 314
-      Top = 430
+      Top = 429
       TabOrder = 21
     end
     inherited BtnExit: TButton
       Left = 384
-      Top = 430
+      Top = 429
       TabOrder = 22
     end
     object ListDetail: TcxListView [2]
@@ -52,7 +52,7 @@ inherited fFormZhiKa: TfFormZhiKa
     end
     object EditStock: TcxTextEdit [3]
       Left = 81
-      Top = 398
+      Top = 397
       ParentFont = False
       Properties.ReadOnly = True
       Style.BorderColor = clWindowFrame
@@ -62,7 +62,7 @@ inherited fFormZhiKa: TfFormZhiKa
     end
     object EditPrice: TcxTextEdit [4]
       Left = 229
-      Top = 398
+      Top = 397
       ParentFont = False
       Properties.OnEditValueChanged = EditPricePropertiesEditValueChanged
       Style.BorderColor = clWindowFrame
@@ -72,7 +72,7 @@ inherited fFormZhiKa: TfFormZhiKa
     end
     object EditValue: TcxTextEdit [5]
       Left = 336
-      Top = 398
+      Top = 397
       ParentFont = False
       Properties.OnEditValueChanged = EditPricePropertiesEditValueChanged
       Style.BorderColor = clWindowFrame
@@ -198,7 +198,7 @@ inherited fFormZhiKa: TfFormZhiKa
     end
     object Check1: TcxCheckBox [14]
       Left = 11
-      Top = 430
+      Top = 429
       Caption = #23436#25104#21518#25171#24320#38480#25552#31383#21475
       ParentFont = False
       Style.BorderColor = clWindowFrame
@@ -294,7 +294,7 @@ inherited fFormZhiKa: TfFormZhiKa
     end
     object btnBackCash: TButton [22]
       Left = 386
-      Top = 398
+      Top = 397
       Width = 51
       Height = 20
       Caption = #35774#32622#36820#29616

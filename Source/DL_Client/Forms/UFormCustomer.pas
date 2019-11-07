@@ -78,6 +78,9 @@ type
     editParent: TcxComboBox;
     dxLayoutControl1Item24: TdxLayoutItem;
     editParent2: TcxTextEdit;
+    dxLayoutControl1Item23: TdxLayoutItem;
+    cbb_Fact: TcxComboBox;
+    dxLayoutControl1Group9: TdxLayoutGroup;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure BtnAddClick(Sender: TObject);
@@ -255,6 +258,7 @@ var nStr, nParent: string;
 begin
   LoadSysDictItem(sFlag_CustomerItem, InfoItems.Properties.Items);
   LoadSysDictItem(sFlag_BankItem, EditBank.Properties.Items);
+  LoadSysDictItem(sFlag_BillFactItem, cbb_Fact.Properties.Items);
   
   if EditSaleMan.Properties.Items.Count < 1 then
     LoadSaleMan(EditSaleMan.Properties.Items);
@@ -446,8 +450,11 @@ begin
     ModalResult := mrOK;
     ShowMsg('数据已保存', sHint);
   except
-    FDM.ADOConn.RollbackTrans;
-    ShowMsg('数据保存失败', '未知原因');
+    on Ex : Exception do
+    begin
+      FDM.ADOConn.RollbackTrans;
+      ShowMsg('数据保存失败：'+Ex.Message, '未知原因');
+    end;
   end;
 end;
 
