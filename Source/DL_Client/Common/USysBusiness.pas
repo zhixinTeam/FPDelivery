@@ -303,6 +303,7 @@ procedure SaveWebOrderDelMsg(const nLID, nBillType: string);
 //插入推送消息
 function GetBillByTruck(const nData: string):string;
 //根据车牌号获取订单信息
+function GetTruckNO(const nTruck: WideString; const nLong: Integer=12): string;
 implementation
 
 //Desc: 记录日志
@@ -2955,6 +2956,31 @@ begin
   if CallBusinessWechat(cBC_WX_get_shoporderbyTruckClt, nData, '', '', @nOut, False) then
     Result := nOut.FData
   else Result := '';
+end;
+
+
+//Date: 2017-10-17
+//Parm: 车牌号;保留长度
+//Desc: 将nTruck整合为长度为nLen的字符串
+function GetTruckNO(const nTruck: WideString; const nLong: Integer): string;
+var nStr: string;
+    nIdx,nLen,nPos: Integer;
+begin
+  nPos := 0;
+  nLen := 0;
+
+  for nIdx:=Length(nTruck) downto 1 do
+  begin
+    nStr := nTruck[nIdx];
+    nLen := nLen + Length(nStr);
+
+    if nLen >= nLong then Break;
+    nPos := nIdx;
+  end;
+
+  Result := Copy(nTruck, nPos, Length(nTruck));
+  nIdx := nLong - Length(Result);
+  Result := Result + StringOfChar(' ', nIdx);
 end;
 
 end.

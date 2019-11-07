@@ -48,7 +48,7 @@ uses
   UFrameCustomer_FP, UFormTestResult, UFormStockItem,
   UFormSealNum, UFormAdjustMoney, UFormBackCash, UFormTestRecOther,
   UFrameTestResult, UFormQryCard, UFormCusLimit, UFrameZKRechargeLog,
-  UFrameCusTotalMoney;
+  UFrameCusTotalMoney, UMgrLEDDisp;
   //UFormpoundAdjust ; 
 
 procedure InitSystemObject;
@@ -223,12 +223,19 @@ begin
 
   CreateBaseFormItem(cFI_FormTodo);
   //待处理事项
+
+  if FileExists(gPath + cDisp_Config) then
+  begin
+    gDisplayManager.LoadConfig(gPath + cDisp_Config);
+    gDisplayManager.StartDisplay;
+  end;
 end;
 
 //Desc: 释放系统对象
 procedure FreeSystemObject;
 begin
   FreeAndNil(gSysLoger);
+  gDisplayManager.StopDisplay;
 end;
 
 end.

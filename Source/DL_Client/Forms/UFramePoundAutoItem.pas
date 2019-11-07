@@ -111,6 +111,8 @@ type
     //记录日志
     procedure PlayVoice(const nStrtext: string);
     //播放语音
+    procedure LEDDisplay(const nContent: string);
+    //LED显示
   public
     { Public declarations }
     class function FrameID: integer; override;
@@ -127,7 +129,7 @@ implementation
 
 uses
   ULibFun, UFormBase, {$IFDEF HR1847}UKRTruckProber,{$ELSE}UMgrTruckProbe,{$ENDIF}
-  UMgrRemoteVoice, UMgrVoiceNet, UDataModule, USysBusiness,
+  UMgrRemoteVoice, UMgrVoiceNet, UDataModule, USysBusiness, UMgrLEDDisp,
   USysLoger, USysConst, USysDB;
 
 const
@@ -387,12 +389,16 @@ begin
   if (not nRet) or (Length(nBills) < 1) then
   begin
     nVoice := '读取磁卡信息失败,请联系管理员';
+    LEDDisplay('读取磁卡信息失败.');
     PlayVoice(nVoice);
     WriteLog(nVoice);
     SetUIData(True);
     Exit;
   end;
-  
+
+  //读取订单情况并发到屏上
+  LEDDisplay(GetTruckNO(nBills[0].FTruck)+nBills[0].FStockName);
+
   nHint := '';
   nInt := 0;
 
@@ -1114,6 +1120,16 @@ begin
     {$ENDIF}
   finally
     EditBill.Enabled := True;
+  end;
+end;
+
+procedure TfFrameAutoPoundItem.LEDDisplay(const nContent: string);
+begin
+  WriteSysLog(Format('LEDDisplay:%s.%s', [FPoundTunnel.FID, nContent]));
+  if Assigned(FPoundTunnel.FOptions) And
+     (UpperCase(FPoundTunnel.FOptions.Values['LEDEnable'])='Y') then
+  begin
+    gDisplayManager.Display(FPoundTunnel.FID, nContent);
   end;
 end;
 
