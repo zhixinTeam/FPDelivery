@@ -258,6 +258,16 @@ const
   sFlag_LSStock       = 'ls-sn-00';                  //零售水泥编号(预开)
   sFlag_LSCustomer    = 'ls-kh-00';                  //零售客户编号(预开)
 
+  sFlag_WxItem        = 'WxItem';                    //微信相关
+  sFlag_InOutBegin    = 'BeginTime';                 //进出厂查询起始时间
+  sFlag_InOutEnd      = 'EndTime';                   //进出厂查询结束时间
+  sFlag_SealCount     = 'SealCount';                 //铅封录入个数
+  sFlag_NoSealStock   = 'NoSealStock';               //无需录入铅封
+
+  sFlag_Rq_WXUrl      = 'WXRqUrl';                   //请求微信网址
+  sFlag_Rq_WXPicUrl   = 'WXRqPicUrl';                //请求微信图片地址
+
+
   sFlag_StockLimited  = 'StockLimited';              //日发货量限制
   sFlag_CtrlStandard  = 'CtrlStandard';              //内控标准
   sFlag_TestRules     = 'TestRules';                 //检验规则
@@ -300,6 +310,9 @@ const
   sTable_Bill         = 'S_Bill';                    //提货单
   sTable_BillBak      = 'S_BillBak';                 //已删交货单
   sTable_BillHK       = 'S_BillPreHK';               //开单预合卡
+
+  sTable_FHLog        = 'S_FHLog';                   //放灰记录
+
 
   sTable_StockMatch   = 'S_StockMatch';              //品种映射
   sTable_StockParam   = 'S_StockParam';              //品种参数
@@ -847,6 +860,18 @@ const
    *.H_Man:操作人
    *.H_Date:创建时间
   -----------------------------------------------------------------------------}
+
+  sSQL_FHLog = 'Create Table $Table(R_ID $Inc, F_ID varChar(20),' +
+       'F_PValue $Float, F_MValue $Float, F_Date DateTime)';
+  {-----------------------------------------------------------------------------
+   交货单预合卡: BillPreHK
+   *.R_ID    : 编号
+   *.F_ID    : 提单号
+   *.F_PValue: 皮重
+   *.F_MValue: 毛重
+   *.F_Date  : 日期
+  -----------------------------------------------------------------------------}
+
 
   sSQL_NewOrderBase = 'Create Table $Table(R_ID $Inc, B_ID varChar(20),' +
        'B_Value $Float, B_SentValue $Float,B_RestValue $Float,' +
@@ -1816,6 +1841,8 @@ begin
   AddSysTableItem(sTable_Bill, sSQL_NewBill);
   AddSysTableItem(sTable_BillBak, sSQL_NewBill);
   AddSysTableItem(sTable_BillHK, sSQL_NewBillHK);
+  AddSysTableItem(sTable_FHLog, sSQL_FHLog);
+
 
   AddSysTableItem(sTable_Truck, sSQL_NewTruck);
   AddSysTableItem(sTable_ZTLines, sSQL_NewZTLines);

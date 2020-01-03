@@ -139,7 +139,13 @@ const
   cBC_WX_DownLoadPic          = $0522;   //微信：下载图片
   cBC_WX_get_shoporderbyTruck = $0523;   //微信：根据车牌号获取订单信息 业务中间件用
   cBC_WX_get_shoporderbyTruckClt = $0524;   //微信：根据车牌号获取订单信息  客户端用
-
+  cBC_WX_get_shoporderStatus  = $0525;   //微信：根据订单号获取订单状态
+  cBC_WX_get_shopYYWebBill    = $0526;   //微信：根据时间段获取预约订单
+  cBC_WX_get_syncYYWebState   = $0527;   //微信：推送预约订单信息状态
+  cBC_WX_SaveCustomerWxOrders = $0529;   //微信：新增客户预开单
+  cBC_WX_QueryByCar           = $0534;   //微信：查询车辆状态
+  cBC_WX_IsCanCreateWXOrder   = $0531;   //微信：下单校验
+  
 type
   PWorkerQueryFieldData = ^TWorkerQueryFieldData;
   TWorkerQueryFieldData = record
