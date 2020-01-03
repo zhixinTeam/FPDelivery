@@ -930,21 +930,38 @@ begin
   nDBConn := nil;
   try
     Result := False;
-    nStr := 'Select L_Status,L_Value,L_PValue,IsNull(L_MValue, 0) L_MValue From %s Where L_ID=''%s''';
-    nStr := Format(nStr, [sTable_Bill, nTunnel.FBill]);
+//    nStr := 'Select L_Status,L_Value,L_PValue,IsNull(L_MValue, 0) L_MValue From %s Where L_ID=''%s''';
+//    nStr := Format(nStr, [sTable_Bill, nTunnel.FBill]);
+//    gDBConnManager.SQLQuery(nStr, nDBConn);
+    if nTunnel.FStatusNew = bsStart then
+    begin
+      //**************************************************************************
+      nStr := MakeSQLByStr([ SF('L_Status', sFlag_TruckFH),
+                             SF('L_NextStatus', sFlag_TruckBFM)
+                              ], sTable_Bill, SF('L_ID', nTunnel.FBill), False);
+      gDBConnManager.WorkerExec(nDBConn, nStr);
+      WriteNearReaderLog(Format('[ %s ] 更新订单状态为 已放灰', [nTunnel.FBill]));
+      //**************************************************************************
+      nStr := 'Insert into $FHLog(F_ID,F_PValue,F_Date)Select top 1 ''$FID'', $PValue, GetDate() From Master..SysDatabases '+
+              'Where Not exists(Select * From $FHLog Where F_ID=''$FID'')';
+      nStr := MacroValue(nStr, [MI('$FHLog', sSQL_FHLog), MI('$FID', nTunnel.FBill), MI('$PValue', FloatToStr(nTunnel.FValTruckP) )]);
+      gDBConnManager.WorkerExec(nDBConn, nStr);
 
-    gDBConnManager.SQLQuery(nStr, nDBConn);
+      WriteNearReaderLog(Format('[ %s ] 更新装车皮重 %g ', [nTunnel.FBill, nTunnel.FValTruckP]));
+    end
+    else if nTunnel.FStatusNew = bsClose then
+    begin
+      nStr := 'UPDate $FHLog Set F_MValue= $MValue Where F_ID=''$FID'')';
+      nStr := MacroValue(nStr, [MI('$FHLog', sSQL_FHLog), MI('$FID', nTunnel.FBill), MI('$MValue', FloatToStr(nTunnel.FValMax))]);
+      gDBConnManager.WorkerExec(nDBConn, nStr);
 
-    nStr := MakeSQLByStr([ SF('L_Status', sFlag_TruckFH),
-                           SF('L_NextStatus', sFlag_TruckBFM)
-                            ], sTable_Bill, SF('L_ID', nTunnel.FBill), False);
-    gDBConnManager.WorkerExec(nDBConn, nStr);
-    WriteNearReaderLog(Format('[ %s ] 更新订单状态为 已放灰', [nTunnel.FBill]));
+      WriteNearReaderLog(Format('[ %s ] 更新装车毛重 %g ', [nTunnel.FBill, nTunnel.FValMax]));
+    end;
 
     Result := True;
   finally
     gDBConnManager.ReleaseConnection(nDBConn);
-  end;   
+  end;
 end;
 
 //Date: 2019-03-11
@@ -1053,6 +1070,10 @@ begin
       ShowLEDHint(nTunnel.FID, '称重保存失败请联系工作人员');       MakeGateSound(nTruck+'称重保存失败请联系工作人员', nVoiceID, False);
       WriteNearReaderLog(Format('%s %s 称重失败、请管理员协助', [nTunnel.FID, nTruck]));
     end;
+  end
+  else if nTunnel.FStatusNew = bsStart then
+  begin
+    SaveBillStatus(nTunnel);
   end;
 end;
 
