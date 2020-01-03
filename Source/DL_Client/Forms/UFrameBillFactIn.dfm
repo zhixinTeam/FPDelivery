@@ -18,9 +18,6 @@ inherited fFrameBillFactIn: TfFrameBillFactIn
     Top = 210
     Width = 1028
     Height = 283
-    inherited cxView1: TcxGridDBTableView
-      OptionsView.DataRowHeight = 24
-    end
   end
   inherited dxLayout1: TdxLayoutControl
     Width = 1028

@@ -166,6 +166,7 @@ const
   cFI_FormSaleZZCus     = $1080;                     //扎账(客户)
   cFI_FormInvGetWeek    = $1081;                     //选择周期
   cFI_FormInvAdjust     = $1082;                     //修改申请量
+  cFI_FrameCusInMoneyExceptio= $1083;                //入金异常客户
 
   cFI_FormAuthorize     = $1090;                     //安全验证
   cFI_FormWXAccount     = $1091;                     //微信账户
@@ -420,6 +421,7 @@ begin
   AddMenuModuleItem('MAIN_L09', cFI_FrameSaleJS);
   AddMenuModuleItem('MAIN_L10', cFI_FrameOrderDetailQuery);
   AddMenuModuleItem('MAIN_L12', cFI_FrameCusTotalMoney);
+  AddMenuModuleItem('MAIN_L13', cFI_FrameCusInMoneyExceptio);
 
   AddMenuModuleItem('MAIN_H01', cFI_FormTruckIn, mtForm);
   AddMenuModuleItem('MAIN_H02', cFI_FormTruckOut, mtForm);
