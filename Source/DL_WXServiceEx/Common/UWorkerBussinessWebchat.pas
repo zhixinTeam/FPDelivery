@@ -81,7 +81,8 @@ type
     function GetCusName(nCusID: string): string;
     //获取客户名称
 
-
+    function GetZhiKaFrozen(nCusId: string):Double;
+    //获取纸卡冻结金额
     function GetCustomerValidMoney(nCustomer: string): Double;
     //获取客户可用金
     function GetCustomerValidMoneyFromK3(nCustomer: string): Double;
@@ -628,8 +629,14 @@ begin
     ReQuestInit;
 
     szUrl := gSysParam.FSrvUrl + '/customer/searchShopCustomer';
-    FidHttp.Post(szUrl, wParam, ReStream);
-    nStr := UTF8Decode(ReStream.DataString);
+    WriteLog('URL：' + szUrl);
+    try
+      FidHttp.Post(szUrl, wParam, ReStream);
+      nStr := UTF8Decode(ReStream.DataString);
+    finally
+      FIdHttp.Disconnect;
+    end;
+
     WriteLog('微信用户列表出参：' + nStr);
     if nStr <> '' then
     begin
@@ -726,8 +733,13 @@ begin
     ReQuestInit;
 
     szUrl := gSysParam.FSrvUrl + '/customer/relClientIAuth';
-    FidHttp.Post(szUrl, wParam, ReStream);
-    nStr := UTF8Decode(ReStream.DataString);
+    try
+	    FidHttp.Post(szUrl, wParam, ReStream);
+	    nStr := UTF8Decode(ReStream.DataString);
+    finally
+      FIdHttp.Disconnect;
+    end;
+    
     if IsBind then
       WriteLog('商城' + FListA.Values['Account'] + ' 账户绑定出参：' + nStr)
     else
@@ -779,7 +791,7 @@ begin
   nMoney := GetCustomerValidMoneyFromK3(FIn.FData);
   {$ENDIF}
 
-  nStr := 'select D_ZID,' +                     //销售卡片编号
+  nStr := 'select Z_OnlyMoney,Z_FixedMoney, Z_FixedMoney/D_Price, D_ZID,' +   //销售卡片编号
     '  D_Type,' +                           //类型(袋,散)
     '  D_StockNo,' +                        //水泥编号
     '  D_StockName,' +                      //水泥名称
@@ -795,10 +807,13 @@ begin
     {$IFDEF SXDY}
     '  ,a.Z_XHSpot ' +                        //卸货地点
     {$ENDIF}
-    'from %s a join %s b on a.Z_ID = b.D_ZID ' + 'where Z_Verified=''%s'' and (Z_InValid<>''%s'' or Z_InValid is null) ' + 'and Z_Customer=''%s''';
+    'from %s a join %s b on a.Z_ID = b.D_ZID ' +
+    'where Z_Verified=''%s'' and (Z_InValid<>''%s'' or Z_InValid is null) and Z_ValidDays >getdate() ' +
+          'and (Z_Freeze<>''Y'' or Z_Freeze is null) and Z_Customer=''%s''';
         //订单已审核 有效
   nStr := Format(nStr, [sTable_ZhiKa, sTable_ZhiKaDtl, sFlag_Yes, sFlag_Yes, FIn.FData]);
   WriteLog('获取订单列表sql:' + nStr);
+  try
   with gDBConnManager.WorkerQuery(FDBConn, nStr), FPacker.XMLBuilder do
   begin
     if RecordCount < 1 then
@@ -854,7 +869,13 @@ begin
         nValue := FieldByName('D_Value').AsFloat;
         {$IFDEF UseCustomertMoney}
         try
-          nValue := nMoney / FieldByName('D_Price').AsFloat;
+          if FieldByName('Z_OnlyMoney').AsString = 'Y' then
+          begin
+            nValue := FieldByName('Z_FixedMoney').AsFloat / FieldByName('D_Price').AsFloat;
+            WriteLog('限提纸卡 '+FieldByName('Z_FixedMoney').AsString);
+          end
+          else nValue := nMoney / FieldByName('D_Price').AsFloat;
+
           nValue := Float2PInt(nValue, cPrecision, False) / cPrecision;
         except
           nValue := 0;
@@ -872,7 +893,7 @@ begin
         NodeNew('SaleArea').ValueAsString := '';
       end;
 
-      nExt;
+      Next;
     end;
 
     nNode := Root.NodeNew('EXMG');
@@ -882,6 +903,9 @@ begin
       NodeNew('MsgResult').ValueAsString := sFlag_Yes;
       NodeNew('MsgCommand').ValueAsString := IntToStr(FIn.FCommand);
     end;
+  end;
+  except
+
   end;
   nData := FPacker.XMLBuilder.WriteToString;
   WriteLog('获取订单列表返回:' + nData);
@@ -1156,8 +1180,14 @@ begin
     ReQuestInit;
 
     szUrl := gSysParam.FSrvUrl + '/order/syncShopOrder';
-    FidHttp.Post(szUrl, wParam, ReStream);
-    nStr := UTF8Decode(ReStream.DataString);
+
+    try
+      FidHttp.Post(szUrl, wParam, ReStream);
+      nStr := UTF8Decode(ReStream.DataString);
+    finally
+      FIdHttp.Disconnect;
+    end;
+
     WriteLog(' 商城订单同步出参：' + nStr);
     if nStr <> '' then
     begin
@@ -1172,6 +1202,7 @@ begin
       else WriteLog(' 商城订单同步失败：' + ReJo['msg'].AsString);
     end;
   finally
+    FidHttp.Disconnect;
     ReStream.Free;
     wParam.Free;
   end;
@@ -1211,7 +1242,7 @@ begin
     ParamJo.S['body'] := BodyJo.AsString;
     nStr := ParamJo.AsString;
 
-    WriteLog('微信用户列表入参：' + nStr);
+    WriteLog('订单列表入参：' + nStr);
 
     wParam.Clear;
     wParam.Add(nStr);
@@ -1219,8 +1250,13 @@ begin
     ReQuestInit;
     
     szUrl := gSysParam.FSrvUrl + '/order/searchShopOrder';
-    FidHttp.Post(szUrl, wParam, ReStream);
-    nStr := UTF8Decode(ReStream.DataString);
+    try
+      FidHttp.Post(szUrl, wParam, ReStream);
+      nStr := UTF8Decode(ReStream.DataString);
+    finally
+      FIdHttp.Disconnect;
+    end;
+
     WriteLog('订单列表查询出参：' + nStr);
     if nStr <> '' then
     begin
@@ -1301,8 +1337,13 @@ begin
     ReQuestInit;
     
     szUrl := gSysParam.FSrvUrl + '/order/searchShopOrder';
-    FidHttp.Post(szUrl, wParam, ReStream);
-    nStr := UTF8Decode(ReStream.DataString);
+    try
+      FidHttp.Post(szUrl, wParam, ReStream);
+      nStr := UTF8Decode(ReStream.DataString);
+    finally
+      FIdHttp.Disconnect;
+    end;
+
     WriteLog('获取订单信息出参:' + nStr);
 
     if nStr <> '' then
@@ -1319,10 +1360,56 @@ begin
         ReBodyJo := SO(ReJo.S['body']);
         if ReBodyJo = nil then Exit;
 
+        //****************************************************
+        //****************************************************
+          if ReBodyJo.S['status']='7' then
+          begin
+            nData:= '订单已过期';
+          end
+          else if ReBodyJo.S['status']='6' then
+          begin
+            nData:= '订单已取消';
+            Exit;
+          end
+          else if (ReBodyJo.S['status']='5') or (ReBodyJo.S['status']='4') or
+                    (ReBodyJo.S['status']='3') or (ReBodyJo.S['status']='2') then
+          begin
+            nData:= '订单已开卡、请勿重复扫码';
+            Exit;
+          end
+          else if ReBodyJo.S['status']='0' then
+          begin
+            nData:= '订单状态未知、不能开卡';
+            Exit;
+          end;
+        //****************************************************
+        //****************************************************
+
         ArrsJa := ReBodyJo['details'].AsArray;
         for nIdx := 0 to ArrsJa.Length - 1 do
         begin
           OneJo := SO(ArrsJa[nIdx].AsString);
+
+          if OneJo.S['status']='7' then
+          begin
+            nData:= '订单已过期';
+          end
+          else if OneJo.S['status']='6' then
+          begin
+            nData:= '订单已取消';
+            Exit;
+          end
+          else if (OneJo.S['status']='5') or (OneJo.S['status']='4') or
+                    (OneJo.S['status']='3') or (OneJo.S['status']='2') then
+          begin
+            nData:= '订单已开卡、请勿重复扫码';
+            Exit;
+          end
+          else if OneJo.S['status']='0' then
+          begin
+            nData:= '订单状态未知、不能开卡';
+            Exit;
+          end;
 
           with FListE do
           begin
@@ -1653,6 +1740,69 @@ begin
   end;
 end;
 
+function TBusWorkerBusinessWebchat.GetZhiKaFrozen(nCusId: string): Double;
+var
+  nStr: string;
+begin
+  nStr := 'select SUM(Z_FixedMoney)as frozen from %s where Z_InValid<>''%s'' or '+
+          ' Z_InValid is null and Z_OnlyMoney=''%s'' and Z_Customer=''%s''' ;
+  nStr := Format(nStr,[sTable_ZhiKa,sFlag_Yes,sFlag_Yes,nCusId]);
+  with gDBConnManager.WorkerQuery(FDBConn, nStr) do
+  begin
+    Result := fieldbyname('frozen').AsFloat;
+  end;
+end;
+
+//Date: 2018-01-05
+//Desc: 获取指定客户的可用金额
+function TBusWorkerBusinessWebchat.GetCustomerValidMoney(nCustomer: string): Double;
+var nStr: string;
+    nUseCredit: Boolean;
+    nVal,nCredit: Double;
+    nZKFrozen: Double;  //纸卡冻结金额
+begin
+  Result := 0 ;
+  nUseCredit := False;
+
+  nStr := 'Select MAX(C_End) From %s ' +
+          'Where C_CusID=''%s'' and C_Money>=0 and C_Verify=''%s''';
+  nStr := Format(nStr, [sTable_CusCredit, nCustomer, sFlag_Yes]);
+  WriteLog('信用SQL:'+nStr);
+  with gDBConnManager.WorkerQuery(FDBConn, nStr) do
+    nUseCredit := (Fields[0].AsDateTime > Str2Date('2000-01-01')) and
+                  (Fields[0].AsDateTime > Now());
+  //信用未过期
+
+  nZKFrozen := GetZhiKaFrozen(nCustomer);
+  //纸卡冻结金额
+
+  nStr := 'Select * From %s Where A_CID=''%s''';
+  nStr := Format(nStr, [sTable_CusAccount, nCustomer]);
+  WriteLog('用户账户SQL:'+nStr);
+  with gDBConnManager.WorkerQuery(FDBConn, nStr) do
+  begin
+    if RecordCount < 1 then
+    begin
+      Exit;
+    end;
+
+    nVal := FieldByName('A_InitMoney').AsFloat + FieldByName('A_InMoney').AsFloat -
+            FieldByName('A_OutMoney').AsFloat -
+            FieldByName('A_Compensation').AsFloat -
+            FieldByName('A_FreezeMoney').AsFloat - nZKFrozen;
+    //xxxxx
+    WriteLog('用户账户金额:'+FloatToStr(nVal));
+    nCredit := FieldByName('A_CreditLimit').AsFloat;
+    nCredit := Float2PInt(nCredit, cPrecision, False) / cPrecision;
+    WriteLog('用户账户信用:'+FloatToStr(nCredit));
+    if nUseCredit then
+      nVal := nVal + nCredit;
+    WriteLog('用户账户可用金:'+FloatToStr(nVal));
+    Result := Float2PInt(nVal, cPrecision, False) / cPrecision;
+  end;
+end;
+
+                {
 //Date: 2018-01-05
 //Desc: 获取指定客户的可用金额
 function TBusWorkerBusinessWebchat.GetCustomerValidMoney(nCustomer: string): Double;
@@ -1693,7 +1843,7 @@ begin
     Result := Float2PInt(nVal, cPrecision, False) / cPrecision;
   end;
 end;
-
+                          }
 //Date: 2018-01-05
 //Desc: 获取指定客户的可用金额
 function TBusWorkerBusinessWebchat.GetCustomerValidMoneyFromK3(nCustomer: string): Double;
@@ -1732,7 +1882,10 @@ begin
 
   nDBWorker := nil;
   try
-    nStr := 'DECLARE @return_value int, @Credit decimal(28, 10),' + '@Balance decimal(28, 10)' + 'Execute GetCredit ''%s'' , @Credit output , @Balance output ' + 'select @Credit as Credit , @Balance as Balance , ' + '''Return Value'' = @return_value';
+    nStr := 'DECLARE @return_value int, @Credit decimal(28, 10),' + '@Balance decimal(28, 10)' +
+            'Execute GetCredit ''%s'' , @Credit output , @Balance output ' +
+            'select @Credit as Credit , @Balance as Balance , ' +
+            '''Return Value'' = @return_value';
     nStr := Format(nStr, [nCusID]);
 
     with gDBConnManager.SQLQuery(nStr, nDBWorker, sFlag_DB_K3) do
@@ -1816,8 +1969,10 @@ begin
   Result := True;
   BuildDefaultXML;
 
-  nType := Trim(fin.FData);
+  nType := Trim(FIn.FData);
   nExtParam := Trim(FIn.FExtParam);
+
+  WriteLog('入参: ' + nExtParam);
   with FPacker.XMLBuilder do
   begin
     if (nType = '') or (nExtParam = '') then
@@ -1840,6 +1995,10 @@ begin
   begin
     nStartDate := Copy(nExtParam, 1, nPos - 1) + ' 00:00:00';
     nEndDate := Copy(nExtParam, nPos + 3, Length(nExtParam) - nPos - 2) + ' 23:59:59';
+
+    nDt := StrToDateTime(nEndDate);
+    nDt := IncDay(nDt, 1);
+    nEndDate := FormatDateTime('YYYY-MM-DD', nDt);
   end;
 
   nStr := 'Select D_Memo, D_Value From %s Where D_Name =''%s'' ';
@@ -2205,6 +2364,7 @@ var
 begin
   Result := False;
   nID := PackerDecodeStr(FIn.FData);
+  WriteLog('下载图片:'+nID);
 
   nStr := 'Select * From %s Where A_ID=''%s'' ';
   nStr := Format(nStr, [sTable_AuditTruck, nID]);
@@ -2278,7 +2438,7 @@ begin
     BodyJo.S['queryWord']  := EncodeBase64(nWebOrder);
     BodyJo.S['facSerialNo']:= gSysParam.FFactID; //'zxygc171223111220640999';
 
-    ParamJo.S['activeCode']  := Cus_ShopOrder;
+    ParamJo.S['activeCode']:= Cus_ShopOrder;
     ParamJo.S['body'] := BodyJo.AsString;
     nStr := ParamJo.AsString;
     //nStr := Ansitoutf8(nStr);
@@ -2290,8 +2450,12 @@ begin
     ReQuestInit;
     
     szUrl := gSysParam.FSrvUrl + '/order/searchShopOrder';
-    FidHttp.Post(szUrl, wParam, ReStream);
-    nStr := UTF8Decode(ReStream.DataString);
+    try
+      FidHttp.Post(szUrl, wParam, ReStream);
+      nStr := UTF8Decode(ReStream.DataString);
+    finally
+      FIdHttp.Disconnect;
+    end;
     WriteLog('获取订单信息出参:' + nStr);
 
     if nStr <> '' then
@@ -3425,9 +3589,14 @@ begin
     ReQuestInit;
     
     szUrl := gSysParam.FSrvUrl + '/truck/searchFacTruck';
-    FidHttp.Post(szUrl, wParam, ReStream);
-    nStr := UTF8Decode(ReStream.DataString);
-    WriteLog('获取车辆信息出参:' + nStr);
+    WriteLog('URL:' + szUrl);
+    try
+      FidHttp.Post(szUrl, wParam, ReStream);
+      nStr := UTF8Decode(ReStream.DataString);
+      WriteLog('获取车辆信息出参:' + nStr);
+    finally
+      FidHttp.Disconnect;
+    end;
 
     if nStr <> '' then
     begin
@@ -3513,8 +3682,13 @@ begin
     ReQuestInit;
 
     szUrl := gSysParam.FSrvUrl + '/truck/synFacTruck';
-    FidHttp.Post(szUrl, wParam, ReStream);
-    nStr := UTF8Decode(ReStream.DataString);
+    try
+      FidHttp.Post(szUrl, wParam, ReStream);
+      nStr := UTF8Decode(ReStream.DataString);
+    finally
+      FIdHttp.Disconnect;
+    end;
+
     WriteLog(' 同步车辆审核状态出参：' + nStr);
     if nStr <> '' then
     begin

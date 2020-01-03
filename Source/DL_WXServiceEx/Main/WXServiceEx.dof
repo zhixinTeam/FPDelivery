@@ -135,14 +135,15 @@ ProductName=KGDelivery
 ProductVersion=1.0.0.0
 Comments=物流一卡通系统微信数据转发中间件
 [Excluded Packages]
+C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D7\RemObjects_Indy_D7.bpl=RemObjects SDK - Indy Library
 C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D7\RemObjects_DataSnap_D7.bpl=RemObjects SDK - DataSnap Integration Pack
 C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D7\RemObjects_Synapse_D7.bpl=RemObjects SDK - Synapse Library
+C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D7\RemObjects_Server_D7.bpl=RemObjects SDK - Server Library
 C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D7\RemObjects_Server_IDE_D7.bpl=RemObjects SDK - Server IDE Integration for Win32
-C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D7\RemObjects_Server_DataSnap_D7.bpl=RemObjects SDK - DataSnap Server Integration Pack
+C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D7\RemObjects_Server_Indy_D7.bpl=RemObjects SDK - Server Indy Library
+C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D7\RemObjects_Server_DataSnap_D7.bpl=RemObjects SDK - Server DataSnap Integration Pack
 C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D7\RemObjects_Server_Synapse_D7.bpl=RemObjects SDK - Server Synapse Library
 C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D7\RemObjects_WebBroker_D7.bpl=RemObjects SDK - WebBroker Library
-C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D7\RemObjects_Indy_D7.bpl=RemObjects SDK - Indy Library
-C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D7\RemObjects_Server_Indy_D7.bpl=RemObjects SDK - Server Indy Library
 [HistoryLists\hlUnitAliases]
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;

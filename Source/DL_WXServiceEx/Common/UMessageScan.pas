@@ -244,11 +244,11 @@ begin
             if nResult then
             begin
               //更新为已处理
-              Inc(nSuccessCount);
+              nSuccessCount:= nSuccessCount+1;
             end
             else
             begin
-              Inc(nFailCount);
+              nFailCount:= nFailCount+1;
             end;
             UpdateMsgNum(nResult,FListA.Values['WOM_LID']);
             FDBConn.FConn.CommitTrans;
@@ -452,7 +452,7 @@ var nStr: string;
     nErr,nIdx: Integer;
     nOut: TWorkerWebChatData;
 begin
-  nStr:= 'select top 1000 * from %s where WOM_StatusType =%d Order by R_ID desc';
+  nStr:= 'select top 500 * from %s where WOM_StatusType =%d Order by R_ID desc';
   nStr:= Format(nStr,[sTable_WebOrderMatch, c_WeChatStatusCreateCard]);
   //查询最近1000条网上开单记录
   with gDBConnManager.WorkerQuery(FDBConn, nStr) do

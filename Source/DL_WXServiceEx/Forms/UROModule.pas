@@ -85,6 +85,7 @@ uses
   UMgrParam, UMgrPlug, USysLoger, SrvBusiness_Impl, SrvConnection_Impl,
   SrvWebchat_Impl, MIT_Service_Invk;
 
+
 procedure TROModule.DataModuleCreate(Sender: TObject);
 begin
   FSrvConnection := nil;
