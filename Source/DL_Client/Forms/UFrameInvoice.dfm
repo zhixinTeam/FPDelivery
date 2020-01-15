@@ -15,9 +15,9 @@ inherited fFrameInvoice: TfFrameInvoice
     end
   end
   inherited cxGrid1: TcxGrid
-    Top = 202
+    Top = 207
     Width = 773
-    Height = 234
+    Height = 229
     inherited cxView1: TcxGridDBTableView
       OnDblClick = cxView1DblClick
     end
@@ -26,8 +26,8 @@ inherited fFrameInvoice: TfFrameInvoice
     Width = 773
     Height = 135
     object EditID: TcxButtonEdit [0]
-      Left = 81
-      Top = 36
+      Left = 87
+      Top = 50
       ParentFont = False
       Properties.Buttons = <
         item
@@ -40,40 +40,40 @@ inherited fFrameInvoice: TfFrameInvoice
       Width = 105
     end
     object cxTextEdit1: TcxTextEdit [1]
-      Left = 81
-      Top = 93
+      Left = 87
+      Top = 120
       Hint = 'T.I_ID'
       ParentFont = False
       TabOrder = 3
       Width = 105
     end
     object cxTextEdit2: TcxTextEdit [2]
-      Left = 249
-      Top = 93
+      Left = 255
+      Top = 120
       Hint = 'T.I_Status'
       ParentFont = False
       TabOrder = 4
       Width = 100
     end
     object cxTextEdit4: TcxTextEdit [3]
-      Left = 400
-      Top = 93
+      Left = 406
+      Top = 120
       Hint = 'T.I_SaleMan'
       ParentFont = False
       TabOrder = 5
       Width = 100
     end
     object cxTextEdit3: TcxTextEdit [4]
-      Left = 563
-      Top = 93
+      Left = 569
+      Top = 120
       Hint = 'T.I_CusName'
       ParentFont = False
       TabOrder = 6
       Width = 121
     end
     object EditDate: TcxButtonEdit [5]
-      Left = 454
-      Top = 36
+      Left = 460
+      Top = 50
       ParentFont = False
       Properties.Buttons = <
         item
@@ -86,8 +86,8 @@ inherited fFrameInvoice: TfFrameInvoice
       Width = 186
     end
     object EditCus: TcxButtonEdit [6]
-      Left = 249
-      Top = 36
+      Left = 255
+      Top = 50
       ParentFont = False
       Properties.Buttons = <
         item
@@ -144,7 +144,7 @@ inherited fFrameInvoice: TfFrameInvoice
     end
   end
   inherited cxSplitter1: TcxSplitter
-    Top = 194
+    Top = 199
     Width = 773
   end
   inherited TitlePanel1: TZnBitmapPanel

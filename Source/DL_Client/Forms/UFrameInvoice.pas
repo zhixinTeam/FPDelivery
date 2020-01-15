@@ -13,7 +13,8 @@ uses
   dxLayoutControl, cxGridLevel, cxClasses, cxControls, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid,
   ComCtrls, ToolWin, cxTextEdit, cxMaskEdit, cxButtonEdit, cxLookAndFeels,
-  cxLookAndFeelPainters, UBitmapPanel, cxSplitter;
+  cxLookAndFeelPainters, UBitmapPanel, cxSplitter, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxLCPainter;
 
 type
   TfFrameInvoice = class(TfFrameNormal)

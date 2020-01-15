@@ -44,6 +44,7 @@ const
   cFI_FramePayment      = $0022;                     //销售回款
   cFI_FrameCusCredit    = $0023;                     //信用管理
 
+  cFI_FrameQueryFH      = $0029;                     //放灰装车记录查询
   cFI_FrameLadingDai    = $0030;                     //袋装提货
   cFI_FramePoundQuery   = $0031;                     //磅房查询
   cFI_FrameFangHuiQuery = $0032;                     //放灰查询
@@ -401,6 +402,7 @@ begin
 
   AddMenuModuleItem('MAIN_G01', cFI_FormLadSan, mtForm);
   AddMenuModuleItem('MAIN_G02', cFI_FrameFangHuiQuery);
+  AddMenuModuleItem('MAIN_GX02', cFI_FrameQueryFH);
 
   AddMenuModuleItem('MAIN_K01', cFI_FrameStock);
   AddMenuModuleItem('MAIN_K02', cFI_FrameStockRecord);

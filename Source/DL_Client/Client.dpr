@@ -13,7 +13,8 @@ uses
   UFormBase in 'Forms\UFormBase.pas' {BaseForm},
   UFrameNormal in 'Forms\UFrameNormal.pas' {fFrameNormal: TFrame},
   UFormNormal in 'Forms\UFormNormal.pas' {fFormNormal},
-  UFrameCusInMoneyException in 'Forms\UFrameCusInMoneyException.pas' {fFrameCusInMoneyExceptio: TFrame};
+  UFrameCusInMoneyException in 'Forms\UFrameCusInMoneyException.pas' {fFrameCusInMoneyExceptio: TFrame},
+  UFrameFangHuiQuery in 'Forms\UFrameFangHuiQuery.pas' {fFrameFangHuiQuery: TFrame};
 
 {$R *.res}
 var
