@@ -944,7 +944,7 @@ begin
       //**************************************************************************
       nStr := 'Insert into $FHLog(F_ID,F_PValue,F_Date)Select top 1 ''$FID'', $PValue, GetDate() From Master..SysDatabases '+
               'Where Not exists(Select * From $FHLog Where F_ID=''$FID'')';
-      nStr := MacroValue(nStr, [MI('$FHLog', sSQL_FHLog), MI('$FID', nTunnel.FBill), MI('$PValue', FloatToStr(nTunnel.FValTruckP) )]);
+      nStr := MacroValue(nStr, [MI('$FHLog', sTable_FHLog), MI('$FID', nTunnel.FBill), MI('$PValue', FloatToStr(nTunnel.FValTruckP) )]);
       gDBConnManager.WorkerExec(nDBConn, nStr);
 
       WriteNearReaderLog(Format('[ %s ] 更新装车皮重 %g ', [nTunnel.FBill, nTunnel.FValTruckP]));
@@ -952,7 +952,7 @@ begin
     else if nTunnel.FStatusNew = bsClose then
     begin
       nStr := 'UPDate $FHLog Set F_MValue= $MValue Where F_ID=''$FID'')';
-      nStr := MacroValue(nStr, [MI('$FHLog', sSQL_FHLog), MI('$FID', nTunnel.FBill), MI('$MValue', FloatToStr(nTunnel.FValMax))]);
+      nStr := MacroValue(nStr, [MI('$FHLog', sTable_FHLog), MI('$FID', nTunnel.FBill), MI('$MValue', FloatToStr(nTunnel.FValMax))]);
       gDBConnManager.WorkerExec(nDBConn, nStr);
 
       WriteNearReaderLog(Format('[ %s ] 更新装车毛重 %g ', [nTunnel.FBill, nTunnel.FValMax]));
