@@ -71,6 +71,7 @@ const
   {*数据库标识*}
   sFlag_DB_K3         = 'King_K3';                   //金蝶数据库
   sFlag_DB_NC         = 'YonYou_NC';                 //用友数据库
+  sFlag_DB_ZB         = 'DL_ZB';                     //总部数据库
 
   {*相关标记*}
   sFlag_Yes           = 'Y';                         //是

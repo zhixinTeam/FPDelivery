@@ -52,7 +52,7 @@
 //通用版本
 
 
-{$DEFINE HLST}
+{$DEFINE FPST}
 //特定系统            HLST   FPST  
 
 {$IFDEF FPST} 
@@ -92,8 +92,10 @@
   //出厂打印化验单
   {$DEFINE NoCheckOnPayment}
   //退款时不校验资金余额
- {$DEFINE UseWXServiceEx}
+  {$DEFINE UseWXServiceEx}
   //使用二期微信中间件
+  {$DEFINE UpLoader}
+  //总部上次数据服务
 {$ENDIF}
 
 {$IFDEF HLST} 

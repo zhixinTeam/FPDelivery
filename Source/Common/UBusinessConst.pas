@@ -113,6 +113,8 @@ const
   cBC_GetCardLength                = $0113;   //获取磁卡是否是长期卡
   cBC_GetHysYsStatus               = $0114;   //获取化验室验收状态
   cBC_SaveHysYS                    = $0115;   //化验室验收
+  cBc_SQLQuery                     = $0116;   //远程查询
+  cBc_SQLExecute                   = $0117;   //远程写入
 
   cBC_WX_VerifPrintCode       = $0501;   //微信：验证喷码信息
   cBC_WX_WaitingForloading    = $0502;   //微信：工厂待装查询
@@ -145,7 +147,9 @@ const
   cBC_WX_SaveCustomerWxOrders = $0529;   //微信：新增客户预开单
   cBC_WX_QueryByCar           = $0534;   //微信：查询车辆状态
   cBC_WX_IsCanCreateWXOrder   = $0531;   //微信：下单校验
-  
+  cBC_WX_SQLExecute           = $0532;   //微信：执行远程SQL写入
+  cBC_WX_SQLQuery             = $0533;   //微信：执行远程SQL查询
+
 type
   PWorkerQueryFieldData = ^TWorkerQueryFieldData;
   TWorkerQueryFieldData = record
