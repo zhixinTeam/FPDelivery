@@ -148,6 +148,7 @@ begin
       FAdminKeep := nIni.ReadInteger('System', 'AdminKeep', 60);
       FAutoMin := nIni.ReadBool('System', 'AutoMin', False);
       FGPWSURL := nIni.ReadString('System', 'GPWSURL', '');
+      FFacID := nIni.ReadString('System', 'FacID', '');
     end;
 
      LoadFormConfig(Self, nIni);

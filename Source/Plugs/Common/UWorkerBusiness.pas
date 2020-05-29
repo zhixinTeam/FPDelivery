@@ -10,7 +10,7 @@ interface
 uses
   Windows, Classes, Controls, DB, SysUtils, UBusinessWorker, UBusinessPacker,
   UBusinessConst, UMgrDBConn, UMgrParam, ZnMD5, ULibFun, UFormCtrl, UBase64,
-  USysLoger, USysDB, UMITConst, DateUtils;
+  USysLoger, USysDB, UMITConst, DateUtils, NativeXml;
 
 type
   TBusWorkerQueryField = class(TBusinessWorkerBase)
@@ -112,6 +112,8 @@ type
     function GetZhiKaFrozen(nCusId: string):Double;
     function GetCardLength(var nData: string): Boolean;
     //获取车辆是否是长期卡
+    function SQLQuery(var nData: string): Boolean;
+    function SQLExecute(var nData: string): Boolean;
   public
     constructor Create; override;
     destructor destroy; override;
@@ -350,12 +352,14 @@ begin
    cBC_UserLogOut          : Result := LogOut(nData);
    cBC_GetStockBatcode     : Result := GetStockBatcode(nData);
    
-   cBC_VerifPrintCode      : Result := CheckSecurityCodeValid(nData); //验证码查询
-   cBC_WaitingForloading   : Result := GetWaitingForloading(nData); //待装车辆查询
+   cBC_VerifPrintCode      : Result := CheckSecurityCodeValid(nData);//验证码查询
+   cBC_WaitingForloading   : Result := GetWaitingForloading(nData);  //待装车辆查询
    cBC_BillSurplusTonnage  : Result := GetBillSurplusTonnage(nData); //查询商城订单可用量
-   cBC_GetLimitValue               : Result := GetLimitValue(nData);     //获取车辆最大限载值
-   cBC_GetWebOrderByCard           : Result := GetWebOrderByCard(nData); //通过卡号获取商城订单
-   cBC_GetCardLength               : Result := GetCardLength(nData);     //获取卡是否是长期卡
+   cBC_GetLimitValue       : Result := GetLimitValue(nData);         //获取车辆最大限载值
+   cBC_GetWebOrderByCard   : Result := GetWebOrderByCard(nData);     //通过卡号获取商城订单
+   cBC_GetCardLength       : Result := GetCardLength(nData);         //获取卡是否是长期卡
+   cBc_SQLQuery            : Result := SQLQuery(nData);              //远程查询
+   cBc_SQLExecute          : Result := SQLExecute(nData);            //远程查写入
    else
     begin
       Result := False;
@@ -2000,6 +2004,145 @@ begin
     if RecordCount > 0 then
       Result := False;
   end;
+end;
+
+function TWorkerBusinessCommander.SQLQuery(var nData: string): Boolean;
+const
+  cBad: array[0..7] of string = ('create', 'insert', 'update', 'delete',
+    'drop', 'alter', 'into', 'sys_user');
+var nStr: string;
+    nBool: Boolean;
+    nIdx,nInt: Integer;
+    nNode,nTmp: TXmlNode;
+begin
+  Result := False;
+
+  WriteLog('RemoteQuery:' + FIn.FData);
+  nBool := True;
+  SplitStr(FIn.FData, FListA, 0, #32);
+
+  for nIdx:=0 to FListA.Count - 1 do
+  begin
+    if nBool then
+    begin
+      nStr := Trim(FListA[nIdx]);
+      if nStr <> '' then
+      begin
+        if CompareText(nStr, 'select') <> 0 then
+        begin
+          nData := '无效的查询语句';
+          Exit;
+        end;
+
+        nBool := False;
+      end;
+    end else
+    begin
+      nStr := LowerCase(Trim(FListA[nIdx]));
+      for nInt:=Low(cBad) to High(cBad) do
+       if cBad[nInt] = nStr then
+       begin
+         nData := '权限不足';
+         Exit;
+       end;
+    end;
+  end;
+
+  with gDBConnManager.WorkerQuery(FDBConn, FIn.FData),FPacker.XMLBuilder do
+  begin
+    if RecordCount < 1 then
+    begin
+      nData := '未查询到数据';
+      Exit;
+    end;
+
+    Result := True;
+    nNode := Root.NodeNew('items');
+    nInt := FieldCount - 1;
+    
+    First;
+    while not Eof do
+    begin
+      nTmp := nNode.NodeNew('item');
+      for nIdx:=0 to nInt do
+        nTmp.NodeNew(Fields[nIdx].FieldName).ValueAsString := Fields[nIdx].AsString;
+      Next;
+    end;
+  end;
+  if Result then
+  begin
+    nNode := FPacker.XMLBuilder.Root.NodeNew('head');
+    nNode.NodeNew('errcode').ValueAsString := '0';
+    nNode.NodeNew('errmsg').ValueAsString := 'OK';
+  end
+  else
+  begin
+    nNode := FPacker.XMLBuilder.Root.NodeNew('head');
+    nNode.NodeNew('errcode').ValueAsString := '-1';
+    nNode.NodeNew('errmsg').ValueAsString := nData;
+  end;
+  nData := FPacker.XMLBuilder.WriteToString;
+end;
+
+function TWorkerBusinessCommander.SQLExecute(var nData: string): Boolean;
+const
+  cGood: array[0..2] of string = ('insert', 'update', 'delete');
+var nStr: string;
+    nIdx: Integer;
+    nBool: Boolean;
+    nNode: TXmlNode;
+begin
+  Result := False;
+  
+  WriteLog('RemoteExec:' + FIn.FData);
+  FIn.FData := TrimLeft(FIn.FData);
+
+  nIdx := Pos(' ', FIn.FData);
+  if nIdx < 2 then
+  begin
+    nData := '无效的查询语句';
+    Exit;
+  end;
+
+  nStr := Copy(FIn.FData, 1, nIdx - 1);
+  nStr := LowerCase(nStr);
+  nBool := False;
+  
+  for nIdx:=Low(cGood) to High(cGood) do
+  if cGood[nIdx] = nStr then
+  begin
+    nBool := True;
+    Break;
+  end;
+
+  if not nBool then
+  begin
+    nData := '权限不足';
+    Exit;
+  end;
+
+  nIdx := gDBConnManager.WorkerExec(FDBConn, FIn.FData);
+  Result := True;
+
+  with FPacker.XMLBuilder.Root.NodeNew('Result') do
+  begin
+    NodeNew('Rows').ValueAsInteger := nIdx;
+    NodeNew('SQL').ValueAsString := FIn.FData;
+  end;
+
+  if Result then
+  begin
+    nNode := FPacker.XMLBuilder.Root.NodeNew('head');
+    nNode.NodeNew('errcode').ValueAsString := '0';
+    nNode.NodeNew('errmsg').ValueAsString := 'OK';
+  end
+  else
+  begin
+    nNode := FPacker.XMLBuilder.Root.NodeNew('head');
+    nNode.NodeNew('errcode').ValueAsString := '-1';
+    nNode.NodeNew('errmsg').ValueAsString := nData;
+  end;
+  nData := FPacker.XMLBuilder.WriteToString;
 end;
 
 initialization

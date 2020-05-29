@@ -19,7 +19,7 @@ object fFormMain: TfFormMain
     Left = 0
     Top = 48
     Width = 180
-    Height = 500
+    Height = 501
     Align = alLeft
     Color = 14408641
     ActiveGroupIndex = 0
@@ -938,7 +938,7 @@ object fFormMain: TfFormMain
   end
   object SBar: TStatusBar
     Left = 0
-    Top = 548
+    Top = 549
     Width = 876
     Height = 19
     Panels = <
@@ -956,7 +956,7 @@ object fFormMain: TfFormMain
     Left = 180
     Top = 48
     Width = 696
-    Height = 500
+    Height = 501
     Align = alClient
     BevelOuter = bvNone
     DockSite = True

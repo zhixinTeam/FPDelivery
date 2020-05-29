@@ -420,16 +420,22 @@ begin
     end;
 
     //富平要求去掉调价提醒
-    {nStr := FieldByName('Z_TJStatus').AsString;
+    nStr := FieldByName('Z_TJStatus').AsString;
     if nStr  <> '' then
     begin
-      if nStr = sFlag_TJOver then
+      {if nStr = sFlag_TJOver then
            nData := '纸卡[ %s ]已调价,请重新开单.'
       else nData := '纸卡[ %s ]正在调价,请稍后.';
 
       nData := Format(nData, [Values['ZhiKa']]);
-      Exit;
-    end; }
+      Exit; }
+      if nStr = sFlag_TJing then
+      begin
+        nData := '纸卡[ %s ]正在调价,请稍后.';
+        nData := Format(nData, [Values['ZhiKa']]);
+        Exit;
+      end;
+    end;
 
     if FieldByName('Z_ValidDays').AsDateTime <= Date() then
     begin

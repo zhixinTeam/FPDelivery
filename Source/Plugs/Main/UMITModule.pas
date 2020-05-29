@@ -15,7 +15,8 @@ uses
   {$IFDEF HardMon}UEventHardware, UWorkerHardware,{$ENDIF}
   UWorkerBusiness, UWorkerBusinessBill, UWorkerBusinessOrder,
   {$IFDEF MicroMsg}UMgrRemoteWXMsg,{$ENDIF} UMemDataPool,
-  UMgrDBConn, UMgrParam, UMgrPlug, UMgrChannel, UChannelChooser, USAPConnection;
+  UMgrDBConn, UMgrParam, UMgrPlug, UMgrChannel, UChannelChooser,
+  UUpLoader;
 
 procedure InitSystemObject(const nMainForm: THandle);
 procedure RunSystemObject;
@@ -96,6 +97,10 @@ begin
 
   gTaskMonitor.StartMon;
   //mon task start
+
+  {$IFDEF UpLoader}
+  gUploader.Start(gParamManager.ActiveParam.FDB.FID);
+  {$ENDIF}
 end;
 
 procedure TMainEventWorker.AfterStopServer;
@@ -119,6 +124,10 @@ begin
   {$IFDEF MicroMsg}
   gWXPlatFormHelper.StopPlatConnector;
   {$ENDIF} //micro message
+
+  {$IFDEF UpLoader}
+  gUploader.stop;
+  {$ENDIF}
 end;
 
 //------------------------------------------------------------------------------

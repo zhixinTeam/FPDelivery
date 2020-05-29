@@ -174,9 +174,10 @@ begin
   gHardShareData := WhenBusinessMITSharedDataIn;
   //hard monitor share
 
-  //if not Assigned(gSendCardNo) then
+  {$IFDEF FixLoad}
     gSendCardNo := TReaderHelper.Create;
   //¶¨ÖÃ×°³µ
+  {$ENDIF}
 end;
 
 procedure THardwareWorker.BeforeStartServer;

@@ -66,6 +66,7 @@ type
     FDisplayDPI : Integer;                           //屏幕分辨率
     FAutoMin    : Boolean;                           //自动最小化
     FGPWSURL    : string;                            //集团公共web服务平台地址
+    FFacID      : string;                            //工厂编号
   end;
   //系统参数
 
