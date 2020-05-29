@@ -139,7 +139,11 @@ type
     //获取车辆信息
     function SyncShopTruckState(var nData: string): boolean;                    // Dl--->WxService
     //同步车辆审核状态
-                                                                                // WxService--->Dl
+
+    function SQLExecute(var nData: string): Boolean;
+    //执行远程写入
+    function SQLQuery(var nData: string): Boolean;
+    //执行远程查询
     function SearchClient(var nData: string): Boolean;
     function SearchContractOrder(var nData: string): Boolean;
     function SearchMateriel(var nData: string): Boolean;
@@ -149,6 +153,7 @@ type
     function QueryTruckQuery(var nData: string): Boolean;
     function BillStats(var nData: string): Boolean;
     function HYDanReport(var nData: string): Boolean;
+    function BuildResXml(nErrMsg:string;nSucc:Boolean=False):string;
   public
     constructor Create; override;
     destructor destroy; override;
@@ -241,7 +246,7 @@ begin
         FKpLong := GetTickCount - FWorkTimeInit;
       if FPackOut then
       begin
-        WriteLog('打包');
+        WriteLog('打包'+ndata);
         nData := FPacker.PackOut(FDataOut);
       end;
 
@@ -366,13 +371,22 @@ end;
 function TBusWorkerBusinessWebchat.UnPackIn(var nData: string): Boolean;
 var
   nNode, nTmp: TXmlNode;
+  nIdx: Integer;
+  nStr, nDataIn: string;
 begin
   Result := False;
   try
     FPacker.XMLBuilder.Clear;
-    FPacker.XMLBuilder.ReadFromString(nData);
+    try
+      FPacker.XMLBuilder.ReadFromString(nData);
+    except
+      nDataIn := UTF8Decode(DecodeBase64(nData));
+      nData := DecodeBase64(nData);
+      //writelog('nDataIn:'+ndatain);
+      //writelog('nData:'+nData);
+      FPacker.XMLBuilder.ReadFromString(nData);
+    end;
 
-    //nNode := FPacker.XMLBuilder.Root.FindNode('Head');
     nNode := FPacker.XMLBuilder.Root;
     if not (Assigned(nNode) and Assigned(nNode.FindNode('Command'))) then
     begin
@@ -386,6 +400,10 @@ begin
       Exit;
     end;
 
+    nTmp := nNode.FindNode('ExtParam');
+    if Assigned(nTmp) then
+      FIn.FExtParam := nTmp.ValueAsString;
+
     nTmp := nNode.FindNode('Command');
     FIn.FCommand := StrToIntDef(nTmp.ValueAsString, 0);
 
@@ -395,6 +413,51 @@ begin
     nTmp := nNode.FindNode('Data');
     if Assigned(nTmp) then
       FIn.FData := nTmp.ValueAsString;
+
+    if FIn.FCommand = cBC_WX_SQLExecute then //验证加密信息
+    begin
+      FPacker.XMLBuilder.Clear;
+      FPacker.XMLBuilder.ReadFromString(nDataIn);
+      nNode := FPacker.XMLBuilder.Root;
+
+      nTmp := nNode.FindNode('Data');
+      if Assigned(nTmp) then
+        FIn.FData := nTmp.ValueAsString;
+
+      if Length(FIn.FExtParam) < 32 then
+      begin
+        nData := BuildResXml('信息验证无效');
+        Result := False;
+        Exit;
+      end;
+
+      nIdx := 0;
+      while nIdx < 3 do
+      begin
+        case nIdx of
+         0: nStr := Date2Str(Date());     //今天
+         1: nStr := Date2Str(Date() + 1); //明天
+         2: nStr := Date2Str(Date() - 1); //昨天
+        end;
+
+        Inc(nIdx);
+        nStr := StringReplace(nData, FIn.FExtParam, nStr + '_WXService', []);
+        WriteLog('md5内容：'+nStr);
+        nStr := MD5Print(MD5String(nStr));
+
+        WriteLog(nStr + ' ' + FIn.FExtParam);
+        if nStr = FIn.FExtParam then
+        begin
+          Result := true;
+          Exit;
+        end;
+        //通过验证
+      end;
+
+      Result := False;
+      nData := BuildResXml('信息验证失败,操作已取消');
+      Exit;
+    end;
 
     if FIn.FCommand = cBC_WX_CreatLadingOrder then
     begin
@@ -431,6 +494,7 @@ begin
       if Assigned(nTmp) then
         FIn.FExtParam := nTmp.ValueAsString;
     end;
+    Result := True;
   except
 
   end;
@@ -441,7 +505,9 @@ end;
 //Desc: 执行nData业务指令
 function TBusWorkerBusinessWebchat.DoDBWork(var nData: string): Boolean;
 begin
-  UnPackIn(nData);
+  Result := UnPackIn(nData);
+  if not Result then Exit;
+  
   with FOut.FBase do
   begin
     FResult := True;
@@ -530,6 +596,16 @@ begin
       begin
         FPackOut := True;
         Result := GetshoporderStatus(nData);
+      end;
+    cBC_WX_SQLExecute:
+      begin
+        //FPackOut := True;
+        Result := SQLExecute(nData);
+      end;
+    cBC_WX_SQLQuery:
+      begin
+        //FPackOut := True;
+        Result := SQLQuery(nData);
       end;
   else
     begin
@@ -2373,15 +2449,15 @@ begin
 
   if nDS.RecordCount < 1 then
   begin
-    nStr := Format('未查询到车辆%s审核信息!', [nID]);
-    WriteLog(nStr);
+    nData := Format('未查询到车辆%s审核信息!', [nID]);
+    WriteLog(nData);
     Exit;
   end;
 
   if nDS.FieldByName('A_LicensePath').AsString = '' then
   begin
-    nStr := Format('车辆%s照片路径为空!', [nID]);
-    WriteLog(nStr);
+    nData := Format('车辆%s照片路径为空!', [nID]);
+    WriteLog(nData);
     Exit;
   end;
 
@@ -3706,6 +3782,158 @@ begin
     ReStream.Free;
     wParam.Free;
   end;
+end;
+
+function TBusWorkerBusinessWebchat.SQLExecute(var nData: string): Boolean;
+const
+  cGood: array[0..2] of string = ('insert', 'update', 'delete');
+var nStr: string;
+    nIdx: Integer;
+    nBool: Boolean;
+    nNode: TXmlNode;
+begin
+  Result := False;
+  BuildDefaultXML;
+
+  WriteLog('RemoteExec:' + FIn.FData);
+  FIn.FData := TrimLeft(FIn.FData);
+
+  nIdx := Pos(' ', FIn.FData);
+  if nIdx < 2 then
+  begin
+    nData := BuildResXml('无效的语句');
+    Exit;
+  end;
+
+  nStr := Copy(FIn.FData, 1, nIdx - 1);
+  nStr := LowerCase(nStr);
+  nBool := False;
+  
+  for nIdx:=Low(cGood) to High(cGood) do
+  if cGood[nIdx] = nStr then
+  begin
+    nBool := True;
+    Break;
+  end;
+
+  if not nBool then
+  begin
+    nData := BuildResXml('权限不足');
+    Exit;
+  end;
+
+  FListA.Clear;
+  SplitStr(FIn.FData, FListA, 0, ';');
+
+  FDBConn.FConn.BeginTrans;
+  try
+    for nIdx:=0 to FListA.Count - 1 do
+    begin
+      gDBConnManager.WorkerExec(FDBConn, FListA[nIdx]);
+      writelog('zyww::'+FListA[nIdx]);
+    end;
+    //xxxxx
+
+    FDBConn.FConn.CommitTrans;
+    Result := True;
+  except
+    FDBConn.FConn.RollbackTrans;
+    raise;
+  end;
+
+  with FPacker.XMLBuilder.Root.NodeNew('Result') do
+  begin
+    NodeNew('Rows').ValueAsInteger := nIdx;
+    NodeNew('SQL').ValueAsString := EncodeBase64(FIn.FData);
+  end;
+
+  nData := BuildResXml('Ok',Result);
+end;
+
+function TBusWorkerBusinessWebchat.SQLQuery(var nData: string): Boolean;
+const
+  cBad: array[0..7] of string = ('create', 'insert', 'update', 'delete',
+    'drop', 'alter', 'into', 'sys_user');
+var nStr: string;
+    nBool: Boolean;
+    nIdx,nInt: Integer;
+    nNode,nTmp: TXmlNode;
+begin
+  Result := False;
+
+  BuildDefaultXML;
+
+  WriteLog('RemoteQuery:' + FIn.FData);
+  nBool := True;
+  SplitStr(FIn.FData, FListA, 0, #32);
+
+  for nIdx:=0 to FListA.Count - 1 do
+  begin
+    if nBool then
+    begin
+      nStr := Trim(FListA[nIdx]);
+      if nStr <> '' then
+      begin
+        if CompareText(nStr, 'select') <> 0 then
+        begin
+          nData := BuildResXml('无效的查询语句');
+          Exit;
+        end;
+
+        nBool := False;
+      end;
+    end else
+    begin
+      nStr := LowerCase(Trim(FListA[nIdx]));
+      for nInt:=Low(cBad) to High(cBad) do
+       if cBad[nInt] = nStr then
+       begin
+         nData := BuildResXml('权限不足');
+         Exit;
+       end;
+    end;
+  end;
+
+  with gDBConnManager.WorkerQuery(FDBConn, FIn.FData),FPacker.XMLBuilder do
+  begin
+    if RecordCount < 1 then
+    begin
+      nData := BuildResXml('未查询到数据');
+      Exit;
+    end;
+
+    Result := True;
+    nNode := Root.NodeNew('items');
+    nInt := FieldCount - 1;
+    
+    First;
+    while not Eof do
+    begin
+      nTmp := nNode.NodeNew('item');
+      for nIdx:=0 to nInt do
+        nTmp.NodeNew(Fields[nIdx].FieldName).ValueAsString := Fields[nIdx].AsString;
+      Next;
+    end;
+  end;
+  nData := BuildResXml('OK',Result);
+end;
+
+function TBusWorkerBusinessWebchat.BuildResXml(nErrMsg:string;nSucc:Boolean=False):string;
+var
+  nNode:TXmlNode;
+begin
+  nNode := FPacker.XMLBuilder.Root.NodeNew('head');
+  if nSucc then
+  begin
+    nNode.NodeNew('errcode').ValueAsString := '0';
+    nNode.NodeNew('errmsg').ValueAsString := 'OK';
+  end
+  else
+  begin
+    nNode.NodeNew('errcode').ValueAsString := '-1';
+    nNode.NodeNew('errmsg').ValueAsString := nErrMsg;
+  end;
+  Result := FPacker.XMLBuilder.WriteToString
 end;
 
 initialization
